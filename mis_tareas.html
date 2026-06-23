@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mis Tareas | VIGILEX</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --red-text: #c62828;
+            --green-text: #2e7d32;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-nav img {
+            height: 30px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .header-dashboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .greeting h1 {
+            color: var(--primary);
+            font-size: 32px;
+            margin: 0 0 5px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .greeting p {
+            color: #666;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-accion {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-accion:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ccc;
+            color: #555;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: transparent;
+            transform: none;
+        }
+
+        .grid-tareas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .columna-tareas {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-tribunal {
+            border-top: 5px solid #1565c0;
+        }
+
+        .col-operativo {
+            border-top: 5px solid #c62828;
+        }
+
+        .col-escritorio {
+            border-top: 5px solid #6a1b9a;
+        }
+
+        .col-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .item-lista {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fafafa;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .item-lista:hover {
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 37, 64, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-top: 6px solid var(--accent);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--red-text);
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(173, 151, 79, 0.1);
+        }
+
+        /* Animación para el Sider */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <a href="lobby.html" class="logo-nav">
+            <img src="logovigilexrubros.png" alt="Vigilex" onerror="this.src='favicon.png'"> VIGILEX
+        </a>
+        <a href="lobby.html" class="btn-accion btn-outline" style="padding: 8px 15px; font-size: 12px;">← Volver al
+            Panel</a>
+    </nav>
+
+    <div class="container">
+        <header class="header-dashboard">
+            <div class="greeting">
+                <h1 class="playfair">Mis Tareas Operativas</h1>
+                <p>Agenda personal, diligencias y escritos pendientes.</p>
+            </div>
+            <button class="btn-accion" onclick="abrirModalNuevaTarea()">➕ Añadir Tarea Rápida</button>
+        </header>
+
+        <div class="grid-tareas">
+            <div class="columna-tareas col-tribunal">
+                <h3 class="col-title playfair" style="color: #1565c0;">🏛️ Tribunal</h3>
+                <div id="lista-tribunal">
+                    <p style="color:#999; font-size:13px; text-align:center;">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="columna-tareas col-operativo">
+                <h3 class="col-title playfair" style="color: #c62828;">🏃‍♂️ Operativo</h3>
+                <div id="lista-operativo">
+                    <p style="color:#999; font-size:13px; text-align:center;">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="columna-tareas col-escritorio">
+                <h3 class="col-title playfair" style="color: #6a1b9a;">💻 Escritorio</h3>
+                <p style="font-size:11px; color:#888; margin-top:-15px; margin-bottom:15px;">Al tachar se enviarán a
+                    revisión (si aplica).</p>
+                <div id="lista-escritorio">
+                    <p style="color:#999; font-size:13px; text-align:center;">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNuevaTarea" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn"
+                onclick="document.getElementById('modalNuevaTarea').style.display='none'">&times;</span>
+            <h2 class="playfair" style="color: var(--primary); margin-top: 0; margin-bottom: 25px;">➕ Tarea Rápida</h2>
+
+            <label class="form-label">Vincular a Expediente (Opcional):</label>
+            <select id="nt-expediente" class="form-input" style="background: #fcfcfc; border-color: var(--accent);">
+                <option value="" style="font-weight: bold; color: var(--primary);">📌 Tarea Personal (Sin Expediente)
+                </option>
+            </select>
+
+            <label class="form-label">Descripción de la Tarea:</label>
+            <input type="text" id="nt-desc" class="form-input" placeholder="Ej. Recoger copias certificadas...">
+
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label class="form-label">Fecha de Vencimiento:</label>
+                    <input type="date" id="nt-fecha" class="form-input">
+                </div>
+                <div style="flex: 1;">
+                    <label class="form-label">Categoría:</label>
+                    <select id="nt-cat" class="form-input">
+                        <option value="Escritorio">💻 Escritorio</option>
+                        <option value="Tribunal">🏛️ Tribunal</option>
+                        <option value="Operativo">🏃‍♂️ Operativo</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-accion" style="width: 100%; padding: 15px; font-size: 15px; margin-top: 10px;"
+                onclick="guardarTareaPersonal()">💾 Guardar Tarea</button>
+        </div>
+    </div>
+
+    <div id="modalSiderTarea"
+        style="display: none; position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 800px; background: white; z-index: 9999; box-shadow: -10px 0 30px rgba(0,0,0,0.3); flex-direction: column; animation: slideIn 0.3s forwards;">
+        <div
+            style="height: 70px; padding: 0 20px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-sizing: border-box;">
+            <h2 id="sider-titulo-tarea"
+                style="margin:0; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                Detalle de Tarea</h2>
+            <span style="font-size: 28px; cursor: pointer; margin-left: 15px;"
+                onclick="document.getElementById('modalSiderTarea').style.display='none'">&times;</span>
+        </div>
+
+        <div style="display: flex; flex: 1; min-height: 0; height: calc(100vh - 70px); overflow: hidden;">
+            <div
+                style="flex: 1; width: 50%; display: flex; flex-direction: column; padding: 20px; border-right: 1px solid #eee; background: #fdfdfd; height: 100%; box-sizing: border-box;">
+                <div style="flex-shrink: 0;">
+                    <input type="hidden" id="sider-id-tarea">
+                    <div
+                        style="font-size: 11px; color: #888; margin-bottom: 15px; display: flex; justify-content: space-between;">
+                        <span id="sider-creacion">Creada: -- por --</span>
+                        <span id="sider-vence" style="color: var(--red-text); font-weight: bold;">Vence: --</span>
+                    </div>
+
+                    <label
+                        style="font-weight:bold; font-size:12px; color:var(--primary); display:block; margin-bottom:5px;">🔗
+                        Enlace del Escrito / Documento:</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <input type="text" id="sider-enlace" placeholder="Pega aquí el enlace de Docs, OneDrive..."
+                            style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 12px;">
+                        <button class="btn-accion" style="padding: 10px;"
+                            onclick="guardarEnlaceSider()">Guardar</button>
+                    </div>
+
+                    <h3
+                        style="font-size: 14px; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">
+                        📜 Historial</h3>
+                </div>
+                <div id="sider-historial" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+            </div>
+
+            <div
+                style="flex: 1; width: 50%; display: flex; flex-direction: column; padding: 20px; background: white; height: 100%; box-sizing: border-box;">
+                <h3 style="font-size: 14px; color: var(--primary); margin-top: 0; margin-bottom: 15px; flex-shrink: 0;">
+                    💬 Comentarios</h3>
+                <div id="sider-comentarios" style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">
+                </div>
+                <div
+                    style="flex-shrink: 0; display: flex; flex-direction: column; border-top: 1px solid #eee; padding-top: 15px; height: 180px;">
+                    <div style="height: 120px; display: flex; flex-direction: column; margin-bottom: 10px;">
+                        <div id="editor-comentario-tarea" style="flex: 1; min-height: 0;"></div>
+                    </div>
+                    <button class="btn-accion" style="width: 100%; padding: 12px; flex-shrink: 0;"
+                        onclick="agregarComentarioSider()">Enviar Comentario</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+        let quillComentarioTarea = null;
+
+        if (!tokenSeguro || !usernameGlobal) window.location.replace("inicio.html");
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarMisTareas();
+            cargarExpedientesSelect();
+        });
+
+        async function cargarMisTareas() {
+            try {
+                const res = await fetch('/.netlify/functions/crm_obtener_mi_dia', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, usuarioObjetivo: usernameGlobal, vista: 'todas', contexto: 'TODOS' })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    renderizarColumna('Tribunal', 'lista-tribunal', data.tareas);
+                    renderizarColumna('Operativo', 'lista-operativo', data.tareas);
+                    renderizarColumna('Escritorio', 'lista-escritorio', data.tareas);
+                } else {
+                    alert("Error al cargar tareas: " + data.error);
+                }
+            } catch (e) { console.error("Error de red:", e); }
+        }
+
+        function renderizarColumna(categoria, idContenedor, tareas) {
+            const contenedor = document.getElementById(idContenedor);
+            const filtradas = tareas.filter(t => t.categoria === categoria && t.estado !== 'realizada');
+
+            if (filtradas.length === 0) {
+                contenedor.innerHTML = '<p style="color:#aaa; font-size:13px; text-align:center; font-style:italic;">Sin pendientes activos.</p>';
+                return;
+            }
+
+            let html = '';
+            filtradas.forEach(t => {
+                const expAsignado = t.numero_expediente ? `<b>Exp:</b> ${t.numero_expediente}` : `<span style="color:#856404; font-weight:bold;">Tarea Personal</span>`;
+                const fechaTexto = t.fecha_vencimiento ? t.fecha_vencimiento.split('T')[0] : 'Sin fecha';
+                const descSegura = t.descripcion ? t.descripcion.replace(/'/g, "\\'").replace(/"/g, '&quot;') : '';
+
+                // Hacemos el título clickeable para abrir el Sider
+                html += `
+                <div class="item-lista">
+                    <div style="display:flex; gap:12px; align-items:center; width:100%;">
+                        <input type="checkbox" style="transform: scale(1.3); cursor:pointer; accent-color: var(--accent);" onchange="marcarTareaCompletada(${t.id_tarea}, this)">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--primary); font-size: 14px; margin-bottom: 4px; line-height: 1.4; cursor:pointer; transition:0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--primary)'" onclick="abrirSiderTarea(${t.id_tarea}, '${descSegura}')">${t.descripcion}</div>
+                            <div style="font-size: 11px; color: #777;">
+                                <span style="color:var(--red-text); font-weight:bold;">Vence: ${fechaTexto}</span> | ${expAsignado}
+                            </div>
+                        </div>
+                        <button onclick="eliminarMiTarea(${t.id_tarea})" style="background:none; border:none; cursor:pointer; color:#ccc; font-size:16px; transition:0.2s;" onmouseover="this.style.color='var(--red-text)'" onmouseout="this.style.color='#ccc'" title="Eliminar permanentemente">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            contenedor.innerHTML = html;
+        }
+
+        async function cargarExpedientesSelect() {
+            try {
+                const res = await fetch('/.netlify/functions/listar_expedientes', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, contexto: 'TODOS' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const select = document.getElementById('nt-expediente');
+                    data.expedientes.filter(e => e.estado_archivo === 'activo').forEach(e => {
+                        select.innerHTML += `<option value="${e.id_expediente}">${e.cliente} - ${e.numero_expediente} (${e.organo_jurisdiccional})</option>`;
+                    });
+                }
+            } catch (e) { }
+        }
+
+        function abrirModalNuevaTarea() {
+            document.getElementById('nt-desc').value = '';
+            document.getElementById('nt-fecha').value = '';
+            document.getElementById('nt-expediente').value = '';
+            document.getElementById('nt-cat').value = 'Escritorio';
+            document.getElementById('modalNuevaTarea').style.display = 'flex';
+            document.getElementById('nt-desc').focus();
+        }
+
+        async function guardarTareaPersonal() {
+            const desc = document.getElementById('nt-desc').value.trim();
+            const fecha = document.getElementById('nt-fecha').value;
+            const cat = document.getElementById('nt-cat').value;
+            const idExp = document.getElementById('nt-expediente').value;
+
+            if (!desc) return alert("Debes escribir una descripción.");
+
+            const payload = {
+                username: usernameGlobal, descripcion: desc, fecha_vencimiento: fecha || null, categoria: cat, asignado_a: usernameGlobal
+            };
+            if (idExp) payload.id_expediente = idExp;
+
+            try {
+                await fetch('/.netlify/functions/crm_agregar_tarea', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify(payload)
+                });
+                document.getElementById('modalNuevaTarea').style.display = 'none';
+                cargarMisTareas();
+            } catch (e) { alert("Error al guardar la tarea."); }
+        }
+
+        async function marcarTareaCompletada(idTarea, checkboxEl) {
+            checkboxEl.disabled = true;
+            try {
+                await fetch('/.netlify/functions/crm_actualizar_tarea', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, id_tarea: idTarea, nuevo_estado: 'realizada', sincronizar_vinculos: false })
+                });
+                setTimeout(() => { cargarMisTareas(); }, 500);
+            } catch (e) { alert("Fallo al actualizar."); checkboxEl.disabled = false; checkboxEl.checked = false; }
+        }
+
+        async function eliminarMiTarea(idTarea) {
+            if (!confirm("¿Eliminar esta tarea permanentemente?")) return;
+            try {
+                await fetch('/.netlify/functions/crm_eliminar_tarea', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usernameGlobal, id_tarea: idTarea }) });
+                cargarMisTareas();
+            } catch (e) { alert("No se pudo eliminar."); }
+        }
+
+        // =====================================================================
+        // SIDER FUNCIONALIDAD (COMENTARIOS E HISTORIAL)
+        // =====================================================================
+        async function abrirSiderTarea(idTarea, descripcion) {
+            if (!quillComentarioTarea) {
+                quillComentarioTarea = new Quill('#editor-comentario-tarea', { theme: 'snow', modules: { toolbar: [['bold', 'italic'], [{ 'list': 'bullet' }]] } });
+            }
+
+            document.getElementById('sider-id-tarea').value = idTarea;
+            document.getElementById('sider-titulo-tarea').innerText = descripcion;
+            document.getElementById('modalSiderTarea').style.display = 'flex';
+
+            document.getElementById('sider-historial').innerHTML = '<p style="color:#888; font-size:12px;">Cargando historial...</p>';
+            document.getElementById('sider-comentarios').innerHTML = '<p style="color:#888; font-size:12px;">Cargando comentarios...</p>';
+            document.getElementById('sider-enlace').value = '';
+            quillComentarioTarea.root.innerHTML = '';
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_detalle_tarea', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'obtener', id_tarea: idTarea })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const t = data.tarea || {};
+                    document.getElementById('sider-creacion').innerText = `Subida por: ${t.creado_por || 'Sistema'}`;
+                    document.getElementById('sider-vence').innerText = t.fecha_vencimiento ? `Vence: ${t.fecha_vencimiento.split('T')[0]}` : 'Sin vencimiento';
+                    document.getElementById('sider-enlace').value = t.enlace_documento || '';
+
+                    document.getElementById('sider-historial').innerHTML = data.historial.map(h => `
+                        <div style="margin-bottom: 10px; font-size: 12px; background: white; padding: 10px; border-radius: 6px; border-left: 2px solid #ddd;">
+                            <span style="color:#999; font-size:10px; display:block; margin-bottom:3px;">${new Date(h.fecha_registro).toLocaleString()} | <b>${h.username}</b></span>
+                            ${h.accion}
+                        </div>
+                    `).join('') || '<p style="color:#888; font-size:12px;">No hay movimientos registrados.</p>';
+
+                    document.getElementById('sider-comentarios').innerHTML = data.comentarios.map(c => {
+                        let headerAcento = "color: #888;";
+                        let badgeRevi = "";
+                        if (c.es_revision) {
+                            headerAcento = "color: #e65100; background: #fff3e0; padding: 5px; border-radius: 4px;";
+                            badgeRevi = `<span style="background:#e65100; color:white; padding:2px 6px; border-radius:10px; font-size:10px; font-weight:bold; margin-left:5px;">Comentario de Revisión</span>`;
+                        }
+                        return `
+                        <div style="background: #fdfdfd; border: 1px solid #eee; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="font-size: 11px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center; ${headerAcento}">
+                                <span><b>${c.username}</b> ${badgeRevi}</span>
+                                <span>${new Date(c.fecha_registro).toLocaleString()}</span>
+                            </div>
+                            <div style="font-size: 13px; line-height: 1.5; color: #444;">${c.comentario}</div>
+                        </div>`;
+                    }).join('') || '<p style="color:#888; font-size:12px; text-align:center; margin-top:20px;">No hay comentarios en esta tarea.</p>';
+                }
+            } catch (e) { document.getElementById('sider-historial').innerHTML = '<span style="color:red;">Error de conexión.</span>'; }
+        }
+
+        async function guardarEnlaceSider() {
+            const idTarea = document.getElementById('sider-id-tarea').value;
+            const enlace = document.getElementById('sider-enlace').value.trim();
+            try {
+                await fetch('/.netlify/functions/crm_detalle_tarea', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'guardar_enlace', id_tarea: idTarea, enlace: enlace })
+                });
+                alert("✅ Enlace guardado correctamente.");
+                abrirSiderTarea(idTarea, document.getElementById('sider-titulo-tarea').innerText);
+            } catch (e) { alert("Error al guardar enlace."); }
+        }
+
+        async function agregarComentarioSider() {
+            const idTarea = document.getElementById('sider-id-tarea').value;
+            const comentario = quillComentarioTarea.root.innerHTML;
+            if (quillComentarioTarea.getText().trim() === '') return alert("El comentario está vacío.");
+            try {
+                await fetch('/.netlify/functions/crm_detalle_tarea', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'agregar_comentario', id_tarea: idTarea, comentario: comentario })
+                });
+                abrirSiderTarea(idTarea, document.getElementById('sider-titulo-tarea').innerText);
+            } catch (e) { alert("Error al publicar comentario."); }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Calendario | VIGILEX</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+
+    <style>
+        /* --- VARIABLES DE DISEÑO HOMOLOGADAS --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --red-text: #c62828;
+            --green-text: #2e7d32;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid var(--primary);
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            color: white;
+            background-color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-volver:hover {
+            background-color: #153c61;
+        }
+
+        /* --- SOBRESCRITURA DE ESTILOS DE FULLCALENDAR --- */
+        #calendario-wrapper {
+            margin-top: 20px;
+            min-height: 700px;
+        }
+
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: #e0e0e0;
+        }
+
+        .fc-col-header-cell-cushion {
+            color: var(--primary);
+            font-weight: bold;
+            padding: 10px 0 !important;
+        }
+
+        .fc-daygrid-day-number {
+            color: #555;
+            font-weight: 600;
+            padding: 8px !important;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .fc-daygrid-day-number:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .fc .fc-button-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .fc .fc-button-primary:not(:disabled):active,
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .fc-event {
+            background-color: #e3f2fd;
+            border: 1px solid #1565c0;
+            border-left: 4px solid #1565c0;
+            color: #1565c0 !important;
+            border-radius: 4px;
+            padding: 3px 5px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .fc-event:hover {
+            transform: scale(1.02);
+            background-color: #bbdefb;
+            z-index: 5;
+        }
+
+        .estado-carga {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        /* --- SÚPER MODAL DE EVENTO --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="date"],
+        .modal-content input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .btn-accion {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .btn-danger {
+            background: #ffebee;
+            color: var(--red-text);
+            border: 1px solid var(--red-text);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* --- RESPONSIVIDAD MÓVIL OPTIMIZADA (CALENDARIO) --- */
+        /* --- RESPONSIVIDAD MÓVIL OPTIMIZADA (CALENDARIO) --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 10px;
+            }
+
+            .container {
+                padding: 15px;
+                width: 100%;
+                max-width: 100vw;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-nav>div {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .btn-volver {
+                width: 100%;
+                margin: 0 !important;
+                box-sizing: border-box;
+                text-align: center;
+            }
+
+            /* Ajustes FullCalendar Móvil */
+            .fc .fc-toolbar {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 15px !important;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.3em !important;
+                text-align: center;
+            }
+
+            .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+
+            /* Botones adaptables en varias líneas (Grid/Wrap) */
+            .fc .fc-button-group {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+                gap: 5px;
+            }
+
+            .fc-direction-ltr .fc-button-group>.fc-button {
+                flex: 1 1 30%;
+                border-radius: 6px !important;
+                margin: 0 !important;
+                font-size: 12px !important;
+                padding: 8px 4px !important;
+            }
+
+            /* 🚀 ARREGLO DE SOLAPAMIENTO DE CELDAS Y NÚMEROS 🚀 */
+            /* 1. Forzar que todas las columnas midan exactamente lo mismo y no se empujen */
+            .fc-scrollgrid-sync-table,
+            .fc-daygrid-body,
+            .fc-multimonth-daygrid-table {
+                table-layout: fixed !important;
+                width: 100% !important;
+            }
+
+            /* 2. Acomodar la parte superior de la celda (Número + Etiqueta Inhábil) */
+            .fc .fc-daygrid-day-top {
+                display: flex !important;
+                flex-direction: column-reverse !important;
+                /* Etiqueta abajo, número arriba */
+                align-items: center !important;
+                /* Centra el contenido */
+                padding: 2px 0 !important;
+                overflow: hidden;
+            }
+
+            /* 3. Centrar y limpiar el número del día */
+            .fc .fc-daygrid-day-number {
+                font-size: 12px !important;
+                padding: 2px !important;
+                line-height: 1 !important;
+                width: 100%;
+                text-align: center !important;
+            }
+
+            /* 4. Blindar la etiqueta Inhábil para que se recorte si es muy larga en vez de romper la celda */
+            .fc-daygrid-day-top>div {
+                font-size: 7.5px !important;
+                /* Letra más pequeña para móvil */
+                padding: 1px !important;
+                margin: 1px 0 !important;
+                max-width: 95%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                /* Agrega "..." si no cabe */
+            }
+
+            /* 5. Separar los títulos de los meses en la vista "Año" para que no choquen con los días */
+            .fc .fc-multimonth-title {
+                padding: 12px 0 8px 0 !important;
+                font-size: 16px !important;
+                margin-top: 15px !important;
+                background-color: var(--bg);
+                /* Fondo sutil para separarlo */
+                color: var(--primary);
+                border-radius: 6px;
+            }
+
+            .fc .fc-multimonth-daygrid-table {
+                margin-bottom: 15px !important;
+            }
+
+            /* Reducir tamaño de eventos normales */
+            .fc-event {
+                font-size: 9px !important;
+                padding: 2px !important;
+                line-height: 1.1;
+                overflow: hidden;
+            }
+
+            #calendario-wrapper {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header-nav">
+            <div>
+                <h1>Agenda Jurisdiccional</h1>
+                <div style="display: flex; gap: 15px; align-items: center; margin-top: 8px; flex-wrap: wrap;">
+                    <div
+                        style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: bold; color: #666;">
+                        <div
+                            style="width: 14px; height: 14px; background: #e3f2fd; border: 1px solid #90caf9; border-radius: 3px;">
+                        </div>
+                        Inhábil PJE
+                    </div>
+                    <div
+                        style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: bold; color: #666;">
+                        <div
+                            style="width: 14px; height: 14px; background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 3px;">
+                        </div>
+                        Inhábil PJF
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn-volver" style="background:var(--accent); margin-right: 10px;"
+                    onclick="abrirModalVacio()">➕ Nuevo Evento</button>
+                <a href="lobby.html" class="btn-volver">← Volver al Panel</a>
+            </div>
+        </div>
+
+
+
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="buscador-calendario"
+                placeholder="🔍 Buscar audiencia, expediente, juzgado o persona..."
+                style="width: 100%; padding: 15px; border: 2px solid var(--primary); border-radius: 8px; font-size: 14px; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+        </div>
+
+        <div id="estado-mensaje" class="estado-carga">Conectando con la base de datos central...</div>
+        <div id="calendario-wrapper"></div>
+    </div>
+
+    <div id="modalEvento" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-titulo"
+                style="margin-top: 0; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                Gestión de Evento</h2>
+
+            <input type="hidden" id="evento-id">
+
+            <label style="font-weight: bold; font-size: 13px; color: #555;">Asunto / Título del Evento</label>
+            <input type="text" id="evento-texto" placeholder="Ej. Audiencia Testimonial - Exp. 1511/2025">
+
+            <label class="checkbox-group">
+                <input type="checkbox" id="evento-allday" onchange="toggleHoras()" checked>
+                Es un evento de Todo el Día (o Vencimiento)
+            </label>
+
+            <label style="font-weight: bold; font-size: 13px; color: #555;">Fecha del Evento</label>
+            <input type="date" id="evento-fecha">
+
+            <div id="contenedor-horas" style="display: none; gap: 10px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; font-size: 13px; color: #555;">Hora de Inicio</label>
+                    <input type="time" id="evento-hora-ini">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-weight: bold; font-size: 13px; color: #555;">Hora de Término</label>
+                    <input type="time" id="evento-hora-fin">
+                </div>
+            </div>
+
+            <div
+                style="background: #f4f6f8; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; margin-top: 5px;">
+                <label
+                    style="font-weight: bold; font-size: 13px; color: var(--primary); margin-bottom: 8px; display:block;">👥
+                    Invitar Equipo Interno</label>
+
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 12px; font-weight: bold; cursor: pointer; color: var(--accent);">
+                        <input type="checkbox" id="chk-todos" onchange="toggleTodosInvitados(this.checked)"> ✅
+                        Seleccionar a todo el despacho
+                    </label>
+                </div>
+
+                <div id="lista-equipo-invitados"
+                    style="max-height: 120px; overflow-y: auto; background: white; border: 1px solid #ccc; padding: 10px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <span style="color:#888; font-size:11px;">Cargando red del equipo...</span>
+                </div>
+
+                <label
+                    style="font-weight: bold; font-size: 13px; color: var(--primary); margin-top: 15px; display:block;">📧
+                    Invitados Externos</label>
+                <input type="text" id="evento-invitados-externos" placeholder="cliente@correo.com, perito@externo.com"
+                    style="margin-bottom:0;">
+                <div style="font-size: 10px; color: #666; margin-top: 5px;">Separa los correos externos con comas. Se
+                    enviará invitación automática a todos.</div>
+            </div>
+
+            <button class="btn-accion" onclick="guardarEvento()">💾 Guardar Evento</button>
+            <button id="btn-eliminar" class="btn-accion btn-danger" onclick="eliminarEvento()" style="display:none;">🗑️
+                Eliminar Evento</button>
+            <button class="btn-accion" style="background: #eee; color: #333;"
+                onclick="document.getElementById('modalEvento').style.display='none'">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Barrera de Seguridad
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+
+        if (!tokenSeguro || !usernameGlobal) {
+            window.location.replace("inicio.html");
+        }
+
+        // FASE 4: CAPTURAR EL TIPO DE CALENDARIO DESDE LA URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipoCalendario = urlParams.get('tipo') || 'personal';
+
+        let accionActual = 'agregar';
+        let miCalendario = null;
+
+        // MATRICES DE DÍAS INHÁBILES ESTRICTOS (Extraídas de computo)
+        const diasInhabilesSTJ = new Set([
+            "2025-01-01", "2025-01-02", "2025-01-03", "2025-02-03", "2025-03-17", "2025-04-28", "2025-04-29", "2025-04-30",
+            "2025-05-01", "2025-05-02", "2025-05-03", "2025-05-04", "2025-05-05", "2025-05-06", "2025-05-07", "2025-05-08",
+            "2025-05-09", "2025-05-10", "2025-06-09", "2025-07-16", "2025-07-17", "2025-07-18", "2025-07-19", "2025-07-20",
+            "2025-07-21", "2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-26", "2025-07-27", "2025-07-28",
+            "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-09-13", "2025-09-16", "2025-09-28", "2025-09-29",
+            "2025-10-12", "2025-11-02", "2025-11-17", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19",
+            "2025-12-20", "2025-12-21", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-27",
+            "2025-12-28", "2025-12-29", "2025-12-30", "2025-12-31",
+            "2026-01-01", "2026-01-02", "2026-02-02", "2026-03-16", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-02",
+            "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10",
+            "2026-06-08", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22",
+            "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30",
+            "2026-07-31", "2026-09-15", "2026-09-16", "2026-09-28", "2026-10-12", "2026-11-02", "2026-11-16", "2026-12-15",
+            "2026-12-16", "2026-12-17", "2026-12-18", "2026-12-19", "2026-12-20", "2026-12-21", "2026-12-22", "2026-12-23",
+            "2026-12-24", "2026-12-25", "2026-12-26", "2026-12-27", "2026-12-28", "2026-12-29", "2026-12-30", "2026-12-31"
+        ]);
+
+        const diasInhabilesPJF = new Set([
+            "2026-01-01", "2026-02-02", "2026-02-05", "2026-03-16", "2026-04-01", "2026-04-02", "2026-04-03",
+            "2026-05-01", "2026-05-04", "2026-05-05",
+            "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23",
+            "2026-07-24", "2026-07-25", "2026-07-26", "2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31",
+            "2026-09-14", "2026-09-15", "2026-09-16", "2026-10-12", "2026-11-02", "2026-11-16", "2026-11-20",
+            "2026-12-16", "2026-12-17", "2026-12-18", "2026-12-19", "2026-12-20", "2026-12-21", "2026-12-22", "2026-12-23",
+            "2026-12-24", "2026-12-25", "2026-12-26", "2026-12-27", "2026-12-28", "2026-12-29", "2026-12-30", "2026-12-31",
+            "2027-01-01"
+        ]);
+
+        // 2. Inicialización del Motor Gráfico
+        document.addEventListener('DOMContentLoaded', async function () {
+
+            // FASE 4: Cambiar título de la página visualmente
+            const h1El = document.querySelector('h1');
+            if (h1El) h1El.innerText = tipoCalendario === 'institucional' ? '⚖️ Agenda Institucional' : '👤 Mi Calendario Personal';
+
+            // Cargar lista de equipo para invitaciones
+            cargarEquipoParaInvitaciones();
+
+            const calendarEl = document.getElementById('calendario-wrapper');
+            const msgEl = document.getElementById('estado-mensaje');
+
+            // Rango dinámico (1 año atrás, año en curso, 2 años adelante)
+            const anioActual = new Date().getFullYear();
+            const fechaInicioValida = `${anioActual - 1}-01-01`;
+            const fechaFinValida = `${anioActual + 3}-01-01`;
+
+            try {
+                // FASE 4: Petición asíncrona enviando el TIPO DE CALENDARIO
+                const response = await fetch('/.netlify/functions/obtener_eventos_calendario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        username: usernameGlobal,
+                        tipo: tipoCalendario // <--- Inyectamos la variable
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    msgEl.style.display = 'none';
+
+                    // Configuración y renderizado
+                    // Detectar si estamos en celular
+                    const esMovil = window.innerWidth <= 768;
+
+                    // Configuración y renderizado
+                    miCalendario = new FullCalendar.Calendar(calendarEl, {
+                        initialView: esMovil ? 'listYear' : 'dayGridMonth',
+                        locale: 'es',
+                        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        displayEventTime: true,
+                        eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: 'short', hour12: true },
+
+                        // Altura dinámica para que no se apachurre en celular
+                        height: esMovil ? 'auto' : undefined,
+                        contentHeight: esMovil ? 'auto' : undefined,
+
+                        // RESTAURAMOS TODAS LAS VISTAS
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listYear'
+                        },
+
+                        // Textos ligeramente más cortos en móvil para estética
+                        buttonText: {
+                            today: 'Hoy',
+                            day: 'Día',
+                            week: esMovil ? 'Sem' : 'Semana',
+                            month: 'Mes',
+                            year: 'Año',
+                            list: esMovil ? 'Lista' : 'Agenda'
+                        },
+
+                        events: data.eventos,
+
+                        // CORRECCIÓN 1: INYECCIÓN VISUAL DEL TACHADO Y CREADOR
+                        eventContent: function (arg) {
+                            let tituloLimpio = arg.event.title;
+                            let estiloTachado = '';
+
+                            // Detectamos si el título empieza con la palomita
+                            if (tituloLimpio.startsWith('✅')) {
+                                estiloTachado = 'text-decoration: line-through; opacity: 0.7;';
+                            }
+
+                            let tituloHTML = `<div style="font-weight: bold; font-size: 11px; white-space: normal; ${estiloTachado}">${tituloLimpio}</div>`;
+
+                            // Inyección visual del creador
+                            if (tipoCalendario === 'institucional' && arg.event.extendedProps && arg.event.extendedProps.creado_por) {
+                                tituloHTML += `<div style="font-size: 9px; margin-top: 2px; opacity: 0.8; font-style: italic; ${estiloTachado}">👤 Por: ${arg.event.extendedProps.creado_por}</div>`;
+                            }
+
+                            return { html: tituloHTML };
+                        },
+
+                        // INYECCIÓN VISUAL DE DÍAS INHÁBILES
+                        dayCellDidMount: function (arg) {
+                            // ... (Mantén tu código exacto de dayCellDidMount aquí)
+                            const year = arg.date.getUTCFullYear();
+                            const month = String(arg.date.getUTCMonth() + 1).padStart(2, '0');
+                            const day = String(arg.date.getUTCDate()).padStart(2, '0');
+                            const iso = `${year}-${month}-${day}`;
+
+                            const isPJE = diasInhabilesSTJ.has(iso);
+                            const isPJF = diasInhabilesPJF.has(iso);
+
+                            if (isPJE || isPJF) {
+                                let label = document.createElement('div');
+                                label.style.fontSize = '10px';
+                                label.style.fontWeight = 'bold';
+                                label.style.padding = '2px 5px';
+                                label.style.borderRadius = '4px';
+                                label.style.margin = '2px';
+                                label.style.display = 'inline-block';
+
+                                if (isPJE && isPJF) {
+                                    arg.el.style.background = 'linear-gradient(135deg, #e3f2fd 50%, #f3e5f5 50%)';
+                                    label.innerText = 'Inhábil PJE y PJF';
+                                    label.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                                    label.style.color = '#333';
+                                } else if (isPJE) {
+                                    arg.el.style.backgroundColor = '#e3f2fd';
+                                    label.innerText = 'Inhábil PJE';
+                                    label.style.color = '#1565c0';
+                                    label.style.backgroundColor = 'rgba(21, 101, 192, 0.1)';
+                                } else if (isPJF) {
+                                    arg.el.style.backgroundColor = '#f3e5f5';
+                                    label.innerText = 'Inhábil PJF';
+                                    label.style.color = '#6a1b9a';
+                                    label.style.backgroundColor = 'rgba(106, 27, 154, 0.1)';
+                                }
+
+                                let top = arg.el.querySelector('.fc-daygrid-day-top');
+                                if (top) {
+                                    top.style.display = 'flex';
+                                    top.style.justifyContent = 'space-between';
+                                    top.style.alignItems = 'center';
+                                    top.prepend(label);
+                                }
+                            }
+                        },
+
+                        // INTERACCIÓN 1: Clic en un recuadro de fecha
+                        dateClick: function (info) {
+                            if (info.view.type === 'dayGridMonth' || info.view.type === 'multiMonthYear') {
+                                miCalendario.changeView('timeGridDay', info.dateStr);
+                            } else {
+                                abrirModalVacio(info.dateStr);
+                            }
+                        },
+
+                        // INTERACCIÓN 2: Clic en un evento existente
+                        eventClick: function (info) {
+                            // ... (Mantén tu código exacto de eventClick aquí)
+                            accionActual = 'editar';
+                            document.getElementById('modal-titulo').innerText = 'Editar Evento / Invitar';
+                            document.getElementById('btn-eliminar').style.display = 'block';
+
+                            document.getElementById('evento-id').value = info.event.id;
+                            document.getElementById('evento-texto').value = info.event.title;
+                            document.getElementById('evento-allday').checked = info.event.allDay;
+                            document.getElementById('evento-fecha').value = info.event.startStr.split('T')[0];
+
+                            document.getElementById('chk-todos').checked = false;
+                            document.getElementById('evento-invitados-externos').value = '';
+                            document.querySelectorAll('.chk-invitado').forEach(chk => chk.checked = false);
+
+                            if (!info.event.allDay && info.event.startStr.includes('T')) {
+                                document.getElementById('evento-hora-ini').value = info.event.startStr.split('T')[1].substring(0, 5);
+                                if (info.event.endStr) {
+                                    document.getElementById('evento-hora-fin').value = info.event.endStr.split('T')[1].substring(0, 5);
+                                }
+                            }
+
+                            toggleHoras();
+                            document.getElementById('modalEvento').style.display = 'flex';
+                        },
+                    });
+
+                    miCalendario.render();
+
+                    // MOTOR DE BÚSQUEDA EN TIEMPO REAL (Debe ir solo UNA vez, aquí al final)
+                    let eventosGlobales = data.eventos;
+                    document.getElementById('buscador-calendario').addEventListener('keyup', function (e) {
+                        const term = e.target.value.toLowerCase();
+                        const filtrados = eventosGlobales.filter(ev =>
+                            ev.title.toLowerCase().includes(term) ||
+                            (ev.extendedProps && ev.extendedProps.creado_por && ev.extendedProps.creado_por.toLowerCase().includes(term))
+                        );
+                        miCalendario.removeAllEventSources();
+                        miCalendario.addEventSource(filtrados);
+                    });
+
+                } else {
+                    throw new Error("Fallo en la estructura de datos.");
+                }
+
+            } catch (error) {
+                msgEl.innerText = "Error de conexión: No fue posible recuperar la agenda jurisdiccional.";
+                msgEl.style.color = "#c62828";
+            }
+        });
+
+        // --- FUNCIONES DEL MODAL ---
+
+        // --- NUEVAS FUNCIONES DE INVITACIÓN ---
+        async function cargarEquipoParaInvitaciones() {
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usernameGlobal, accion: 'listar_equipo' })
+                });
+                const data = await res.json();
+
+                if (data.success && data.equipo) {
+                    const container = document.getElementById('lista-equipo-invitados');
+                    container.innerHTML = '';
+
+                    data.equipo.forEach(u => {
+                        if (u.username !== usernameGlobal && u.email) {
+                            // AGREGAMOS data-user PARA CAPTURAR EL USERNAME
+                            container.innerHTML += `
+                                <label style="font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; color:#333;">
+                                    <input type="checkbox" class="chk-invitado" value="${u.email}" data-user="${u.username}"> 👤 ${u.username}
+                                </label>
+                            `;
+                        }
+                    });
+                }
+            } catch (e) { console.error("Error al cargar equipo."); }
+        }
+
+        function toggleTodosInvitados(checked) {
+            document.querySelectorAll('.chk-invitado').forEach(chk => chk.checked = checked);
+        }
+
+        function toggleHoras() {
+            const isAllDay = document.getElementById('evento-allday').checked;
+            document.getElementById('contenedor-horas').style.display = isAllDay ? 'none' : 'flex';
+        }
+
+        function abrirModalVacio(fechaSeleccionada = null) {
+            accionActual = 'agregar';
+            document.getElementById('modal-titulo').innerText = 'Nuevo Evento';
+            document.getElementById('evento-id').value = '';
+            document.getElementById('evento-texto').value = '';
+
+            // Limpiar invitados
+            document.getElementById('chk-todos').checked = false;
+            document.getElementById('evento-invitados-externos').value = '';
+            document.querySelectorAll('.chk-invitado').forEach(chk => chk.checked = false);
+
+            if (fechaSeleccionada && fechaSeleccionada.includes('T')) {
+                document.getElementById('evento-allday').checked = false;
+                const partes = fechaSeleccionada.split('T');
+                document.getElementById('evento-fecha').value = partes[0];
+                document.getElementById('evento-hora-ini').value = partes[1].substring(0, 5);
+                document.getElementById('evento-hora-fin').value = '';
+            } else {
+                document.getElementById('evento-allday').checked = true;
+
+                if (fechaSeleccionada) {
+                    document.getElementById('evento-fecha').value = fechaSeleccionada;
+                } else {
+                    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+                    const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10);
+                    document.getElementById('evento-fecha').value = localISOTime;
+                }
+                document.getElementById('evento-hora-ini').value = '09:00';
+                document.getElementById('evento-hora-fin').value = '10:00';
+            }
+
+            toggleHoras();
+            document.getElementById('btn-eliminar').style.display = 'none';
+            document.getElementById('modalEvento').style.display = 'flex';
+        }
+
+        // --- CONECTORES CRUD HACIA EL SERVIDOR ---
+
+        async function guardarEvento() {
+            const titulo = document.getElementById('evento-texto').value.trim();
+            const fechaBase = document.getElementById('evento-fecha').value; // Formato AAAA-MM-DD
+            const allDay = document.getElementById('evento-allday').checked;
+            const hIni = document.getElementById('evento-hora-ini').value;
+            const hFin = document.getElementById('evento-hora-fin').value;
+            const id = document.getElementById('evento-id').value;
+
+            if (!titulo || !fechaBase) {
+                alert("El título del asunto y la fecha son obligatorios.");
+                return;
+            }
+
+            // --- CONSTRUCCIÓN MANUAL DE TEXTO (EVITA CUALQUIER DESFASE DE ZONA HORARIA) ---
+            let fechaInicioISO, fechaFinISO;
+
+            if (allDay) {
+                // Para eventos de todo el día, usamos el estándar de inicio y fin de jornada
+                fechaInicioISO = `${fechaBase}T00:00:00`;
+                fechaFinISO = `${fechaBase}T23:59:59`;
+            } else {
+                // Capturamos las horas tal cual están en los inputs
+                const h1 = hIni ? hIni : "00:00";
+                const h2 = hFin ? hFin : "23:59";
+                fechaInicioISO = `${fechaBase}T${h1}:00`;
+                fechaFinISO = `${fechaBase}T${h2}:00`;
+            }
+
+            // --- RECOPILADOR DE IDENTIDADES PARA INVITACIONES ---
+            let emailsSeleccionados = [];
+            let usernamesInternos = [];
+
+            // 1. Miembros del equipo
+            document.querySelectorAll('.chk-invitado:checked').forEach(chk => {
+                emailsSeleccionados.push(chk.value);
+                usernamesInternos.push(chk.getAttribute('data-user'));
+            });
+
+            // 2. Correos externos
+            const externosInput = document.getElementById('evento-invitados-externos').value.trim();
+            if (externosInput) {
+                const listaExternos = externosInput.split(',').map(e => e.trim()).filter(e => e !== "");
+                emailsSeleccionados = emailsSeleccionados.concat(listaExternos);
+            }
+
+            const invitadosFinales = emailsSeleccionados.join(', ');
+            const invitarATodos = document.getElementById('chk-todos').checked;
+
+            const btn = document.querySelector('.btn-accion');
+            btn.innerText = "Guardando e invitando...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/.netlify/functions/calendario_crud', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        username: usernameGlobal,
+                        accion: accionActual,
+                        id_evento: id,
+                        titulo: titulo,
+                        fecha_inicio: fechaInicioISO,
+                        fecha_fin: fechaFinISO,
+                        todo_el_dia: allDay,
+                        tipo_calendario: tipoCalendario,
+                        invitados: invitadosFinales,
+                        usernames_invitados: usernamesInternos,
+                        invitar_a_todos: invitarATodos
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    window.location.reload();
+                } else {
+                    throw new Error(data.error || "Fallo del servidor");
+                }
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alert("Error al intentar guardar el evento: " + e.message);
+                btn.innerText = "💾 Guardar Evento";
+                btn.disabled = false;
+            }
+        }
+
+        async function eliminarEvento() {
+            const id = document.getElementById('evento-id').value;
+
+            if (!id) {
+                alert("No se pudo identificar el ID del evento.");
+                return;
+            }
+
+            if (!confirm("¿Estás seguro de eliminar este evento permanentemente?")) return;
+
+            const btn = document.getElementById('btn-eliminar');
+            btn.innerText = "Eliminando..."; btn.disabled = true;
+
+            try {
+                const res = await fetch('/.netlify/functions/calendario_crud', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        username: usernameGlobal,
+                        accion: 'eliminar',
+                        id_evento: id
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    window.location.reload();
+                } else {
+                    alert("Error del servidor: " + (data.error || "Fallo desconocido"));
+                }
+            } catch (e) {
+                alert("Error de red al intentar eliminar el evento.");
+            } finally {
+                btn.innerText = "🗑️ Eliminar Evento"; btn.disabled = false;
+            }
+        }
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

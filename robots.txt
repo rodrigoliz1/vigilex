@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Bloquear acceso a los módulos internos, privados y de backend
+Disallow: /lobby.html
+Disallow: /suscripcion.html
+Disallow: /equipo.html
+Disallow: /expedientes.html
+Disallow: /resoluciones.html
+Disallow: /seleccion_calendario.html
+Disallow: /computo
+Disallow: /admin.html
+Disallow: /.netlify/
+
+# Indicar a los motores de búsqueda dónde está el mapa del sitio
+Sitemap: https://www.vigilex.mx/sitemap.xml

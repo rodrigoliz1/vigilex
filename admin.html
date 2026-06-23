@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin | Vigilex</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    
+
+    <style>
+        /* --- VARIABLES Y DISEÑO BASE (TUS ESTILOS ORIGINALES) --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ff9800;
+            --bg: #f4f6f8;
+            --card: #fff;
+            --text: #333;
+            --danger: #c62828;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            padding: 20px;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid var(--accent);
+            box-sizing: border-box;
+        }
+
+        /* --- ENCABEZADOS Y TABLAS --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            color: white;
+            margin-right: 5px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .btn-edit {
+            background: #1565c0;
+        }
+
+        .btn-mail {
+            background: #2e7d32;
+        }
+
+        .btn-enter {
+            background: #6a1b9a;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        /* --- MODALES Y FORMAS --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 12px;
+            color: var(--primary);
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* --- AJUSTES DEL EDITOR QUILL --- */
+        #editor-container {
+            height: 250px;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+        }
+
+        .ql-font-arial {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .ql-font-georgia {
+            font-family: 'Georgia', serif;
+        }
+
+        .ql-font-tahoma {
+            font-family: 'Tahoma', sans-serif;
+        }
+
+        .ql-font-trebuchet {
+            font-family: 'Trebuchet MS', sans-serif;
+        }
+
+        .ql-font-verdana {
+            font-family: 'Verdana', sans-serif;
+        }
+
+        /* --- INSPECTOR GRID BLINDADO (TU DISEÑO) --- */
+        .inspector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .inspector-box {
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fafafa;
+            box-sizing: border-box;
+        }
+
+        .inspector-box h4 {
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .inspector-box-full {
+            grid-column: span 2;
+        }
+
+        .danger-zone {
+            border: 1px dashed var(--danger);
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-sizing: border-box;
+        }
+
+        .danger-zone h4 {
+            color: var(--danger);
+            margin-top: 0;
+            border-bottom: 1px dashed var(--danger);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Subtabla de usuarios */
+        .sub-table th,
+        .sub-table td {
+            padding: 8px;
+            font-size: 11px;
+        }
+
+        @media(max-width: 768px) {
+            .inspector-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .inspector-box-full {
+                grid-column: span 1;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1 style="color: var(--primary); margin:0;">👑 Centro de Comando Master</h1>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn btn-mail" style="font-size: 13px; padding: 10px 15px;"
+                    onclick="abrirModalCorreo('TODOS', '')">✉️ Comunicado Masivo</button>
+                <a href="lobby.html" style="color: #666; text-decoration: none; font-weight: bold; font-size: 14px;">←
+                    Volver al Lobby</a>
+            </div>
+        </div>
+
+        <div
+            style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #eee; border-left: 6px solid var(--accent);">
+            <h3 style="color: var(--accent); margin-top: 0; font-size: 18px;">👥 Gestión de Cuotas de Despachos</h3>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Amplía o reduce la cantidad máxima de abogados
+                que un despacho puede invitar a su cuenta institucional. (Por defecto son 5).</p>
+
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label
+                        style="font-size: 12px; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; margin-top:0;">ID
+                        de la Firma Objetivo:</label>
+                    <input type="number" id="admin-id-firma" placeholder="Ej. 1"
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; margin:0;">
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <label
+                        style="font-size: 12px; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; margin-top:0;">Nuevo
+                        Límite de Abogados:</label>
+                    <input type="number" id="admin-limite" placeholder="Ej. 15"
+                        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; margin:0;">
+                </div>
+                <button onclick="actualizarLimiteFirma()" id="btn-actualizar-limite" class="btn"
+                    style="padding: 10px 20px; background: var(--accent); font-size:13px; margin:0; height: 38px;">
+                    Aplicar Límite a Firma
+                </button>
+            </div>
+        </div>
+        <h3
+            style="color: var(--primary); margin-top: 0; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+            Padrón Global de Firmas Suscritas</h3>
+
+        <table id="tabla-usuarios">
+            <thead>
+                <tr>
+                    <th>ID / Despacho</th>
+                    <th>Titular Principal</th>
+                    <th>Volumen / Estado</th>
+                    <th>Vigencia</th>
+                    <th>Acciones Maestras</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-usuarios">
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px;">Accediendo a la red de nodos...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="modalInspect" class="modal">
+        <div class="modal-content">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px;">
+                <h2 style="margin: 0; color: var(--primary);" id="lbl-titulo-inspector">🔍 Inspector de Despacho</h2>
+                <span style="font-size: 28px; cursor: pointer; line-height: 1;"
+                    onclick="document.getElementById('modalInspect').style.display='none'">&times;</span>
+            </div>
+
+            <input type="hidden" id="ins-target-original">
+
+            <div class="inspector-grid">
+
+                <div class="inspector-box">
+                    <h4>Datos Corporativos</h4>
+                    <label>Nombre de Firma (Despacho):</label>
+                    <input type="text" id="ins-firma">
+
+                    <div
+                        style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #eee; margin-top: 15px;">
+                        <p style="font-size: 13px; margin: 0 0 8px 0;"><b>ID Suscripción:</b> <span id="ins-lbl-sub"
+                                style="font-family: monospace;"></span></p>
+                        <p style="font-size: 13px; margin: 0 0 8px 0;"><b>Creación:</b> <span
+                                id="ins-lbl-registro"></span></p>
+                        <p style="font-size: 13px; margin: 0; color:var(--danger);"><b>Estado Cancelación:</b> <span
+                                id="ins-lbl-cancelada"></span></p>
+                    </div>
+
+                    <div id="box-chk-cancelar" style="border-top: 1px solid #ccc; padding-top: 15px; margin-top: 15px;">
+                        <label
+                            style="color: var(--danger); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="ins-chk-revocar" style="width: auto; margin: 0;">
+                            ⛔ Forzar Cancelación Bancaria (Stripe)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="inspector-box">
+                    <h4>Control de Vigencia Global</h4>
+                    <div style="margin-bottom: 15px;">
+                        <label>Forzar Expiración (A todos los usuarios de la firma):</label>
+                        <input type="date" id="ins-fecha-fija" style="margin-bottom: 0;">
+                    </div>
+                    <div>
+                        <label>Sumar Días (Inyectar vigencia temporal):</label>
+                        <input type="number" id="ins-sumar-dias" placeholder="Ej. 30 (Suma al saldo actual)"
+                            style="margin-bottom: 0;">
+                    </div>
+
+                    <button class="btn btn-edit" style="width: 100%; padding: 12px; margin-top: 25px; font-size: 13px;"
+                        onclick="guardarInspector()">💾 Aplicar Mutaciones a la Firma</button>
+                </div>
+
+                <div class="inspector-box inspector-box-full">
+                    <h4>Padrón de Subcuentas (Usuarios del Despacho)</h4>
+                    <table class="sub-table" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Usuario (Login)</th>
+                                <th>Rol</th>
+                                <th>Email</th>
+                                <th>Tipo de Acceso / Plan</th>
+                                <th>Vencimiento / Ciclo</th>
+                                <th>Herramientas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-subcuentas"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="danger-zone">
+                <h4>Zona de Peligro (Riesgo de Pérdida de Datos)</h4>
+                <p style="font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 15px;">Ejecutar esta acción
+                    desencadenará una purga en cascada. Se destruirá el despacho completo y TODO el árbol de datos
+                    relacionado: usuarios, expedientes, tareas, reportes, eventos de calendario y cálculos.</p>
+                <button class="btn btn-danger" style="padding: 12px 20px; font-size: 13px;"
+                    onclick="borrarUsuario()">🗑️ Purgar Despacho Permanentemente</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditarUsuario" class="modal" style="z-index: 1001;">
+        <div class="modal-content" style="max-width: 400px; padding: 20px;">
+            <h3 style="color: var(--primary); margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 10px;">✏️
+                Editar Subcuenta</h3>
+            <input type="hidden" id="edit-user-original">
+
+            <label>Login (Username):</label>
+            <input type="text" id="edit-user-nombre">
+
+            <label>Nombre Real Completo:</label>
+            <input type="text" id="edit-user-nombrereal" placeholder="Ej. Roberto Sánchez">
+
+            <label>Email:</label>
+            <input type="email" id="edit-user-email">
+            <label>Contraseña:</label>
+            <div style="position:relative;">
+                <input type="password" id="edit-user-pass" style="padding-right: 35px;">
+                <button type="button" onclick="toggleAdminPassVisibility('edit-user-pass')"
+                    style="position:absolute; right:8px; top:12px; background:none; border:none; cursor:pointer; font-size:16px;">👁️</button>
+            </div>
+            <button class="btn btn-edit" style="width: 100%; padding: 12px;" onclick="guardarMutacionUsuario()">Guardar
+                Cambios</button>
+            <button class="btn" style="width: 100%; padding: 12px; margin-top: 10px; background: #eee; color:#333;"
+                onclick="document.getElementById('modalEditarUsuario').style.display='none'">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalMail" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <h2
+                style="margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;">
+                ✉️ Redactar Comunicado</h2>
+
+            <label>MODO DE ENVÍO Y DESTINATARIO:</label>
+            <select id="mail-tipo" onchange="toggleMailInput()"
+                style="border: 2px solid var(--primary); font-weight: bold;">
+                <option value="todos">📢 ENVIAR A TODOS LOS USUARIOS DEL SISTEMA (MASIVO)</option>
+                <option value="individual">👤 Usuario Seleccionado en Tabla</option>
+                <option value="manual">✍️ Escribir correo manualmente (Externo)</option>
+            </select>
+
+            <div id="div-mail-individual"
+                style="display: none; background: #e3f2fd; border: 1px dashed #1565c0; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                <span
+                    style="font-size: 12px; color: #1565c0; font-weight: bold; display: block; margin-bottom: 5px;">DESTINATARIO
+                    ACTUAL:</span>
+                <span id="lbl-usuario-seleccionado"
+                    style="font-size: 15px; color: #0a2540; font-weight: bold;">Ninguno</span>
+            </div>
+
+            <div id="div-mail-manual" style="display: none;">
+                <input type="email" id="mail-destino-manual"
+                    placeholder="Ingresa el correo externo (ej. prospecto@correo.com)"
+                    style="border-color: var(--accent);">
+            </div>
+
+            <label>ASUNTO:</label>
+            <input type="text" id="mail-asunto" placeholder="Ej. Actualización de plataforma Vigilex"
+                style="font-weight: bold;">
+
+            <label>CUERPO DEL MENSAJE (HTML Enriquecido):</label>
+            <div id="editor-container"></div>
+
+            <button class="btn btn-mail" style="width: 100%; padding: 15px; font-size: 14px; margin-top: 15px;"
+                id="btn-enviar-mail" onclick="enviarCorreo()">🚀 Lanzar Mensaje a la Red</button>
+            <button class="btn"
+                style="width: 100%; background: #eee; color:#333; margin-top:10px; padding: 12px; font-size: 13px;"
+                onclick="cerrarModalMail()">Cancelar y Descartar</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Barrera de Seguridad
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+        const adminActual = usernameGlobal; // <-- AGREGAMOS ESTA LÍNEA CLAVE
+
+        if (!tokenSeguro || !adminActual) {
+            window.location.replace("inicio.html");
+        }
+
+        let licenciaExpiradaGlobal = false;
+
+        let quill;
+        let userSeleccionadoFirma = "";
+        let userSeleccionadoEmail = "";
+        let idFirmaActual = null;
+        let usuariosActualesData = [];
+
+        // FUNCIÓN PARA EVITAR EL DESFASE DE DÍAS (ZONA HORARIA)
+        function formatearFechaSincronizada(fechaISO) {
+            if (!fechaISO) return '<span style="color:gray;">Vitalicia / Sin fecha</span>';
+            // Cortamos el texto "2026-04-07" y lo separamos manualmente
+            const partes = fechaISO.split('T')[0].split('-');
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            // partes[0] = año, partes[1] = mes, partes[2] = día
+            return `${parseInt(partes[2])} de ${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const Font = Quill.import('formats/font');
+            Font.whitelist = ['arial', 'georgia', 'tahoma', 'trebuchet', 'verdana'];
+            Quill.register(Font, true);
+
+            const toolbarOptions = [
+                [{ 'font': ['arial', 'georgia', 'tahoma', 'trebuchet', 'verdana'] }, { 'size': ['small', false, 'large', 'huge'] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'align': [] }],
+                ['image', 'link'],
+                ['clean']
+            ];
+
+            quill = new Quill('#editor-container', {
+                theme: 'snow',
+                modules: { toolbar: { container: toolbarOptions, handlers: { image: imageHandlerUrl } } }
+            });
+
+            cargarDespachos();
+        });
+
+        // --- NUEVA FUNCIÓN: ACTUALIZAR LÍMITES (FASE 2) ---
+        async function actualizarLimiteFirma() {
+            const idFirma = document.getElementById('admin-id-firma').value;
+            const limite = document.getElementById('admin-limite').value;
+            const btn = document.getElementById('btn-actualizar-limite');
+
+            if (!idFirma || !limite) return alert("Ingresa el ID de la firma y el nuevo límite.");
+
+            btn.innerText = "Aplicando...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        adminUser: adminActual, // Tu token local de Master
+                        accion: 'actualizar_limite',
+                        targetId: idFirma,
+                        payload: { nuevoLimite: limite }
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("✅ Límite de la firma (ID " + idFirma + ") actualizado correctamente a " + limite + " usuarios.");
+                    document.getElementById('admin-id-firma').value = '';
+                    document.getElementById('admin-limite').value = '';
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (e) {
+                alert("Error de conexión con el servidor maestro.");
+            }
+
+            btn.innerText = "Aplicar Límite a Firma";
+            btn.disabled = false;
+        }
+        // ---------------------------------------------------
+
+        function imageHandlerUrl() {
+            const url = prompt('Para evitar que Gmail bloquee el correo, la imagen debe estar alojada en internet (ej. Imgur, Drive).\\n\\nPega aquí el enlace directo (URL):');
+            if (url) {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', url);
+            }
+        }
+
+        async function cargarDespachos() {
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${tokenSeguro}` // <-- ESTO ES VITAL
+                    },
+                    body: JSON.stringify({ adminUser: adminActual, accion: 'listar_despachos' })
+                });
+                const data = await res.json();
+                if (res.status === 403) return window.location.replace("lobby.html");
+
+                const tbody = document.getElementById('tbody-usuarios');
+                tbody.innerHTML = "";
+
+                data.despachos.forEach(f => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><b>ID: ${f.id_firma}</b><br><span style="color:var(--primary); font-size:14px;">${f.nombre_comercial}</span></td>
+                        <td>${f.titular_principal || '<i>Sin Titular</i>'}</td>
+                        <td><b>${f.total_usuarios}</b> Usuarios (Límite: ${f.limite_usuarios || 5})<br><small style="color:${f.suscripcion_cancelada ? 'red' : 'green'}; font-weight:bold;">${f.suscripcion_cancelada ? 'BLOQUEADO' : 'ACTIVO'}</small></td>
+                        <td>${formatearFechaSincronizada(f.fecha_expiracion)}</td>
+                        <td>
+                            <button class="btn btn-edit" onclick="inspeccionarFirma(${f.id_firma}, '${f.nombre_comercial}')">🔍 Radiografía</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) { alert("Fallo de conexión con la base central."); }
+        }
+
+        async function inspeccionarFirma(idFirma, nombre) {
+            document.getElementById('lbl-titulo-inspector').innerText = `🔍 Radiografía: ${nombre}`;
+            document.getElementById('ins-target-original').value = idFirma;
+            idFirmaActual = idFirma;
+
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ adminUser: adminActual, accion: 'obtener_radiografia', targetId: idFirma })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    const f = data.firma;
+                    document.getElementById('ins-firma').value = f.nombre_comercial;
+                    document.getElementById('ins-lbl-sub').innerText = f.stripe_subscription_id || 'Pago Único / No vinculada';
+                    document.getElementById('ins-lbl-registro').innerText = new Date(f.fecha_creacion).toLocaleDateString('es-MX');
+
+                    const lblCancelada = document.getElementById('ins-lbl-cancelada');
+                    if (!f.stripe_subscription_id) {
+                        lblCancelada.innerText = 'No aplica (Pago Único)';
+                        lblCancelada.style.color = '#666';
+                    } else {
+                        lblCancelada.innerText = f.suscripcion_cancelada ? 'SÍ (Cobros y Acceso Detenidos)' : 'Renovando Automáticamente';
+                        lblCancelada.style.color = f.suscripcion_cancelada ? 'var(--danger)' : '#2e7d32';
+                    }
+
+                    const chkRevocar = document.getElementById('ins-chk-revocar');
+                    chkRevocar.checked = f.suscripcion_cancelada;
+                    if (!f.stripe_subscription_id) chkRevocar.disabled = true; else chkRevocar.disabled = false;
+
+                    document.getElementById('ins-fecha-fija').value = '';
+                    document.getElementById('ins-sumar-dias').value = '';
+
+                    usuariosActualesData = data.usuarios;
+                    const tbody = document.getElementById('tbody-subcuentas');
+                    tbody.innerHTML = "";
+
+                    // Usamos la función de ayuda para que coincida con el Lobby y la tabla
+                    let expGlobal = formatearFechaSincronizada(f.fecha_expiracion);
+
+                    let tipoAcceso = "Pago Único / Acceso Manual";
+                    let etiquetaVencimiento = "Corte de Servicio";
+                    let colorVencimiento = "#c62828";
+
+                    if (f.stripe_subscription_id) {
+                        tipoAcceso = `Suscripción Stripe<br><b style="color:#0a2540;">${f.plan_nombre || 'Plan Profesional'}</b>`;
+                        etiquetaVencimiento = f.suscripcion_cancelada ? "Corte Irrevocable (Cancelada)" : "Próxima Facturación";
+                        colorVencimiento = f.suscripcion_cancelada ? "#c62828" : "#2e7d32";
+                    }
+
+                    data.usuarios.forEach((u, index) => {
+                        const origenLic = u.licencia_usada ? `Cód: ${u.licencia_usada}` : "Invitación Corporativa Interna";
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><b>${u.username}</b><br><small style="color:#666;">${u.nombre_real || 'Sin nombre'}</small></td>
+                            <td><span style="font-size:9px; background:#0a2540; color:white; padding:3px 6px; border-radius:10px;">${u.rol_equipo.toUpperCase()}</span></td>
+                            <td style="font-size:11px;">${u.email || 'N/A'}</td>
+                            <td style="font-size:11px; line-height: 1.4;">
+                                ${tipoAcceso}<br>
+                                <span style="color:#666; font-size:10px;">${origenLic}</span>
+                            </td>
+                            <td style="font-size:11px; line-height: 1.4;">
+                                <strong style="color:${colorVencimiento}; font-size:12px;">${expGlobal}</strong><br>
+                                <span style="color:#666; font-size:10px;">(${etiquetaVencimiento})</span>
+                            </td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn btn-edit" style="background:#555;" onclick="abrirEditorUsuario(${index})" title="Editar Credenciales">✏️</button>
+                                <button class="btn btn-enter" onclick="infiltrarse('${u.username}')" title="Infiltrarse en cuenta">👁️</button>
+                                <button class="btn btn-mail" onclick="abrirModalCorreo('${u.username}', '${u.email}')" title="Enviar Email">✉️</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    document.getElementById('modalInspect').style.display = 'flex';
+                }
+            } catch (e) { alert("Error al extraer la radiografía de la firma."); }
+        }
+
+        async function guardarInspector() {
+            if (!confirm("¿Confirmas la inyección de estas mutaciones directamente en el servidor SQL?")) return;
+
+            const target = document.getElementById('ins-target-original').value;
+            const payload = {
+                nuevoNombre: document.getElementById('ins-firma').value.trim(),
+                exp_fija: document.getElementById('ins-fecha-fija').value || null,
+                sumar_dias: document.getElementById('ins-sumar-dias').value || null,
+                cancelar_stripe: document.getElementById('ins-chk-revocar').checked
+            };
+
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ adminUser: adminActual, accion: 'mutar_despacho', targetId: target, payload })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("✅ Mutaciones aplicadas exitosamente a todo el Despacho.");
+                    inspeccionarFirma(target, payload.nuevoNombre);
+                    cargarDespachos();
+                } else { alert("Fallo: " + data.error); }
+            } catch (e) { alert("Error de red."); }
+        }
+
+        function abrirEditorUsuario(index) {
+            const u = usuariosActualesData[index];
+            document.getElementById('edit-user-original').value = u.username;
+            document.getElementById('edit-user-nombre').value = u.username;
+
+            // Extraemos el nombre real (si no tiene, lo dejamos en blanco)
+            document.getElementById('edit-user-nombrereal').value = u.nombre_real || '';
+
+            document.getElementById('edit-user-email').value = u.email || '';
+
+            // CAMBIO CLAVE: El campo de contraseña se deja vacío. 
+            // Mostramos un placeholder para que entienda cómo funciona.
+            document.getElementById('edit-user-pass').value = '';
+            document.getElementById('edit-user-pass').placeholder = 'Dejar vacío para no cambiar';
+
+            document.getElementById('modalEditarUsuario').style.display = 'flex';
+        }
+
+        async function guardarMutacionUsuario() {
+            const payload = {
+                username_objetivo: document.getElementById('edit-user-original').value,
+                nuevo_user: document.getElementById('edit-user-nombre').value.trim(),
+                nuevo_nombre_real: document.getElementById('edit-user-nombrereal').value.trim(), // <-- NUEVO DATO CAPTURADO
+                nuevo_email: document.getElementById('edit-user-email').value.trim(),
+                nuevo_pass: document.getElementById('edit-user-pass').value.trim()
+            };
+
+            const res = await fetch('/.netlify/functions/admin_core', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ adminUser: adminActual, accion: 'mutar_usuario', targetId: idFirmaActual, payload })
+            });
+
+            if (res.ok) {
+                alert("✅ Subcuenta editada con éxito.");
+                document.getElementById('modalEditarUsuario').style.display = 'none';
+                inspeccionarFirma(idFirmaActual, document.getElementById('ins-firma').value);
+            }
+        }
+
+        async function borrarUsuario() {
+            const target = document.getElementById('ins-target-original').value;
+            const text = prompt(`ALERTA DE PURGA RADIACTIVA.\nEsta acción destruirá el DESPACHO ENTERO y todas sus subcuentas, expedientes y tareas.\n\nEscribe BORRAR FIRMA en mayúsculas para confirmar:`);
+            if (text !== 'BORRAR FIRMA') { alert("Operación abortada por seguridad."); return; }
+
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ adminUser: adminActual, accion: 'purgar_despacho', targetId: target })
+                });
+                if (res.ok) {
+                    alert("✅ El Despacho y todos sus datos han sido erradicados.");
+                    document.getElementById('modalInspect').style.display = 'none';
+                    cargarDespachos();
+                }
+            } catch (e) { alert("Fallo en el motor SQL."); }
+        }
+
+        function toggleMailInput() {
+            const tipo = document.getElementById('mail-tipo').value;
+            document.getElementById('div-mail-manual').style.display = tipo === 'manual' ? 'block' : 'none';
+            document.getElementById('div-mail-individual').style.display = tipo === 'individual' ? 'block' : 'none';
+        }
+
+        function abrirModalCorreo(firma, email) {
+            if (firma === 'TODOS') {
+                document.getElementById('mail-tipo').value = 'todos';
+                userSeleccionadoFirma = 'MASIVO_TODOS';
+            } else {
+                document.getElementById('mail-tipo').value = 'individual';
+                document.getElementById('lbl-usuario-seleccionado').innerText = `${firma} (${email || 'Sin correo'})`;
+                userSeleccionadoEmail = email;
+            }
+            toggleMailInput();
+            document.getElementById('modalMail').style.display = 'flex';
+        }
+
+        function cerrarModalMail() {
+            document.getElementById('modalMail').style.display = 'none';
+            quill.setContents([]);
+            document.getElementById('mail-asunto').value = "";
+            document.getElementById('mail-destino-manual').value = "";
+        }
+
+        async function enviarCorreo() {
+            const tipo = document.getElementById('mail-tipo').value;
+            const asunto = document.getElementById('mail-asunto').value.trim();
+            const mensajeHTML = quill.root.innerHTML;
+
+            let emailFinal = ""; let target = "";
+
+            if (tipo === 'todos') { target = 'MASIVO_TODOS'; }
+            else if (tipo === 'manual') {
+                emailFinal = document.getElementById('mail-destino-manual').value.trim();
+                target = 'MANUAL';
+            }
+            else if (tipo === 'individual') {
+                emailFinal = userSeleccionadoEmail;
+                target = 'INDIVIDUAL';
+                if (!emailFinal) return alert(`El usuario no tiene un correo electrónico registrado.`);
+            }
+
+            if (!asunto || quill.getText().trim().length === 0) return alert("Asunto y mensaje obligatorios.");
+
+            const btn = document.getElementById('btn-enviar-mail');
+            btn.innerText = "INYECTANDO EN LA RED..."; btn.disabled = true;
+
+            try {
+                const res = await fetch('/.netlify/functions/admin_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ adminUser: adminActual, accion: 'enviar_correo', targetId: target, payload: { emailDestino: emailFinal, asunto, mensajeHTML } })
+                });
+                const data = await res.json();
+                if (data.success) { alert(`✅ Correos enviados: ${data.total}`); cerrarModalMail(); }
+                else { alert("Fallo SMTP: " + data.error); }
+            } catch (e) { alert("Fallo de conexión."); }
+
+            btn.innerText = "🚀 Lanzar Mensaje a la Red"; btn.disabled = false;
+        }
+
+        function infiltrarse(username) {
+            if (confirm(`⚠️ ALERTA DE SEGURIDAD:\n\nEstás a punto de infiltrarte en el sistema bajo la identidad de "${username}".\n\n¿Deseas proceder con la infiltración?`)) {
+                localStorage.setItem('usuario_actual', username);
+                window.location.href = "lobby.html";
+            }
+        }
+
+        function toggleAdminPassVisibility(id) {
+            const inputElement = document.getElementById(id);
+            inputElement.type = inputElement.type === "password" ? "text" : "password";
+        }
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

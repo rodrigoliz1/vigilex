@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-vigilex.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --navy-light: #153b61;
+            --gold: #ad974f;
+            --bg-light: #f8f9fa;
+            --text-dark: #333333;
+            --text-gray: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #8f7c3f;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Menú Móvil Clases */
+        .mobile-menu-btn,
+        .close-menu-item,
+        .mobile-only-btn {
+            display: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 5% 60px;
+            position: relative;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .hero-gold-line {
+            width: 60px;
+            height: 4px;
+            background-color: var(--gold);
+            margin: 0 auto 30px;
+            border-radius: 2px;
+        }
+
+        /* --- CONTACTO SECTION --- */
+        .contact-section {
+            padding: 60px 5% 100px;
+            max-width: 1200px;
+            margin: -40px auto 0;
+            /* Sube la caja un poco sobre el header */
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Lado Izquierdo (Info) */
+        .contact-info {
+            background-color: var(--navy);
+            color: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .contact-info h3 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            color: #ccc;
+            margin-bottom: 40px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-item i {
+            font-size: 24px;
+            color: var(--gold);
+        }
+
+        .info-item span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Lado Derecho (Formulario) */
+        .contact-form-container {
+            padding: 50px 60px;
+        }
+
+        .contact-form-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-form-container p {
+            color: var(--text-gray);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--navy);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(173, 151, 79, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* --- MODAL DE ALERTA --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-top: 5px solid var(--gold);
+            text-align: center;
+        }
+
+        .modal-box h3 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .modal-box p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--navy);
+            color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: #07192b;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 60px 5% 20px 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo h2 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 300px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2-cols {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .contact-info {
+                padding: 40px 30px;
+            }
+
+            .contact-form-container {
+                padding: 40px 30px;
+            }
+
+            /* Menú Móvil */
+            .desktop-only-btn {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 26px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 30px;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+                transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 2000;
+            }
+
+            .nav-links.active-menu {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                display: block;
+                width: 100%;
+            }
+
+            .close-menu-item {
+                display: block;
+                width: 100%;
+                text-align: right;
+                margin-bottom: 10px;
+            }
+
+            .close-menu-btn {
+                background: none;
+                border: none;
+                font-size: 30px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .mobile-only-btn {
+                display: block;
+                width: 100%;
+                margin-top: 20px;
+                border-top: 1px solid #eee;
+                padding-top: 25px;
+            }
+
+            .mobile-only-btn .btn-primary {
+                text-align: center;
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logovigilexrubros.png" alt="Vigilex Logo"> VIGILEX</a>
+
+        <button class="mobile-menu-btn" id="btnMenuAbrir"><i class="fa-solid fa-bars"></i></button>
+
+        <ul class="nav-links" id="menuLateral">
+            <li class="close-menu-item"><button class="close-menu-btn" id="btnMenuCerrar"><i
+                        class="fa-solid fa-xmark"></i></button></li>
+
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="caracteristicas.html">Características</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html" class="active">Contacto</a></li>
+            <li><a href="precios.html">Precios</a></li>
+
+            <li class="mobile-only-btn"><a href="inicio.html" class="btn-primary">Acceder al Sistema</a></li>
+        </ul>
+
+        <a href="inicio.html" class="btn-primary desktop-only-btn">Acceder al Sistema</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-gold-line"></div>
+        <h1>Hablemos de tu Despacho</h1>
+        <p>¿Dudas sobre la implementación, migración de datos o planes corporativos? Nuestro equipo está listo para
+            asesorarte.</p>
+    </header>
+
+    <section class="contact-section">
+        <div class="contact-grid">
+
+            <div class="contact-info">
+                <div>
+                    <h3>Atención Exclusiva</h3>
+                    <p>En VIGILEX entendemos que el tiempo de un abogado es invaluable. Nos comprometemos a brindarte
+                        una atención rápida, confidencial y sumamente resolutiva.</p>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>soporte@vigilex.lat</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Lunes a Viernes<br>9:00 AM - 6:00 PM (CST)</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>Soporte Técnico y <br>Onboarding Corporativo</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; font-size: 13px; opacity: 0.7;">
+                    &copy; 2026 VIGILEX Latam
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <h3>Envíanos un Mensaje</h3>
+                <p>Completa el formulario y un especialista en integración tecnológica jurídica te contactará a la
+                    brevedad.</p>
+
+                <form id="formularioContacto" onsubmit="enviarMensaje(event)">
+                    <div class="form-group">
+                        <label for="f_nombre">Nombre Completo *</label>
+                        <input type="text" id="f_nombre" class="form-control" placeholder="Lic. Juan Pérez" required>
+                    </div>
+
+                    <div class="grid-2-cols">
+                        <div class="form-group">
+                            <label for="f_telefono">Celular / Teléfono *</label>
+                            <input type="tel" id="f_telefono" class="form-control" placeholder="(555) 123 4567"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="f_email">Correo Electrónico *</label>
+                            <input type="email" id="f_email" class="form-control" placeholder="juan@despacho.com"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_mensaje">Tu Consulta o Requerimiento *</label>
+                        <textarea id="f_mensaje" class="form-control"
+                            placeholder="Me interesa conocer más sobre el Plan Institucional para 10 abogados..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btnSubmit"
+                        style="width: 100%; padding: 15px; font-size: 16px; margin-top: 10px;">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="modalAlerta" class="modal-overlay">
+        <div class="modal-box" id="modalAlerta-caja">
+            <div id="modalAlerta-icono" style="font-size: 45px; margin-bottom: 10px;">✅</div>
+            <h3 id="modalAlerta-titulo">Mensaje Enviado</h3>
+            <p id="modalAlerta-msg">Hemos recibido tu consulta con éxito. Revisa tu correo electrónico para confirmar la
+                recepción.</p>
+            <button class="modal-btn" onclick="cerrarModalAlerta()">Entendido</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2><img src="logovigilexrubros.png" alt="Logo"> VIGILEX</h2>
+                <p style="margin-top:15px;">Sistema de Gestión Integral para Abogados.
+                <p> </p>Seguridad, control y elegancia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="index.html#inicio">Inicio</a></li>
+                    <li><a href="caracteristicas.html">Características</a></li>
+                    <li><a href="inicio.html">Acceso a Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VIGILEX. Todos los derechos reservados. Rodrigo Lizárraga Camacho
+        </div>
+    </footer>
+
+    <script>
+        // SCRIPT DEL MENÚ LATERAL MÓVIL
+        const btnAbrir = document.getElementById('btnMenuAbrir');
+        const btnCerrar = document.getElementById('btnMenuCerrar');
+        const menuLateral = document.getElementById('menuLateral');
+
+        btnAbrir.addEventListener('click', () => { menuLateral.classList.add('active-menu'); });
+        btnCerrar.addEventListener('click', () => { menuLateral.classList.remove('active-menu'); });
+
+        // SCRIPT PARA ENVIAR EL FORMULARIO
+        async function enviarMensaje(event) {
+            event.preventDefault(); // Evita que la página se recargue
+
+            const nombre = document.getElementById('f_nombre').value.trim();
+            const telefono = document.getElementById('f_telefono').value.trim();
+            const email = document.getElementById('f_email').value.trim();
+            const mensaje = document.getElementById('f_mensaje').value.trim();
+
+            const btn = document.getElementById('btnSubmit');
+            const textoOriginal = btn.innerText;
+            btn.innerText = "Enviando de forma segura...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/.netlify/functions/enviar_contacto', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, telefono, email, mensaje })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    mostrarAlerta(true, "Mensaje Enviado", "Hemos recibido tu consulta con éxito. En breve recibirás un acuse de recibo en tu correo electrónico.");
+                    document.getElementById('formularioContacto').reset(); // Limpia el formulario
+                } else {
+                    mostrarAlerta(false, "Error de Envío", data.error || "Ocurrió un problema al enviar tu mensaje.");
+                }
+            } catch (error) {
+                mostrarAlerta(false, "Fallo de Conexión", "No se pudo conectar con el servidor. Por favor revisa tu conexión a internet e inténtalo de nuevo.");
+            }
+
+            btn.innerText = textoOriginal;
+            btn.disabled = false;
+        }
+
+        // FUNCIONES DEL MODAL ELEGANTE
+        function mostrarAlerta(esExito, titulo, mensaje) {
+            document.getElementById('modalAlerta-titulo').innerText = titulo;
+            document.getElementById('modalAlerta-msg').innerText = mensaje;
+            document.getElementById('modalAlerta-icono').innerText = esExito ? "✅" : "⚠️";
+            document.getElementById('modalAlerta-caja').style.borderTopColor = esExito ? "var(--green)" : "var(--red)";
+            document.getElementById('modalAlerta').style.display = 'flex';
+        }
+
+        function cerrarModalAlerta() {
+            document.getElementById('modalAlerta').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

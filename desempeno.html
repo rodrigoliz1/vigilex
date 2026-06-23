@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Desempeño | VIGILEX Analytics</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --gold: #ad974f;
+            --bg-light: #f4f6f8;
+            --text-dark: #333333;
+            --green: #2e7d32;
+            --red: #c62828;
+            --orange: #f57c00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--navy);
+            color: var(--navy);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: var(--navy);
+            color: white;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+        }
+
+        .header-analitica {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-analitica h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header-analitica p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-pdf {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pdf:hover {
+            background: #8f7c3f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(173, 151, 79, 0.3);
+        }
+
+        .pdf-only-logo {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+            width: 100%;
+        }
+
+        .pdf-only-logo img {
+            height: 75px;
+            width: auto;
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            border-top: 4px solid var(--navy);
+            position: relative;
+        }
+
+        .card-gold {
+            border-top-color: var(--gold);
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .gauge-score {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+        }
+
+        .gauge-score span {
+            display: block;
+            font-size: 45px;
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gauge-score small {
+            font-size: 12px;
+            color: #888;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* KPIs (AHORA 4 COLUMNAS) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .kpi-box {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .kpi-box i {
+            font-size: 24px;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .kpi-box .val {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+
+        .kpi-box .label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: var(--navy);
+            background: #fafafa;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+        }
+
+        .bg-green {
+            background: var(--green);
+        }
+
+        .bg-red {
+            background: var(--red);
+        }
+
+        .bg-orange {
+            background: var(--orange);
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-light);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #pdf-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .pdf-stack-layout .dashboard-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .pdf-stack-layout .charts-row {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .pdf-stack-layout .header-analitica {
+            border-bottom: none;
+            margin-bottom: 10px;
+            padding-bottom: 0;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loader">
+        <h2 style="color: var(--navy); margin-bottom: 10px;">Procesando Algoritmos Analíticos...</h2>
+        <p style="color: #666; font-size: 14px;">Calculando fricción, tiempos procesales y VigiScore.</p>
+    </div>
+
+    <div id="pdf-overlay">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 50px; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 style="color: var(--navy);">Estructurando Documento Seguro...</h2>
+        <p style="color: #666;">Alineando reportes para formato de impresión.</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="lobby.html" class="logo"><img src="logovigilexrubros.png" alt="Vigilex"
+                onerror="this.src='favicon.png'"> VIGILEX</a>
+        <a href="equipo.html" class="btn-outline">← Volver al Despacho</a>
+    </nav>
+
+    <div class="container" id="area-imprimible">
+
+        <div class="pdf-only-logo" id="logo-pdf">
+            <img src="logo-mediano.png" alt="VIGILEX Corporativo" onerror="this.src='logo-vigilex.png'">
+        </div>
+
+        <div class="header-analitica" id="header-pdf">
+            <div>
+                <p>Métrica de Rendimiento Individual</p>
+                <h1>Análisis: <span id="lbl-nombre" style="color: var(--gold);">Cargando...</span></h1>
+                <div style="font-size: 12px; color: #888; margin-top: 5px;">Periodo de evaluación: Últimos 30 días |
+                    Fecha de corte: <span id="lbl-fecha">--</span></div>
+            </div>
+            <button class="btn-pdf" onclick="descargarPDF()" data-html2canvas-ignore="true">
+                <i class="fa-solid fa-file-pdf"></i> Exportar Reporte Mensual
+            </button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>
+                    El VigiScore
+                    <i class="fa-solid fa-circle-info" title="Ver Detalles del Algoritmo"
+                        style="color:#ccc; cursor:pointer; float:right; transition: 0.2s;"
+                        onmouseover="this.style.color='var(--navy)'" onmouseout="this.style.color='#ccc'"
+                        onclick="alert('ESTRUCTURA DEL ALGORITMO VIGISCORE:\n\n• 45% Efectividad (Tareas cumplidas a tiempo).\n• 35% Agilidad de Captura (Acuerdos subidos el mismo día).\n• 20% Calidad Operativa (Trabajos aprobados a la 1ra sin correcciones).')"
+                        data-html2canvas-ignore="true"></i>
+                </h3>
+                <div class="gauge-container" id="cont-gauge">
+                    <canvas id="gaugeChart"></canvas>
+                    <div class="gauge-score">
+                        <span id="lbl-score">0</span>
+                        <small id="lbl-nivel">Evaluando...</small>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 12px; color: #666; margin-top: 15px;">Métrica de confiabilidad
+                    basada en el algoritmo interno de VIGILEX.</p>
+            </div>
+
+            <div class="card card-gold">
+                <h3>Productividad Operativa</h3>
+                <div class="kpi-grid">
+                    <div class="kpi-box"><i class="fa-solid fa-folder-tree"></i>
+                        <div class="val" id="kpi-asuntos">0</div>
+                        <div class="label">Asuntos Activos</div>
+                    </div>
+                    <div class="kpi-box"><i class="fa-solid fa-check-double"></i>
+                        <div class="val" id="kpi-tareas" style="color: var(--green);">0</div>
+                        <div class="label">Tareas Logradas</div>
+                    </div>
+                    <div class="kpi-box"><i class="fa-solid fa-clock-rotate-left"></i>
+                        <div class="val" id="kpi-retraso" style="color: var(--red);">0h</div>
+                        <div class="label">Retraso Promedio</div>
+                    </div>
+                    <div class="kpi-box"><i class="fa-solid fa-calendar-plus" style="color: var(--orange);"></i>
+                        <div class="val" id="kpi-prorrogas" style="color: var(--orange);">0</div>
+                        <div class="label">Prórrogas (Cambios)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="card">
+                <h3>Efectividad de Plazos</h3>
+                <div class="chart-wrapper" id="cont-bar">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Tasa de Fricción (Calidad)</h3>
+                <div class="chart-wrapper" id="cont-pie">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-gold">
+            <h3>Últimas Acciones Críticas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha de Acción</th>
+                        <th>Expediente</th>
+                        <th>Concepto / Tarea</th>
+                        <th>Tiempo de Rpta.</th>
+                        <th>Evaluación</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-auditoria">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        if (!tokenSeguro) window.location.replace("inicio.html");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetUsername = urlParams.get('abogado');
+
+        if (!targetUsername) {
+            alert("No se especificó un abogado para evaluar.");
+            window.location.href = "equipo.html";
+        }
+
+        let gaugeInst, barInst, pieInst;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const fecha = new Date();
+            document.getElementById('lbl-fecha').innerText = fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            try {
+                const response = await fetch('/.netlify/functions/metricas_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: localStorage.getItem('usuario_actual'), targetUsername: targetUsername })
+                });
+
+                const resData = await response.json();
+
+                // 🛑 EL CADENERO: Si el backend nos lanza un 403 (Prohibido)
+                if (response.status === 403) {
+                    alert("⛔ ACCESO RESTRINGIDO\n\n" + resData.error);
+                    window.location.replace("lobby.html"); // Expulsado directo al lobby
+                    return;
+                }
+
+                if (resData.success) {
+                    procesarDatosAnaliticos(resData.metricas);
+                    document.getElementById('loader').style.display = 'none';
+                } else {
+                    alert("Error: " + resData.error);
+                    window.location.replace("lobby.html");
+                }
+            } catch (error) {
+                alert("Fallo de red al intentar descargar los algoritmos.");
+                window.location.replace("lobby.html");
+            }
+        });
+
+        function procesarDatosAnaliticos(data) {
+            document.getElementById('lbl-nombre').innerText = data.nombre_real;
+            document.getElementById('lbl-score').innerText = data.vigiscore;
+
+            let nivelTexto, colorGauge;
+            if (data.vigiscore >= 90) { nivelTexto = 'ÉLITE'; colorGauge = '#2e7d32'; }
+            else if (data.vigiscore >= 75) { nivelTexto = 'CONFIABLE'; colorGauge = '#ad974f'; }
+            else if (data.vigiscore >= 60) { nivelTexto = 'RIESGO MODERADO'; colorGauge = '#f57c00'; }
+            else { nivelTexto = 'ALTO RIESGO'; colorGauge = '#c62828'; }
+
+            document.getElementById('lbl-nivel').innerText = nivelTexto;
+            document.getElementById('lbl-score').style.color = colorGauge;
+
+            document.getElementById('kpi-asuntos').innerText = data.kpis.asuntos_activos;
+            document.getElementById('kpi-tareas').innerText = data.kpis.tareas_completadas;
+            document.getElementById('kpi-retraso').innerText = data.kpis.retraso_promedio_horas + 'h';
+            // INYECCIÓN DE LA NUEVA KPI DE PRÓRROGAS
+            document.getElementById('kpi-prorrogas').innerText = data.kpis.prorrogas;
+
+            const ctxGauge = document.getElementById('gaugeChart').getContext('2d');
+            gaugeInst = new Chart(ctxGauge, {
+                type: 'doughnut',
+                data: { datasets: [{ data: [data.vigiscore, Math.max(0, 100 - data.vigiscore)], backgroundColor: [colorGauge, '#e0e0e0'], borderWidth: 0, cutout: '80%' }] },
+                options: { maintainAspectRatio: false, circumference: 180, rotation: -90, plugins: { tooltip: { enabled: false } } }
+            });
+
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barInst = new Chart(ctxBar, {
+                type: 'bar',
+                data: { labels: ['A Tiempo', 'Con Retraso', 'Vencidas'], datasets: [{ label: 'Incidencias', data: [data.graficas.plazos.a_tiempo, data.graficas.plazos.tarde, data.graficas.plazos.vencidas], backgroundColor: ['#2e7d32', '#f57c00', '#c62828'], borderRadius: 4 }] },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            pieInst = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: { labels: ['Aprobadas a la 1ra', 'Enviadas a Corregir'], datasets: [{ data: [data.graficas.friccion.aprobadas_directo, data.graficas.friccion.enviadas_a_corregir], backgroundColor: ['#0a2540', '#e0e0e0'], borderWidth: 2, borderColor: '#fff' }] },
+                options: { maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom' } } }
+            });
+
+            const tbody = document.getElementById('tbody-auditoria');
+            if (data.auditoria.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay acciones recientes.</td></tr>';
+            } else {
+                tbody.innerHTML = data.auditoria.map(a => `<tr><td><b>${a.fecha}</b></td><td><span style="color: var(--navy); font-weight:bold;">${a.exp}</span></td><td>${a.desc}</td><td>${a.rpta}</td><td><span class="status-badge bg-${a.evalCode}">${a.eval}</span></td></tr>`).join('');
+            }
+        }
+
+        // ==========================================
+        // EXPORTACIÓN A PDF (MÉTODO DE APILAMIENTO VERTICAL)
+        // ==========================================
+        function descargarPDF() {
+            document.getElementById('pdf-overlay').style.display = 'flex';
+
+            setTimeout(() => {
+                const elemento = document.getElementById('area-imprimible');
+                const logoPdf = document.getElementById('logo-pdf');
+
+                const imgGauge = new Image(); imgGauge.src = gaugeInst.toBase64Image(); imgGauge.style.width = '100%'; imgGauge.style.maxHeight = '150px'; imgGauge.style.objectFit = 'contain';
+                const imgBar = new Image(); imgBar.src = barInst.toBase64Image(); imgBar.style.width = '100%'; imgBar.style.maxHeight = '200px'; imgBar.style.objectFit = 'contain';
+                const imgPie = new Image(); imgPie.src = pieInst.toBase64Image(); imgPie.style.width = '100%'; imgPie.style.maxHeight = '200px'; imgPie.style.objectFit = 'contain';
+
+                const canGauge = document.getElementById('gaugeChart');
+                const canBar = document.getElementById('barChart');
+                const canPie = document.getElementById('pieChart');
+
+                canGauge.style.display = 'none'; canGauge.parentNode.insertBefore(imgGauge, canGauge);
+                canBar.style.display = 'none'; canBar.parentNode.insertBefore(imgBar, canBar);
+                canPie.style.display = 'none'; canPie.parentNode.insertBefore(imgPie, canPie);
+
+                elemento.classList.add('pdf-stack-layout');
+                logoPdf.style.display = 'block';
+
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: `Reporte_Desempeño_${targetUsername}.pdf`,
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, useCORS: true, logging: false },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(elemento).save().then(() => {
+                    elemento.classList.remove('pdf-stack-layout');
+                    logoPdf.style.display = 'none';
+
+                    imgGauge.remove(); canGauge.style.display = 'block';
+                    imgBar.remove(); canBar.style.display = 'block';
+                    imgPie.remove(); canPie.style.display = 'block';
+
+                    document.getElementById('pdf-overlay').style.display = 'none';
+                });
+            }, 100);
+        }
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

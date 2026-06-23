@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas y Contabilidad | VIGILEX</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --green-success: #2e7d32;
+            --red-danger: #c62828;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2,
+        h3,
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navegación Superior */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Dashboard de Resumen */
+        .finance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border-top: 4px solid var(--accent);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .monto {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 10px 0 0 0;
+            color: var(--primary);
+            word-break: break-word;
+        }
+
+        .stat-card.ingresos {
+            border-top-color: var(--green-success);
+        }
+
+        .stat-card.egresos {
+            border-top-color: var(--red-danger);
+        }
+
+        /* Sección de Gráficas y Tabla */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Tabla de Movimientos */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #eee;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f9f9f9;
+            font-size: 14px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tag-ingreso {
+            background: #e8f5e9;
+            color: var(--green-success);
+        }
+
+        .tag-egreso {
+            background: #ffebee;
+            color: var(--red-danger);
+        }
+
+        /* Botones de Acción (Tabla) */
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+            padding: 4px;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.2);
+        }
+
+        /* Botón de Formulario */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-cancelar {
+            background: #f4f6f8;
+            color: var(--text-muted);
+            border: 1px solid #ddd;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .btn-cancelar:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <a href="lobby.html" class="logo-nav">
+            <img src="favicon.png" height="30"> VIGILEX
+        </a>
+        <a href="lobby.html" class="btn-back">← Volver al Panel</a>
+    </nav>
+
+    <div class="container">
+        <header style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 class="playfair" style="font-size: 36px; color: var(--primary); margin: 0;">Finanzas de <span
+                        id="nombre-usuario" style="color: var(--accent);">Abogado</span></h1>
+                <p
+                    style="color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-size: 12px; font-weight: 600;">
+                    Control Contable de la Firma</p>
+            </div>
+            <button onclick="exportarPDF()" class="btn-pdf-export"
+                style="background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;"
+                onmouseover="this.style.background='var(--primary)'; this.style.color='white';"
+                onmouseout="this.style.background='white'; this.style.color='var(--primary)';">
+                📄 Exportar Reporte PDF
+            </button>
+        </header>
+
+        <div class="finance-grid">
+            <div class="stat-card">
+                <h3>Balance Actual</h3>
+                <div class="monto" id="balance-total">$0.00</div>
+            </div>
+            <div class="stat-card ingresos">
+                <h3>Ingresos del Mes</h3>
+                <div class="monto" id="ingresos-mes" style="color: var(--green-success);">$0.00</div>
+            </div>
+            <div class="stat-card egresos">
+                <h3>Gastos del Mes</h3>
+                <div class="monto" id="egresos-mes" style="color: var(--red-danger);">$0.00</div>
+            </div>
+            <div class="stat-card ingresos">
+                <h3>Ingreso Promedio / Mes</h3>
+                <div class="monto" id="promedio-ingresos" style="color: var(--green-success);">$0.00</div>
+            </div>
+            <div class="stat-card egresos">
+                <h3>Gasto Promedio / Mes</h3>
+                <div class="monto" id="promedio-egresos" style="color: var(--red-danger);">$0.00</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2 class="playfair" style="margin-top: 0;">Rendimiento Mensual</h2>
+                <div class="chart-container">
+                    <canvas id="chartRendimiento"></canvas>
+                </div>
+
+                <h3 class="playfair" style="margin-top: 30px;">Movimientos Recientes</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Monto</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-movimientos">
+                            <tr>
+                                <td colspan="5" style="text-align:center; color:#999; padding:20px;">Cargando
+                                    movimientos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel" style="height: fit-content;" id="panel-formulario">
+                <h2 class="playfair" style="margin-top: 0; font-size: 20px;" id="titulo-formulario">Nuevo Movimiento
+                </h2>
+                <form id="form-finanzas">
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 5px;">Fecha del
+                            Movimiento</label>
+                        <input type="date" id="input-fecha" required
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label
+                            style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 5px;">Descripción</label>
+                        <input type="text" id="input-descripcion" placeholder="Ej. Pago de Copias" required
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 5px;">Monto
+                            ($)</label>
+                        <input type="number" id="input-monto" step="0.01" placeholder="0.00" required
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label
+                            style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 5px;">Tipo</label>
+                        <select id="input-tipo" required
+                            style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                            <option value="ingreso">Ingreso (Honorarios / Pagos)</option>
+                            <option value="egreso">Egreso (Gastos / Insumos)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btn-submit">Registrar en Contabilidad</button>
+                    <button type="button" class="btn-cancelar" id="btn-cancelar" onclick="cancelarEdicion()">Cancelar
+                        Edición</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Barrera de Seguridad e Identidad
+        if (localStorage.getItem('sesion_activa') !== 'verdadera') {
+            window.location.replace("inicio.html");
+        }
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usuarioReal = localStorage.getItem('usuario_actual');
+
+        // Vamos a solicitar el nombre real a tu base de datos para la bienvenida
+        document.getElementById('nombre-usuario').innerText = usuarioReal;
+
+        // Variable global para saber si estamos creando o editando
+        let idMovimientoEditando = null;
+
+        // 2. Inicialización de Gráfica (Vacía al inicio)
+        const ctx = document.getElementById('chartRendimiento').getContext('2d');
+        let graficaFinanzas = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Flujo de Efectivo',
+                    data: [0, 0, 0, 0, 0, 0],
+                    borderColor: '#ad974f',
+                    backgroundColor: 'rgba(173, 151, 79, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // 3. Cargar Datos desde el Servidor
+        async function cargarDatosFinancieros() {
+            try {
+                const res = await fetch('/.netlify/functions/crm_finanzas', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${tokenSeguro}`,
+                        'X-Usuario-Operador': usuarioReal
+                    }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Actualizar KPIs con los datos reales y nuevos promedios
+                    document.getElementById('balance-total').innerText = `$${data.stats.balance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+                    document.getElementById('ingresos-mes').innerText = `$${data.stats.ingresos_mes.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+                    document.getElementById('egresos-mes').innerText = `$${data.stats.egresos_mes.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+                    document.getElementById('promedio-ingresos').innerText = `$${(data.stats.promedio_ingresos || 0).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+                    document.getElementById('promedio-egresos').innerText = `$${(data.stats.promedio_egresos || 0).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+
+                    // --- ACTUALIZAR LA GRÁFICA DINÁMICAMENTE ---
+                    const mesesCortos = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                    let labelsGrafica = [];
+                    let datosGrafica = [];
+
+                    // Generamos los últimos 6 meses basándonos en la fecha actual
+                    for (let i = 5; i >= 0; i--) {
+                        let date = new Date();
+                        date.setMonth(date.getMonth() - i);
+                        let claveMes = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // ej: "2024-04"
+                        labelsGrafica.push(mesesCortos[date.getMonth()]);
+
+                        // Buscamos si el backend nos mandó movimientos para ese mes
+                        let mesEncontrado = data.grafica.find(g => g.mes_anio === claveMes);
+                        datosGrafica.push(mesEncontrado ? parseFloat(mesEncontrado.utilidad) : 0);
+                    }
+
+                    // Inyectamos y redibujamos
+                    graficaFinanzas.data.labels = labelsGrafica;
+                    graficaFinanzas.data.datasets[0].data = datosGrafica;
+                    graficaFinanzas.update();
+                    // ---------------------------------------------
+
+                    // Actualizar Tabla
+                    const tbody = document.getElementById('tabla-movimientos');
+                    tbody.innerHTML = '';
+
+                    if (data.movimientos.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">No hay movimientos registrados aún.</td></tr>';
+                    } else {
+                        data.movimientos.forEach(mov => {
+                            // Validar el formato de la zona horaria para que no se atrase un día
+                            let dateObj = new Date(mov.fecha_registro);
+                            let fechaVisual = dateObj.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
+                            let fechaInput = dateObj.toISOString().split('T')[0];
+
+                            const esIngreso = mov.tipo === 'ingreso';
+                            const tagClass = esIngreso ? 'tag-ingreso' : 'tag-egreso';
+                            const tagText = esIngreso ? 'INGRESO' : 'GASTO';
+                            const colorMonto = esIngreso ? 'var(--primary)' : 'var(--red-danger)';
+                            const signo = esIngreso ? '' : '-';
+                            const descEscapada = mov.descripcion.replace(/'/g, "\\'");
+
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td>${fechaVisual}</td>
+                                    <td>${mov.descripcion}</td>
+                                    <td><span class="tag ${tagClass}">${tagText}</span></td>
+                                    <td style="font-weight: bold; color: ${colorMonto};">${signo}$${parseFloat(mov.monto).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                                    <td style="text-align: center; white-space: nowrap;">
+                                        <button class="btn-icon" onclick="prepararEdicion(${mov.id}, '${fechaInput}', '${descEscapada}', ${mov.monto}, '${mov.tipo}')" title="Editar Movimiento">✏️</button>
+                                        <button class="btn-icon" onclick="eliminarMovimiento(${mov.id})" title="Eliminar Movimiento">🗑️</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error al cargar datos:", error);
+            }
+        }
+
+        // 4. Modo Edición
+        function prepararEdicion(id, fecha, desc, monto, tipo) {
+            idMovimientoEditando = id;
+            document.getElementById('input-fecha').value = fecha;
+            document.getElementById('input-descripcion').value = desc;
+            document.getElementById('input-monto').value = monto;
+            document.getElementById('input-tipo').value = tipo;
+
+            document.getElementById('titulo-formulario').innerText = "Editar Movimiento";
+            document.getElementById('btn-submit').innerText = "Guardar Cambios";
+            document.getElementById('btn-cancelar').style.display = 'block';
+
+            // Hacer scroll suave hacia el formulario
+            document.getElementById('panel-formulario').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarEdicion() {
+            idMovimientoEditando = null;
+            document.getElementById('form-finanzas').reset();
+            document.getElementById('input-fecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('titulo-formulario').innerText = "Nuevo Movimiento";
+            document.getElementById('btn-submit').innerText = "Registrar en Contabilidad";
+            document.getElementById('btn-cancelar').style.display = 'none';
+        }
+
+        // 5. Guardar o Actualizar Movimiento
+        document.getElementById('form-finanzas').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fecha = document.getElementById('input-fecha').value;
+            const descripcion = document.getElementById('input-descripcion').value.trim();
+            const monto = parseFloat(document.getElementById('input-monto').value);
+            const tipo = document.getElementById('input-tipo').value;
+            const btn = document.getElementById('btn-submit');
+
+            if (!fecha || !descripcion || isNaN(monto) || monto <= 0) {
+                return alert("Por favor, completa todos los campos correctamente.");
+            }
+
+            btn.innerText = "Procesando...";
+            btn.disabled = true;
+
+            try {
+                const metodo = idMovimientoEditando ? 'PUT' : 'POST';
+                const bodyData = { fecha, descripcion, monto, tipo, categoria: 'General' };
+                if (idMovimientoEditando) bodyData.id = idMovimientoEditando; // Añadimos el ID si estamos editando
+
+                const res = await fetch('/.netlify/functions/crm_finanzas', {
+                    method: metodo,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${tokenSeguro}`,
+                        'X-Usuario-Operador': usuarioReal
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    cancelarEdicion(); // Limpiamos el form y reseteamos variables
+                    cargarDatosFinancieros(); // Recargamos la tabla
+                } else {
+                    alert("Error al procesar: " + data.error);
+                }
+            } catch (error) {
+                alert("Fallo de conexión al servidor.");
+            }
+
+            btn.disabled = false;
+        });
+
+        // 6. Eliminar Movimiento
+        async function eliminarMovimiento(id) {
+            if (!confirm("⚠️ ¿Estás seguro de que deseas eliminar este movimiento? Esta acción afectará tus saldos y no se puede deshacer.")) return;
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_finanzas', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${tokenSeguro}`,
+                        'X-Usuario-Operador': usuarioReal
+                    },
+                    body: JSON.stringify({ id: id })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    cargarDatosFinancieros(); // Recargar tras borrar
+                } else {
+                    alert("No se pudo eliminar: " + data.error);
+                }
+            } catch (error) {
+                alert("Fallo de conexión al eliminar.");
+            }
+        }
+
+        // 7. Función de Exportación a PDF Corporativo
+        function exportarPDF() {
+            const elemento = document.querySelector('.container');
+            const botonesExport = document.querySelectorAll('.btn-pdf-export, .btn-icon');
+
+            // Ocultar botones temporalmente para el PDF
+            botonesExport.forEach(b => b.style.display = 'none');
+
+            const opciones = {
+                margin: 10,
+                filename: `Reporte_Financiero_VIGILEX_${new Date().toLocaleDateString('es-MX')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opciones).from(elemento).save().then(() => {
+                // Restaurar botones
+                botonesExport.forEach(b => b.style.display = 'inline-block');
+                document.querySelector('.btn-pdf-export').style.display = 'flex';
+            });
+        }
+
+        // Inicializar Fecha de hoy al abrir
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('input-fecha').value = new Date().toISOString().split('T')[0];
+            cargarDatosFinancieros();
+
+            // Intento de buscar nombre real en background si existe el script de info_cuenta
+            fetch('/.netlify/functions/info_cuenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ username: localStorage.getItem('usuario_actual') })
+            }).then(r => r.json()).then(d => {
+                if (d.success && d.cuenta.nombre_real) {
+                    document.getElementById('nombre-usuario').innerText = d.cuenta.nombre_real;
+                }
+            }).catch(e => console.log('Omitiendo nombre real'));
+        });
+    </script>
+</body>
+
+</html>

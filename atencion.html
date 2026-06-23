@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atención al Cliente | VIGILEX</title>
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            margin: 0;
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        /* GRID DE CLIENTES */
+        .clientes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .cliente-folder {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-bottom: 5px solid var(--accent);
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cliente-folder:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .folder-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .cliente-name {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .cliente-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* VISTA DETALLE CLIENTE */
+        #detalle-cliente {
+            display: none;
+        }
+
+        .asunto-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 6px solid var(--primary);
+        }
+
+        .reporte-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .btn-slides {
+            background: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-slides:disabled {
+            background: #ccc;
+        }
+
+        #loader {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-nav">
+        <h1 class="header-title">🤝 Atención al Cliente</h1>
+        <div style="display: flex; gap: 10px;">
+            <button id="btn-regresar" onclick="mostrarGrid()"
+                style="display:none; background:#eee; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;">←
+                Volver</button>
+            <a href="lobby.html"
+                style="text-decoration:none; color:var(--primary); font-weight:bold; font-size:14px; padding:10px;">Cerrar</a>
+        </div>
+    </div>
+
+    <div id="grid-clientes" class="clientes-grid"></div>
+
+    <div id="loader">✨ Vigilex AI está redactando los logros del último periodo...</div>
+
+    <div id="detalle-cliente">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+            <h2 id="nombre-cliente-titulo" style="margin:0; color:var(--primary);"></h2>
+
+            <div
+                style="display: flex; gap: 10px; background: #fdfaf3; padding: 10px; border-radius: 8px; border: 1px solid var(--accent);">
+                <input type="text" id="input-template-id" value="1EBvP1SNDeQgx6iJx67ejUyVjkeCPTDZ4d19fiV4s97U"
+                    placeholder="ID de Plantilla..."
+                    style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 12px; width: 280px;">
+                <button id="btn-generar-slides" onclick="generarReporteSlides()" class="btn-slides">
+                    <span>📊 Generar Reporte con Plantilla</span>
+                </button>
+            </div>
+        </div>
+        <div id="lista-asuntos-analisis"></div>
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+        let clienteSeleccionado = null;
+        let analisisGlobalActual = null;
+
+        document.addEventListener('DOMContentLoaded', cargarClientes);
+
+        async function cargarClientes() {
+            const res = await fetch('/.netlify/functions/crm_atencion_core', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ username: usernameGlobal, accion: 'listar_clientes' })
+            });
+            const data = await res.json();
+            const grid = document.getElementById('grid-clientes');
+            grid.innerHTML = data.clientes.map(c => `
+                <div class="cliente-folder" onclick="verDetalleCliente('${c.cliente}')">
+                    <span class="folder-icon">📂</span>
+                    <div class="cliente-name">${c.cliente}</div>
+                    <div class="cliente-meta">${c.total_exp} expedientes activos</div>
+                </div>
+            `).join('');
+        }
+
+        async function verDetalleCliente(nombre) {
+            clienteSeleccionado = nombre;
+            document.getElementById('grid-clientes').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('btn-regresar').style.display = 'block';
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_atencion_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'analizar_cliente', cliente: nombre })
+                });
+                const data = await res.json();
+                analisisGlobalActual = data.analisis;
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('detalle-cliente').style.display = 'block';
+                document.getElementById('nombre-cliente-titulo').innerText = nombre;
+
+                const contenedor = document.getElementById('lista-asuntos-analisis');
+                contenedor.innerHTML = data.analisis.map(a => `
+                    <div class="asunto-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                            <b style="font-size:16px;">Exp: ${a.expediente}</b>
+                            <span class="reporte-badge">Corte: Últimos 25 días</span>
+                        </div>
+                        <p style="font-size:14px; color:#555;"><b>Estado Actual:</b> ${a.etapa}</p>
+                        <div style="background:#f9f9f9; padding:15px; border-radius:8px; font-size:13px; margin-bottom:10px;">
+                            <b style="color:var(--accent);">🏆 LOGROS DEL PERIODO:</b><br>${a.logros.replace(/\n/g, '<br>')}
+                        </div>
+                        <p style="font-size:13px;"><b>🔮 PROYECCIÓN:</b> ${a.proyeccion}</p>
+                    </div>
+                `).join('');
+            } catch (e) { alert("Error al analizar"); }
+        }
+
+        async function generarReporteSlides() {
+            // 1. Capturamos el ID de la plantilla
+            const templateId = document.getElementById('input-template-id').value.trim();
+            if (!templateId) return alert("Por favor, pega el ID de tu plantilla de Google Slides.");
+
+            const btn = document.getElementById('btn-generar-slides');
+            btn.disabled = true; btn.innerText = "🚀 Clonando plantilla y redactando...";
+
+            try {
+                // 2. Se lo enviamos al backend en el body
+                const res = await fetch('/.netlify/functions/crm_atencion_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        username: usernameGlobal,
+                        accion: 'crear_google_slides',
+                        cliente: clienteSeleccionado,
+                        datos: analisisGlobalActual,
+                        template_id: templateId // <--- ¡ESTO ERA LO QUE FALTABA!
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success && data.url) {
+                    if (confirm("✅ ¡Presentación creada con éxito! ¿Deseas abrirla ahora?")) {
+                        window.open(data.url, '_blank');
+                    }
+                } else {
+                    alert("Error: " + (data.error || "Fallo en la clonación"));
+                }
+            } catch (e) { alert("Error al conectar con Google Slides."); }
+
+            btn.disabled = false; btn.innerText = "📊 Generar Reporte con Plantilla";
+        }
+
+        function mostrarGrid() {
+            document.getElementById('detalle-cliente').style.display = 'none';
+            document.getElementById('grid-clientes').style.display = 'grid';
+            document.getElementById('btn-regresar').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

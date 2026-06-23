@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta | VIGILEX</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        /* --- ARQUITECTURA VISUAL HOMOLOGADA --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --red-text: #c62828;
+            --green-text: #2e7d32;
+            --input-border: #cccccc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            /* Cambio crucial para acomodar el Header */
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px 10px;
+            /* Padding ajustado */
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            box-sizing: border-box;
+            /* Previene que el padding desborde la caja */
+            border-top: 6px solid var(--primary);
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            color: white;
+            background-color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-volver:hover {
+            background-color: #153c61;
+        }
+
+        /* --- PANELES DE INFORMACIÓN Y FORMULARIOS --- */
+        .info-panel {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-val {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .badge-ok {
+            background-color: #e8f5e9;
+            color: var(--green-text);
+        }
+
+        .badge-error {
+            background-color: #ffebee;
+            color: var(--red-text);
+        }
+
+        .seccion-titulo {
+            color: var(--primary);
+            font-size: 18px;
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #153c61;
+        }
+
+        .btn-primary:disabled {
+            background-color: #9aa7b5;
+            cursor: not-allowed;
+        }
+
+        .alerta {
+            display: none;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .alerta-exito {
+            background-color: #e8f5e9;
+            color: var(--green-text);
+            border: 1px solid var(--green-text);
+        }
+
+        .alerta-error {
+            background-color: #ffebee;
+            color: var(--red-text);
+            border: 1px solid var(--red-text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <body>
+        <div
+            style="max-width: 900px; margin: 0 auto 20px auto; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box;">
+            <h1 style="color: var(--primary); margin: 0; font-size: 24px;">Cómputo Jurisdiccional</h1>
+            <a href="lobby.html"
+                style="text-decoration: none; color: white; background-color: var(--primary); padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold; transition: 0.2s;">←
+                Volver al Panel</a>
+        </div>
+
+        <div class="container" style="margin-top: 0;">
+
+            <div class="container">
+                <div class="header-nav">
+                    <h1>Gestión de Identidad</h1>
+                    <a href="lobby.html" class="btn-volver">← Volver al Panel</a>
+                </div>
+
+                <div id="loader-datos" style="text-align: center; padding: 40px; color: #666; font-style: italic;">
+                    Extrayendo matriz de datos institucionales...
+                </div>
+
+                <div id="contenido-cuenta" style="display: none;">
+
+                    <div class="info-panel">
+                        <h2 class="seccion-titulo">Credenciales del Sistema</h2>
+
+                        <div class="info-row">
+                            <div class="info-label">Titular / Firma Legal</div>
+                            <div class="info-val" id="val-titular">--</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Usuario Institucional (Login)</div>
+                            <div class="info-val" id="val-username">--</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Licencia Comercial Vinculada</div>
+                            <div class="info-val" id="val-licencia"
+                                style="font-family: monospace; letter-spacing: 1px;">--
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Estado de la Vigencia</div>
+                            <div style="text-align: right;">
+                                <div class="info-val" id="val-fecha-exp" style="margin-bottom: 5px;">--</div>
+                                <div id="val-badge-exp" class="badge">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-panel" style="background-color: white;">
+                        <h2 class="seccion-titulo" style="color: #c62828; border-bottom-color: #c62828;">Seguridad de la
+                            Cuenta
+                        </h2>
+
+                        <div id="msgAlerta" class="alerta"></div>
+
+                        <form id="form-password">
+                            <div class="form-group">
+                                <label>Contraseña Actual</label>
+                                <input type="password" id="pass_actual" placeholder="Ingrese su contraseña vigente"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nueva Contraseña</label>
+                                <input type="password" id="pass_nuevo" placeholder="Mínimo 6 caracteres" required
+                                    minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmar Nueva Contraseña</label>
+                                <input type="password" id="pass_confirmar" placeholder="Repita su nueva contraseña"
+                                    required minlength="6">
+                            </div>
+
+                            <button type="submit" id="btn-cambiar" class="btn-primary">ACTUALIZAR CONTRASEÑA
+                                MAESTRA</button>
+                        </form>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="cerrarSesion()"
+                            style="background: transparent; color: var(--red-text); border: 1px solid var(--red-text); padding: 10px 20px; width: auto; font-size: 14px;">
+                            Cerrar Sesión de Forma Segura
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+                // 1. Barrera de Seguridad Cliente
+                if (localStorage.getItem('sesion_activa') !== 'verdadera') {
+                    window.location.replace("inicio.html");
+                }
+
+                const usuarioActual = localStorage.getItem('usuario_actual');
+                const tokenSeguro = localStorage.getItem('vigilex_token'); // <--- ¡AGREGA ESTA LÍNEA!
+                let licenciaExpiradaGlobal = false;
+
+                // 2. Extracción de Datos al Cargar la Página
+                document.addEventListener('DOMContentLoaded', async () => {
+                    try {
+                        // Hacemos uso del endpoint info_cuenta.js que ya tenías programado
+                        const response = await fetch('/.netlify/functions/info_cuenta', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                            body: JSON.stringify({ username: usuarioGlobal })
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            document.getElementById('val-titular').innerText = usuarioGlobal;
+                            document.getElementById('val-username').innerText = data.cuenta.username;
+                            document.getElementById('val-licencia').innerText = data.cuenta.licencia_usada || 'ASIGNACIÓN DIRECTA';
+
+                            // Cálculo algorítmico de la vigencia
+                            if (!data.cuenta.fecha_expiracion) {
+                                document.getElementById('val-fecha-exp').innerText = "Licencia Vitalicia";
+                                document.getElementById('val-badge-exp').style.display = 'none';
+                            } else {
+                                const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+                                const exp = new Date(data.cuenta.fecha_expiracion);
+                                const dif = Math.ceil((exp - hoy) / (1000 * 60 * 60 * 24));
+
+                                document.getElementById('val-fecha-exp').innerText = exp.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+
+                                const badge = document.getElementById('val-badge-exp');
+                                if (dif > 0) {
+                                    badge.innerText = `Faltan ${dif} días naturales`;
+                                    badge.className = 'badge badge-ok';
+                                } else {
+                                    badge.innerText = "LICENCIA EXPIRADA";
+                                    badge.className = 'badge badge-error';
+                                }
+                            }
+
+                            // Transición de Interfaz
+                            document.getElementById('loader-datos').style.display = 'none';
+                            document.getElementById('contenido-cuenta').style.display = 'block';
+                        } else {
+                            throw new Error("No se pudo extraer la información.");
+                        }
+                    } catch (e) {
+                        document.getElementById('loader-datos').innerHTML = `<span style="color: #c62828; font-weight: bold;">Error: Fallo de conexión con el núcleo de datos institucionales.</span>`;
+                    }
+                });
+
+                // 3. Orquestador de Cambio de Contraseña
+                document.getElementById('form-password').addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const alerta = document.getElementById('msgAlerta');
+                    alerta.style.display = 'none';
+
+                    const passActual = document.getElementById('pass_actual').value;
+                    const passNuevo = document.getElementById('pass_nuevo').value;
+                    const passConfirm = document.getElementById('pass_confirmar').value;
+                    const btn = document.getElementById('btn-cambiar');
+
+                    // Barrera de congruencia local
+                    if (passNuevo !== passConfirm) {
+                        mostrarAlerta('Las nuevas contraseñas no coinciden. Verifique su escritura.', 'error');
+                        return;
+                    }
+
+                    btn.disabled = true; btn.innerText = "PROCESANDO TRANSACCIÓN...";
+
+                    try {
+                        const response = await fetch('/.netlify/functions/cambiar_password', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                            body: JSON.stringify({
+                                usuarioActual: usuarioGlobal,
+                                passwordActual: passActual,
+                                passwordNuevo: passNuevo
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            mostrarAlerta('✅ Contraseña actualizada correctamente. Use su nueva clave en el próximo inicio de sesión.', 'exito');
+                            document.getElementById('form-password').reset();
+                        } else {
+                            mostrarAlerta(`❌ ${data.error}`, 'error');
+                        }
+                    } catch (error) {
+                        mostrarAlerta('❌ Error de red al intentar conectar con el servidor.', 'error');
+                    }
+
+                    btn.disabled = false; btn.innerText = "ACTUALIZAR CONTRASEÑA MAESTRA";
+                });
+
+                // 4. Utilidades
+                function mostrarAlerta(mensaje, tipo) {
+                    const div = document.getElementById('msgAlerta');
+                    div.innerText = mensaje;
+                    div.className = tipo === 'error' ? 'alerta alerta-error' : 'alerta alerta-exito';
+                    div.style.display = 'block';
+                }
+
+                function cerrarSesion() {
+                    localStorage.removeItem('sesion_activa');
+                    localStorage.removeItem('usuario_actual');
+                    window.location.replace("index.html");
+                }
+            </script>
+
+            <script src="notificaciones_globales.js"></script>
+    </body>
+
+</html>

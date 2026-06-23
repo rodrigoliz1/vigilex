@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes y Precios | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-vigilex.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --gold: #ad974f;
+            --gold-hover: #8f7c3f;
+            --bg-light: #f4f6f8;
+            --text-dark: #333333;
+            --text-gray: #666666;
+            --green-savings: #2e7d32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        /* --- NAVEGACIÓN (Consistente con inicio.html) --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--gold-hover);
+        }
+
+        /* --- HEADER DE PRECIOS --- */
+        .pricing-header {
+            text-align: center;
+            padding: 80px 5% 40px;
+            background: linear-gradient(to bottom, #ffffff, var(--bg-light));
+        }
+
+        .pricing-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .pricing-header p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- SELECTOR DE CICLO DE FACTURACIÓN --- */
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            color: var(--text-gray);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .toggle-btn.active {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(10, 37, 64, 0.2);
+        }
+
+        /* --- TABLA DE PRECIOS --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto 80px;
+            padding: 0 5%;
+        }
+
+        .pricing-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eeeeee;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Tarjeta Destacada (Starter) */
+        .card-popular {
+            border: 2px solid var(--gold);
+            transform: scale(1.03);
+            z-index: 1;
+        }
+
+        .card-popular:hover {
+            transform: scale(1.03) translateY(-5px);
+        }
+
+        .badge-popular {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .plan-users {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+        }
+
+        .plan-price-container {
+            min-height: 100px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 25px;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            transition: opacity 0.3s;
+        }
+
+        .plan-currency {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .plan-period {
+            font-size: 1rem;
+            color: var(--text-gray);
+            font-weight: 400;
+        }
+
+        .plan-savings {
+            color: var(--green-savings);
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #e8f5e9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .plan-savings.show {
+            opacity: 1;
+        }
+
+        /* --- ETIQUETA DE PRUEBA GRATIS --- */
+        .plan-trial {
+            display: inline-block;
+            background-color: rgba(173, 151, 79, 0.1);
+            /* Fondo dorado transparente */
+            color: var(--navy);
+            border: 1px solid var(--gold);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .plan-trial i {
+            color: var(--gold);
+            margin-right: 5px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: var(--text-gray);
+        }
+
+        .plan-features i {
+            color: var(--gold);
+            margin-top: 4px;
+        }
+
+        .btn-plan {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 2px solid var(--navy);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+        }
+
+        .btn-outline:hover {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .btn-fill {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .btn-fill:hover {
+            background: #153c61;
+            border-color: #153c61;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 60px 5% 20px 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo h2 {
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .footer-logo p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 300px;
+        }
+
+        /* ESTAS LÍNEAS FALTABAN */
+        .footer-links h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+
+            /* Ajuste elegante del menú para celulares (columna centrada) */
+            nav {
+                flex-direction: column;
+                padding: 20px 5%;
+                gap: 15px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                width: 100%;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+                /* Ligeramente más pequeño para que no sature */
+            }
+
+            nav .btn-primary {
+                width: 100%;
+                text-align: center;
+            }
+
+            .card-popular {
+                transform: none;
+            }
+
+            .card-popular:hover {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logovigilexrubros.png" alt="Vigilex Logo"> VIGILEX
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="index.html#caracteristicas">Características</a></li>
+            <li><a href="index.html#nosotros">Nosotros</a></li>
+            <li><a href="precios.html" class="active">Precios</a></li>
+        </ul>
+        <a href="inicio.html" class="btn-primary">Acceder al Sistema</a>
+    </nav>
+
+    <section class="pricing-header">
+        <h1>Invierte en la tranquilidad de tu despacho</h1>
+        <p>Selecciona el plan que mejor se adapte al tamaño de tu firma. Ahorra hasta un 16% con nuestros planes
+            anuales.</p>
+
+        <div class="billing-toggle">
+            <button class="toggle-btn active" onclick="cambiarCiclo('mensual')" id="btn-mensual">Mensual</button>
+            <button class="toggle-btn" onclick="cambiarCiclo('semestral')" id="btn-semestral">Semestral</button>
+            <button class="toggle-btn" onclick="cambiarCiclo('anual')" id="btn-anual">Anual</button>
+        </div>
+    </section>
+
+    <section class="pricing-grid">
+
+        <div class="pricing-card">
+            <h3 class="plan-name">Plan Personal</h3>
+            <div class="plan-users">1 Abogado</div>
+
+            <div class="plan-price-container">
+                <div class="plan-price"><span class="plan-currency">$</span><span id="price-personal">499</span><span
+                        class="plan-period" id="period-personal">/ mes</span></div>
+                <div class="plan-savings" id="savings-personal">Ahorra $0</div>
+            </div>
+
+            <div class="plan-trial" id="trial-personal"><i class="fa-solid fa-gift"></i> 7 Días de Prueba Gratis</div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> Acceso individual completo</li>
+                <li><i class="fa-solid fa-check"></i> Gestión de expedientes ilimitada</li>
+                <li><i class="fa-solid fa-check"></i> Agenda inteligente (Calendario PJE/PJF)</li>
+                <li><i class="fa-solid fa-check"></i> Creación de tareas y recordatorios</li>
+                <li><i class="fa-solid fa-check"></i> Soporte por correo electrónico</li>
+            </ul>
+            <a href="#" id="btn-link-personal" class="btn-plan btn-outline">Seleccionar Plan</a>
+        </div>
+
+        <div class="pricing-card card-popular">
+            <div class="badge-popular">Más Popular</div>
+            <h3 class="plan-name">Plan Institucional <br> Starter</h3>
+            <div class="plan-users">Hasta 5 Usuarios</div>
+
+            <div class="plan-price-container">
+                <div class="plan-price"><span class="plan-currency">$</span><span id="price-starter">999</span><span
+                        class="plan-period" id="period-starter">/ mes</span></div>
+                <div class="plan-savings" id="savings-starter">Ahorra $0</div>
+            </div>
+
+            <div class="plan-trial" id="trial-starter"><i class="fa-solid fa-gift"></i> 7 Días de Prueba Gratis</div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> <b>Todo lo del plan Personal, más:</b></li>
+                <li><i class="fa-solid fa-check"></i> Acceso para 5 abogados / pasantes</li>
+                <li><i class="fa-solid fa-check"></i> Asignación de tareas a miembros del equipo</li>
+                <li><i class="fa-solid fa-check"></i> Calendario institucional compartido</li>
+                <li><i class="fa-solid fa-check"></i> Notificaciones de equipo</li>
+                <li><i class="fa-solid fa-check"></i> Soporte prioritario 24/7</li>
+            </ul>
+            <a href="#" id="btn-link-starter" class="btn-plan btn-fill">Seleccionar Plan</a>
+        </div>
+
+        <div class="pricing-card">
+            <h3 class="plan-name">Plan Institucional <br> Profesional</h3>
+            <div class="plan-users">Usuarios Ilimitados</div>
+
+            <div class="plan-price-container">
+                <div class="plan-price"><span class="plan-currency">$</span><span id="price-pro">1,499</span><span
+                        class="plan-period" id="period-pro">/ mes</span></div>
+                <div class="plan-savings" id="savings-pro">Ahorra $0</div>
+            </div>
+
+            <div class="plan-trial" id="trial-pro"><i class="fa-solid fa-gift"></i> 7 Días de Prueba Gratis</div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> <b>Todo lo del plan Starter, más:</b></li>
+                <li><i class="fa-solid fa-check"></i> Cuentas ilimitadas para toda la firma</li>
+                <li><i class="fa-solid fa-check"></i> Roles y permisos de seguridad avanzados</li>
+                <li><i class="fa-solid fa-check"></i> Historial de auditoría de modificaciones</li>
+                <li><i class="fa-solid fa-check"></i> Onboarding personalizado para el despacho</li>
+            </ul>
+            <a href="#" id="btn-link-pro" class="btn-plan btn-outline">Seleccionar Plan</a>
+        </div>
+
+    </section>
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logovigilexrubros.png" alt="Vigilex Logo">
+                <p></p>VIGILEX
+                <p>Sistema de Gestión Integral para Abogados.
+                <p> </p> Seguridad, control y elegancia. </p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="inicio.html">Acceso a Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VIGILEX. Todos los derechos reservados. <p></p> Rodrigo Lizárraga Camacho
+        </div>
+
+    </footer>
+
+    <script>
+        // Catálogo de precios, ahorros, DÍAS DE PRUEBA y enlaces
+        const catalogo = {
+            mensual: {
+                personal: { precio: "499", periodo: "/ mes", ahorro: 0, prueba: "7", link: "https://buy.stripe.com/eVq4gz1R8bAX0m9gUb9bO0b" },
+                starter: { precio: "999", periodo: "/ mes", ahorro: 0, prueba: "7", link: "https://buy.stripe.com/cNi3cv8fw0Wj0m9dHZ9bO0e" },
+                pro: { precio: "1,499", periodo: "/ mes", ahorro: 0, prueba: "7", link: "https://buy.stripe.com/4gM14n9jA34rb0N0Vd9bO0h" }
+            },
+            semestral: {
+                personal: { precio: "2,499", periodo: "/ semestre", ahorro: 495, prueba: "14", link: "https://buy.stripe.com/4gMbJ12VcbAX9WJdHZ9bO0c" },
+                starter: { precio: "5,499", periodo: "/ semestre", ahorro: 495, prueba: "14", link: "https://buy.stripe.com/eVq3cvbrIgVhecZ0Vd9bO0f" },
+                pro: { precio: "8,499", periodo: "/ semestre", ahorro: 495, prueba: "14", link: "https://buy.stripe.com/4gM7sL7bs6gD9WJcDV9bO0i" }
+            },
+            anual: {
+                personal: { precio: "4,699", periodo: "/ año", ahorro: 1289, prueba: "30", link: "https://buy.stripe.com/fZufZhcvMawTecZ8nF9bO0d" },
+                starter: { precio: "10,499", periodo: "/ año", ahorro: 1489, prueba: "30", link: "https://buy.stripe.com/fZudR98fwbAX7OB0Vd9bO0g" },
+                pro: { precio: "15,999", periodo: "/ año", ahorro: 1989, prueba: "30", link: "https://buy.stripe.com/fZudR91R80Wj2uhavN9bO0j" }
+            }
+        };
+
+        function cambiarCiclo(ciclo) {
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${ciclo}`).classList.add('active');
+
+            const actualizarTarjeta = (plan) => {
+                const data = catalogo[ciclo][plan];
+
+                // 1. Actualiza Precios
+                document.getElementById(`price-${plan}`).innerText = data.precio;
+                document.getElementById(`period-${plan}`).innerText = data.periodo;
+
+                // 2. Actualiza Etiqueta de Días de Prueba
+                document.getElementById(`trial-${plan}`).innerHTML = `<i class="fa-solid fa-gift"></i> ${data.prueba} Días de Prueba Gratis`;
+
+                // 3. Actualiza Botón de Acción (Call To Action)
+                const boton = document.getElementById(`btn-link-${plan}`);
+                boton.href = data.link;
+                boton.innerText = `Comenzar mis ${data.prueba} Días de Prueba Gratis`;
+
+                // 4. Actualiza Etiqueta de Ahorro
+                const badgeAhorro = document.getElementById(`savings-${plan}`);
+                if (data.ahorro > 0) {
+                    badgeAhorro.innerText = `¡Ahorras $${data.ahorro.toLocaleString('es-MX')}!`;
+                    badgeAhorro.classList.add('show');
+                } else {
+                    badgeAhorro.classList.remove('show');
+                }
+            };
+
+            actualizarTarjeta('personal');
+            actualizarTarjeta('starter');
+            actualizarTarjeta('pro');
+        }
+
+        // Iniciar en vista mensual
+        cambiarCiclo('mensual');
+    </script>
+</body>
+
+</html>

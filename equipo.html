@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Despacho | Vigilex</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES DE DISEÑO INSTITUCIONAL --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            /* Dorado Premium */
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --danger: #c62828;
+            --danger-bg: #fffafa;
+            --success: #2e7d32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- NAVEGACIÓN SUPERIOR --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-nav img {
+            height: 30px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container-wrapper {
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+            border-top: 6px solid var(--primary);
+        }
+
+        .header-dashboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-text h1 {
+            color: var(--primary);
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(173, 151, 79, 0.2);
+        }
+
+        .btn-accent:hover {
+            background: #9c8745;
+            box-shadow: 0 8px 20px rgba(173, 151, 79, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--input-border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background: white;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 8px 15px;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-bg);
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* --- MÉTRICAS (ASIENTOS DE LICENCIA) --- */
+        .metrics-box {
+            background: #fdfaf3;
+            border: 1px dashed var(--accent);
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(173, 151, 79, 0.05);
+        }
+
+        .metrics-text {
+            color: var(--primary);
+            font-size: 15px;
+            margin: 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metrics-desc {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0 0 0;
+            font-weight: 500;
+        }
+
+        .metrics-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--accent);
+            font-family: 'Playfair Display', serif;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- TABLA DE EQUIPO --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 18px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        th {
+            color: #888;
+            font-weight: 700;
+            background: #fafafa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 11px;
+        }
+
+        th:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        tr:hover td {
+            background-color: #f9fbfd;
+        }
+
+        .rol-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .rol-titular {
+            background: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #c8e6c9;
+        }
+
+        .rol-admin {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffe0b2;
+        }
+
+        .rol-abogado {
+            background: #eef2f5;
+            color: var(--text-muted);
+            border: 1px solid #e0e0e0;
+        }
+
+        /* --- MODALES --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 37, 64, 0.85);
+            /* Azul muy oscuro y translúcido */
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            box-sizing: border-box;
+            border-top: 6px solid var(--accent);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(173, 151, 79, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .header-dashboard {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .metrics-box {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .top-nav {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <div class="logo-nav">
+            <img src="logovigilexrubros.png" alt="Vigilex" onerror="this.src='favicon.png'">
+            VIGILEX <span style="font-weight: 300; font-size: 16px; margin-left: 5px;">| Despacho</span>
+        </div>
+        <a href="lobby.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 12px; margin: 0;">← Volver al
+            Panel</a>
+    </nav>
+
+    <div class="container-wrapper">
+        <div class="container">
+            <div class="header-dashboard">
+                <div class="header-text">
+                    <h1 class="playfair">Gestión de Despacho</h1>
+                    <p class="subtitle">Administra los accesos y roles de tu equipo corporativo.</p>
+                </div>
+                <div>
+                    <button class="btn btn-accent" id="btn-abrir-modal" onclick="intentarInvitar()"
+                        style="display:none;">+ Invitar Abogado</button>
+                </div>
+            </div>
+
+            <div class="metrics-box">
+                <div>
+                    <p class="metrics-text">Asientos de Licencia Ocupados</p>
+                    <p class="metrics-desc">Expande la capacidad de tu licencia en Detalles de Suscripción.</p>
+                </div>
+                <div class="metrics-number" id="asientos-ocupados-texto">--</div>
+            </div>
+
+            <div id="banner-inhabilitados"
+                style="display:none; background: var(--danger-bg); border: 1px solid #ffcdd2; padding: 20px; border-radius: 12px; margin-bottom: 30px; border-left: 5px solid var(--danger);">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
+                    <div style="flex: 1;">
+                        <h4 style="color:var(--danger); margin:0 0 8px 0; font-size:16px; font-weight: 700;">⚠️ Tienes
+                            <span id="lbl-cuentas-excedidas">0</span> cuentas inhabilitadas
+                        </h4>
+                        <p style="margin:0; font-size:13px; color:#555; line-height: 1.5;">Por el límite de tu plan
+                            actual, las cuentas excedidas no pueden acceder al sistema. Serán <b>eliminadas
+                                permanentemente en <span id="lbl-dias-borrado"
+                                    style="color:var(--danger); font-weight:bold; font-size:15px;">14</span> días</b>
+                            junto con su historial.</p>
+                    </div>
+                    <a href="suscripcion.html" class="btn"
+                        style="background:var(--danger); color:white; text-decoration:none; padding: 12px 20px; white-space: nowrap;">Mejorar
+                        Plan</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabla-equipo">
+                    <thead>
+                        <tr>
+                            <th>Usuario Institucional</th>
+                            <th>Correo Electrónico</th>
+                            <th>Rol de Acceso</th>
+                            <th>Registro</th>
+                            <th style="text-align: right;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-equipo">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #888; font-weight: 600;">
+                                Conectando con la base de datos del despacho...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalInvitar" class="modal">
+        <div class="modal-content">
+            <span class="modal-close"
+                onclick="document.getElementById('modalInvitar').style.display='none'">&times;</span>
+            <h2 class="playfair">Crear Acceso Corporativo</h2>
+
+            <div class="form-group">
+                <label>Nombre Completo del Abogado:</label>
+                <input type="text" id="inv-nombre" placeholder="Ej. Lic. Roberto Sánchez">
+            </div>
+
+            <div class="form-group">
+                <label>Usuario Institucional (Login):</label>
+                <input type="text" id="inv-user" placeholder="Ej. rsanchez">
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico de Respaldo:</label>
+                <input type="email" id="inv-email" placeholder="ejemplo@despacho.com">
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña Temporal:</label>
+                <input type="text" id="inv-pass" placeholder="Asígnale una contraseña de 1er uso">
+            </div>
+
+            <div class="form-group">
+                <label>Nivel de Permisos:</label>
+                <select id="inv-rol">
+                    <option value="socio">Socio (Administra despacho y carteras)</option>
+                    <option value="admin">Administrador (Control de sistema)</option>
+                    <option value="abogado">Abogado (Acceso Estándar Libre)</option>
+                    <option value="asociado">Asociado (Sujeto a revisión de Jefe/Socio)</option>
+                    <option value="pasante">Pasante (Solo ve lo que le comparten)</option>
+                </select>
+            </div>
+
+            <button class="btn btn-accent" style="width: 100%; padding: 15px; margin-top: 10px;" id="btn-ejecutar-inv"
+                onclick="ejecutarInvitacion()">Registrar y Enviar Accesos</button>
+        </div>
+    </div>
+
+    <div id="modalMetricas" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <span class="modal-close"
+                onclick="document.getElementById('modalMetricas').style.display='none'">&times;</span>
+            <h2 class="playfair">📊 Trazabilidad Operativa</h2>
+
+            <div
+                style="background:#fdfaf3; padding:20px; border-radius:10px; border:1px solid var(--accent); margin-bottom:20px;">
+                <p style="margin:0 0 8px 0; font-size:13px; color: #555;"><b>Abogado:</b> <span id="met-usuario"
+                        style="color:var(--primary); font-weight: bold;"></span></p>
+                <p style="margin:0 0 8px 0; font-size:13px; color: #555;"><b>Correo:</b> <span id="met-email"
+                        style="font-weight: 500;"></span></p>
+                <p style="margin:0; font-size:13px; color: #555;"><b>Asuntos Activos a su cargo:</b> <span
+                        id="met-total" style="font-weight:900; font-size:18px; color:var(--accent);">0</span></p>
+            </div>
+
+            <h4
+                style="color:var(--primary); margin-bottom:15px; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                Desglose de Cartera:</h4>
+            <div id="met-lista-expedientes" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+            <button class="btn btn-outline" style="width:100%; margin-top:25px; padding:14px;"
+                onclick="document.getElementById('modalMetricas').style.display='none'">Cerrar Panel</button>
+        </div>
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usuarioLocal = localStorage.getItem('usuario_actual');
+
+        if (!tokenSeguro || !usuarioLocal) {
+            window.location.replace("inicio.html");
+        }
+
+        let asientosOcupados = 0;
+        let asientosTotales = 0;
+        let miRangoNum = 99; // Se alimentará del servidor
+        let vistaActual = 'despacho'; // O 'celula'
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Pestaña predeterminada al cargar
+            vistaActual = 'celula';
+
+            // Inyectamos las pestañas (Tabs) invertidas
+            const header = document.querySelector('.header-dashboard');
+            const tabsHTML = `
+                <div style="width: 100%; display: flex; gap: 15px; margin-top: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;" id="equipo-tabs">
+                    <button id="tab-celula" onclick="cambiarVistaEquipo('celula')" style="background:none; border:none; font-weight:bold; font-size:14px; color:var(--primary); border-bottom: 3px solid var(--accent); padding-bottom:5px; cursor:pointer;">🛡️ Mi Equipo (Célula)</button>
+                    <button id="tab-despacho" onclick="cambiarVistaEquipo('despacho')" style="background:none; border:none; font-weight:bold; font-size:14px; color:#888; padding-bottom:5px; cursor:pointer;">🏢 Todo el Despacho</button>
+                </div>
+            `;
+            header.insertAdjacentHTML('afterend', tabsHTML);
+
+            cargarEquipo();
+        });
+
+        function cambiarVistaEquipo(vista) {
+            vistaActual = vista;
+            document.getElementById('tab-despacho').style.color = (vista === 'despacho') ? 'var(--primary)' : '#888';
+            document.getElementById('tab-despacho').style.borderBottom = (vista === 'despacho') ? '3px solid var(--accent)' : 'none';
+
+            document.getElementById('tab-celula').style.color = (vista === 'celula') ? 'var(--primary)' : '#888';
+            document.getElementById('tab-celula').style.borderBottom = (vista === 'celula') ? '3px solid var(--accent)' : 'none';
+
+            cargarEquipo();
+        }
+
+        async function cargarEquipo() {
+            document.getElementById('tbody-equipo').innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #888;">Analizando estructura corporativa...</td></tr>';
+
+            try {
+                const responseRaw = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usuarioLocal, accion: 'listar_equipo', vistaRequerida: vistaActual })
+                });
+                const data = await responseRaw.json();
+
+                if (responseRaw.status === 403 || responseRaw.status === 500) {
+                    alert("⚠️ Bloqueo: " + (data.error || "Fallo desconocido"));
+                    return window.location.replace("lobby.html");
+                }
+
+                miRangoNum = data.miRango;
+                asientosOcupados = data.equipo.length;
+                asientosTotales = data.limite;
+
+                // Si es Asociado (50) o Pasante (60), Ocultamos la pestaña de "Todo el Despacho"
+                if (miRangoNum > 40) {
+                    document.getElementById('tab-despacho').style.display = 'none';
+                    if (vistaActual === 'despacho') { cambiarVistaEquipo('celula'); return; }
+                }
+
+                // Mostrar botón de invitar solo si no es Pasante (60)
+                if (miRangoNum < 60) {
+                    document.getElementById('btn-abrir-modal').style.display = 'inline-flex';
+                }
+
+                const tbody = document.getElementById('tbody-equipo');
+                tbody.innerHTML = "";
+
+                // ACTUALIZACIÓN DE CABECERA (Asientos)
+                const limiteTxt = data.limite >= 99999 ? '∞' : data.limite;
+                if (document.getElementById('asientos-ocupados-texto')) {
+                    // Sumamos los asientos ocupados reales (ignora la vista parcial de célula)
+                    document.getElementById('asientos-ocupados-texto').innerText = `${asientosOcupados} / ${limiteTxt}`;
+                }
+
+                data.equipo.forEach((u, index) => {
+                    let esPendiente = u.requiere_cambio_pass;
+                    let fechaRegistroHtml = esPendiente ? `<span style="color:#e65100; font-weight:bold;">Pendiente de Activación</span>` : "Activo";
+                    let btnReenviar = "";
+
+                    // Solo superiores pueden reenviar invitaciones
+                    if (esPendiente && u.rango_num > miRangoNum) {
+                        btnReenviar = `<button class="btn" style="background: white; color: #856404; border: 1px solid #fbc02d; font-size: 10px; padding: 6px 10px; margin-top: 8px; font-weight:bold; box-shadow:none;" onclick="reenviarInvitacion('${u.username}')">Reenviar Invitación</button>`;
+                    }
+
+                    // BOTONES DE ACCIÓN (Jerarquizados)
+                    let botonesAccion = `<div style="display: flex; justify-content: flex-end; gap: 8px;">`;
+
+                    // NUEVO: Modificar cargo (Solo si el objetivo es de menor rango)
+                    if (u.username !== usuarioLocal && u.rango_num > miRangoNum) {
+                        botonesAccion += `<button onclick="abrirModalEditarRol('${u.username}', '${u.rol_equipo}')" class="btn btn-primary" style="padding: 8px 14px; font-size: 11px; background: var(--success); color:white; border:none;">✏️ Cargo</button>`;
+                    }
+
+                    // Puedes ver la analítica de quienes están DEBAJO de ti (y de ti mismo)
+                    if (u.rango_num > miRangoNum || u.username === usuarioLocal) {
+                        botonesAccion += `<button onclick="window.location.href='desempeno.html?abogado=${u.username}'" class="btn btn-outline" style="padding: 8px 14px; font-size: 11px;">📊 Analítica</button>`;
+                    }
+
+                    // Puedes revocar solo a quienes están DEBAJO de ti
+                    if (u.username !== usuarioLocal && u.rango_num > miRangoNum) {
+                        botonesAccion += `<button onclick="revocarUsuario('${u.username}')" class="btn btn-danger" style="padding: 8px 14px; font-size: 11px; box-shadow: none;">🚫 Revocar</button>`;
+                    }
+
+                    botonesAccion += `</div>`;
+
+                    let tagClass = 'rol-abogado';
+                    let tagText = u.rol_equipo.toUpperCase();
+                    if (u.rol_equipo === 'master' || u.rol_equipo === 'titular' || u.rol_equipo === 'socio') tagClass = 'rol-titular';
+                    else if (u.rol_equipo === 'admin') tagClass = 'rol-admin';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><b style="color: var(--primary); font-size: 15px;">${u.nombre_real || u.username}</b><br><span style="font-size: 11px; color: #888;">${u.username}</span></td>
+                        <td style="color: #555; font-weight: 500; font-size: 13px;">${u.email || 'Sin correo'}<br>${btnReenviar}</td>
+                        <td><span class="rol-tag ${tagClass}">${tagText}</span></td>
+                        <td style="color: #666; font-size: 13px; font-weight: 600;">${fechaRegistroHtml}</td>
+                        <td>${botonesAccion}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (e) {
+                console.error(e);
+                alert("Fallo al contactar al servidor del despacho.");
+            }
+        }
+
+        function intentarInvitar() {
+            // 1. Validamos el límite de licencias
+            if (asientosOcupados >= asientosTotales) {
+                alert("⚠️ LÍMITE DE LICENCIA ALCANZADO\n\nTu suscripción actual solo permite " + (asientosTotales >= 99999 ? '∞' : asientosTotales) + " usuario(s).\nMejora tu plan en Detalles de Suscripción.");
+                return;
+            }
+
+            // 2. Filtramos los roles disponibles hacia abajo
+            const selectRol = document.getElementById('inv-rol');
+            const rangos = { 'titular': 20, 'socio': 30, 'admin': 40, 'abogado': 40, 'asociado': 50, 'pasante': 60 };
+
+            let encontroVisible = false;
+            Array.from(selectRol.options).forEach(opt => {
+                const optRango = rangos[opt.value] || 99;
+                // Mostrar solo los roles que numéricamente son mayores a mi rango (es decir, inferiores jerárquicamente)
+                if (optRango > miRangoNum) {
+                    opt.style.display = 'block';
+                    if (!encontroVisible) { opt.selected = true; encontroVisible = true; }
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+
+            if (!encontroVisible) {
+                alert("Tu nivel jerárquico no te permite crear nuevos accesos corporativos.");
+                return;
+            }
+
+            document.getElementById('modalInvitar').style.display = 'flex';
+        }
+
+        async function ejecutarInvitacion() {
+            const payload = {
+                nuevoNombre: document.getElementById('inv-nombre').value.trim(),
+                nuevoUser: document.getElementById('inv-user').value.trim(),
+                nuevoEmail: document.getElementById('inv-email').value.trim(),
+                nuevoPass: document.getElementById('inv-pass').value.trim(),
+                nuevoRol: document.getElementById('inv-rol').value
+            };
+
+            if (!payload.nuevoNombre || !payload.nuevoUser || !payload.nuevoEmail || !payload.nuevoPass) return alert("Completa todos los campos obligatorios.");
+
+            const btn = document.getElementById('btn-ejecutar-inv');
+            const ogText = btn.innerText; btn.innerText = "Registrando..."; btn.disabled = true;
+
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usuarioLocal, accion: 'invitar_miembro', payload })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("✅ Usuario registrado exitosamente. Se ha enviado el correo con sus credenciales.");
+                    document.getElementById('modalInvitar').style.display = 'none';
+                    ['inv-nombre', 'inv-user', 'inv-email', 'inv-pass'].forEach(id => document.getElementById(id).value = '');
+                    cargarEquipo();
+                } else { alert("Fallo: " + data.error); }
+            } catch (e) { alert("Error de red. Revisa tu conexión."); }
+
+            btn.innerText = ogText; btn.disabled = false;
+        }
+
+        async function reenviarInvitacion(usernameObjetivo) {
+            if (!confirm(`¿Deseas reenviar el correo de acceso a ${usernameObjetivo}?`)) return;
+            try {
+                const res = await fetch('/.netlify/functions/solicitar_otp_password', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameObjetivo })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) alert("✅ Correo reenviado con éxito.");
+                else alert("Error: No se pudo reenviar.");
+            } catch (e) { alert("Fallo de red."); }
+        }
+
+        async function revocarUsuario(usernameObjetivo) {
+            if (!confirm(`⚠️ ¿Revocar el acceso a ${usernameObjetivo}?\nSus asuntos pasarán a tu control.`)) return;
+
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usuarioLocal, accion: 'revocar_usuario', payload: { targetUsername: usernameObjetivo } })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) { alert("✅ " + data.mensaje); cargarEquipo(); }
+                else { alert("Fallo: " + (data.error || "Operación denegada.")); }
+            } catch (error) { alert("Error de conexión."); }
+        }
+
+        function abrirModalEditarRol(username, rolActual) {
+            document.getElementById('lbl-edit-rol-user').innerText = username;
+            document.getElementById('edit-rol-target-user').value = username;
+
+            const select = document.getElementById('edit-rol-select');
+            select.innerHTML = '';
+
+            const rolesDisponibles = [
+                { val: 'titular', label: 'Titular', r: 20 },
+                { val: 'socio', label: 'Socio', r: 30 },
+                { val: 'admin', label: 'Administrador', r: 40 },
+                { val: 'abogado', label: 'Abogado', r: 40 },
+                { val: 'asociado', label: 'Asociado', r: 50 },
+                { val: 'pasante', label: 'Pasante', r: 60 }
+            ];
+
+            // Solo mostramos opciones que estén por debajo del rango del usuario logueado
+            rolesDisponibles.forEach(rol => {
+                if (rol.r > miRangoNum) {
+                    const opt = document.createElement('option');
+                    opt.value = rol.val;
+                    opt.innerText = rol.label;
+                    if (rol.val === rolActual) opt.selected = true;
+                    select.appendChild(opt);
+                }
+            });
+
+            document.getElementById('modalEditarRol').style.display = 'flex';
+        }
+
+        async function ejecutarCambioRol() {
+            const targetUsername = document.getElementById('edit-rol-target-user').value;
+            const nuevoRol = document.getElementById('edit-rol-select').value;
+
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        usuarioActual: usuarioLocal,
+                        accion: 'cambiar_rol',
+                        payload: { targetUsername, nuevoRol }
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("✅ " + data.mensaje);
+                    document.getElementById('modalEditarRol').style.display = 'none';
+                    cargarEquipo();
+                } else {
+                    alert("⚠️ Error: " + data.error);
+                }
+            } catch (e) { alert("Fallo de red al actualizar cargo."); }
+        }
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+
+    <div id="modalEditarRol" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="modal-close"
+                onclick="document.getElementById('modalEditarRol').style.display='none'">&times;</span>
+            <h2 class="playfair">Modificar Cargo</h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Asigna una nueva jerarquía para <b
+                    id="lbl-edit-rol-user" style="color:var(--primary);"></b>.</p>
+
+            <input type="hidden" id="edit-rol-target-user">
+            <div class="form-group">
+                <label>Seleccione Nuevo Cargo:</label>
+                <select id="edit-rol-select"></select>
+            </div>
+
+            <button class="btn btn-accent" style="width: 100%; padding: 15px; margin-top: 10px;"
+                onclick="ejecutarCambioRol()">Actualizar Jerarquía</button>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

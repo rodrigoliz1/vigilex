@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel de Control | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES DE DISEÑO INSTITUCIONAL --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --hover-bg: #ffffff;
+            --green-soft: #e8f5e9;
+            --green-text: #2e7d32;
+            --red-soft: #ffebee;
+            --red-text: #c62828;
+            --urgente-rojo: #c62828;
+            --urgente-naranja: #e65100;
+            --urgente-amarillo: #fbc02d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* CLASE MÁGICA PARA IOS TAKEOVER */
+        body.chat-abierto-movil {
+            overflow: hidden !important;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        h1,
+        h2,
+        h3,
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- NAVEGACIÓN SUPERIOR --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-nav img {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #banner-expirado {
+            display: none;
+            width: 100%;
+            background-color: var(--red-soft);
+            color: var(--red-text);
+            text-align: center;
+            padding: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            border-bottom: 1px solid #ffcdd2;
+            font-size: 14px;
+            z-index: 99;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .header-dashboard {
+            margin-bottom: 40px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .greeting h1 {
+            color: var(--primary);
+            font-size: 36px;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .greeting p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 15px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            color: var(--red-text);
+            border: 1px solid var(--red-text);
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 10px;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--red-text);
+            color: white;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.2);
+        }
+
+        .campana-btn {
+            background: #f8f9fa;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            position: relative;
+            margin-right: 15px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .campana-btn:hover {
+            background-color: #eef2f5;
+            transform: scale(1.05);
+        }
+
+        .campana-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--red-text);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid white;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- GRID DE MÓDULOS --- */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .module-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+            border-top: 5px solid var(--primary);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(248, 249, 250, 0.5) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 0;
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border-top-color: var(--accent) !important;
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-expedientes {
+            border-top-color: #1565c0;
+        }
+
+        .card-resoluciones {
+            border-top-color: #0288d1;
+        }
+
+        .card-calendario {
+            border-top-color: #2e7d32;
+        }
+
+        .card-caducidades {
+            border-top-color: #c62828;
+        }
+
+        .card-analisis {
+            border-top-color: #6a1b9a;
+        }
+
+        .card-cuenta {
+            border-top-color: var(--accent);
+        }
+
+        .card-equipo {
+            border-top-color: #0277bd;
+        }
+
+        .card-admin {
+            border-top-color: #ff9800;
+        }
+
+        .card-ia {
+            border-top-color: #090148;
+            background: linear-gradient(180deg, #ffffff 0%, #f3e5f5 100%);
+        }
+
+        .module-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 50%;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .module-card:hover .module-icon {
+            transform: scale(1.1);
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .module-title {
+            font-size: 20px;
+            color: var(--primary);
+            margin: 0 0 12px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .module-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* --- PANEL LATERAL DE NOTIFICACIONES --- */
+        #panel-notificaciones {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            z-index: 10001;
+            transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 5px solid var(--accent);
+        }
+
+        #panel-notificaciones.abierto {
+            right: 0;
+        }
+
+        .notif-header {
+            padding: 25px 20px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notif-header h3 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .notif-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background: #f9f9f9;
+        }
+
+        .notif-card {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
+        .notif-card.urgente-rojo {
+            border-left-color: var(--urgente-rojo);
+            background: #fffafa;
+        }
+
+        .notif-card.urgente-naranja {
+            border-left-color: var(--urgente-naranja);
+            background: #fffdf5;
+        }
+
+        .notif-card.urgente-amarillo {
+            border-left-color: var(--urgente-amarillo);
+            background: #fffde7;
+        }
+
+        .notif-titulo {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .notif-msg {
+            font-size: 13px;
+            color: #555;
+            margin: 0 0 12px 0;
+            line-height: 1.5;
+        }
+
+        .notif-fecha {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .notif-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .notif-close:hover {
+            color: var(--red-text);
+        }
+
+        /* --- LOADERS Y MODALES GENERALES --- */
+        #pantalla-carga {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 37, 64, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-cuenta {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 16px;
+            padding: 35px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-top: 6px solid var(--accent);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--red-text);
+        }
+
+        .info-row {
+            margin-bottom: 18px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .info-val {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .info-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-cuenta-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            color: #888;
+            transition: 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .tab-cuenta-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        .btn-pago {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.1s, box-shadow 0.2s;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        .btn-pago:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-pago-anual {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-pago-mensual {
+            background-color: #f4f6f8;
+            color: var(--primary);
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="pantalla-carga">
+        <h2 class="playfair" style="color: var(--primary); font-size: 28px; margin-bottom: 10px;">Autenticando
+            credenciales...</h2>
+        <p style="color: #666; font-size: 14px;">Conectando con el servidor seguro de VIGILEX.</p>
+    </div>
+
+    <div id="banner-expirado">
+        ⚠️ Tu suscripción ha expirado. Los módulos del sistema se encuentran bloqueados. <a href="#"
+            onclick="abrirMiCuenta(); return false;" style="color: var(--red-text); text-decoration: underline;">Renovar
+            licencia ahora</a>.
+    </div>
+
+    <nav class="top-nav" style="display: none;" id="nav-principal">
+        <a href="lobby.html" class="logo-nav">
+            <img src="logovigilexrubros.png" alt="Vigilex" onerror="this.src='favicon.png'"> VIGILEX
+        </a>
+        <div class="nav-actions">
+            <button class="campana-btn" id="btn-comunicados-gerenciales" onclick="abrirModalMensaje()"
+                title="Enviar Comunicado al Equipo" style="display: none;">✉️</button>
+            <button class="campana-btn" onclick="toggleNotificaciones()" title="Notificaciones y Avisos">
+                🔔<span class="campana-badge" id="badge-notif">0</span>
+            </button>
+            <button class="campana-btn" onclick="window.location.href='mensajes.html'" title="Chats y Grupos Privados">
+                💬<span class="campana-badge" id="badge-chat" style="display:none;">0</span>
+            </button>
+            <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <div class="container" style="display: none;" id="contenido-principal">
+        <header class="header-dashboard">
+            <div class="greeting">
+                <h1 class="playfair">Bienvenido, <span id="nombre-usuario" style="color: var(--accent);"></span></h1>
+                <p>Gestión Jurisdiccional Inteligente</p>
+            </div>
+        </header>
+
+        <main class="modules-grid">
+            <a href="#" onclick="intentarAcceso('expedientes.html'); return false;"
+                class="module-card card-expedientes">
+                <div class="module-icon">📂</div>
+                <h2 class="module-title playfair">Cartera de Asuntos</h2>
+                <p class="module-desc">Gestión integral, seguimiento de acuerdos, tareas y listas de control
+                    personalizadas por asunto.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('mis_tareas.html'); return false;" class="module-card card-tareas">
+                <div class="module-icon">📋</div>
+                <h2 class="module-title playfair">Mis Tareas</h2>
+                <p class="module-desc">Acceso rápido a tu agenda operativa personal. Gestiona tus pendientes de
+                    escritorio, tribunales y tareas generales.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('vigilex_ia.html'); return false;" class="module-card card-ia">
+                <div class="module-icon">✨</div>
+                <h2 class="module-title playfair">VIGILEX IA</h2>
+                <p class="module-desc">Centro de Inteligencia Procesal. Clasificación automática de acuerdos y chat de
+                    consulta estratégica global.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('resoluciones.html'); return false;"
+                class="module-card card-resoluciones">
+                <div class="module-icon">📑</div>
+                <h2 class="module-title playfair">Resoluciones</h2>
+                <p class="module-desc">Boletín judicial interno. Revisa acuerdos, notificaciones y sentencias publicadas
+                    agrupadas por cartera.</p>
+            </a>
+            <a href="#" onclick="intentarAcceso('seleccion_calendario.html'); return false;"
+                class="module-card card-calendario">
+                <div class="module-icon">🗓️</div>
+                <h2 class="module-title playfair">Mi Calendario</h2>
+                <p class="module-desc">Agenda jurisdiccional interactiva. Visualización de plazos y términos
+                    sincronizados con la base de datos.</p>
+            </a>
+            <a href="#" onclick="intentarAcceso('computo'); return false;" class="module-card card-caducidades">
+                <div class="module-icon">⏱️</div>
+                <h2 class="module-title playfair">Cómputo de Plazos</h2>
+                <p class="module-desc">Calculadora de plazos del Fuero Común y Federal, con vinculación directa al
+                    calendario general y expedientes.</p>
+            </a>
+            <a href="#" onclick="intentarAcceso('analisis.html'); return false;" id="card-analisis" class="module-card card-analisis" style="display: none;">
+                <div class="module-icon">📊</div>
+                <h2 class="module-title playfair">Análisis de Expedientes</h2>
+                <p class="module-desc">Dashboard inteligente. Métricas, estadísticas de rendimiento y proyección de
+                    riesgos procesales con IA.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('atencion.html'); return false;" id="card-atencion" class="module-card"
+                style="display: none; border-top-color: #00796b;">
+                <div class="module-icon">🤝</div>
+                <h2 class="module-title playfair">Atención al Cliente</h2>
+                <p class="module-desc">Generación automática de reportes ejecutivos en Google Slides y resúmenes de
+                    logros por periodo.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('equipo.html'); return false;" id="card-equipo"
+                class="module-card card-equipo" style="display: none; background: #fcfdfe;">
+                <div class="module-icon" style="background: #e1f5fe;">👥</div>
+                <h2 class="module-title playfair" style="color: #0277bd;">Mi Despacho</h2>
+                <p class="module-desc">Gestión del Workspace. Invita abogados, revisa el VigiScore, asigna roles y
+                    administra tu equipo.</p>
+            </a>
+            <a href="#" class="module-card card-cuenta" onclick="abrirMiCuenta(); return false;">
+                <div class="module-icon">👤</div>
+                <h2 class="module-title playfair">Mi Cuenta</h2>
+                <p class="module-desc">Administración de credenciales, vigencia de licencia comercial y renovación de
+                    planes.</p>
+            </a>
+
+            <a href="#" onclick="intentarAcceso('finanzas.html'); return false;" class="module-card"
+                style="border-top-color: #2e7d32;">
+                <div class="module-icon" style="background: #e8f5e9;">💰</div>
+                <h2 class="module-title playfair">Finanzas y Contabilidad</h2>
+                <p class="module-desc">Control de ingresos, gastos y honorarios. Genera reportes de rentabilidad y
+                    proyecciones mensuales.</p>
+            </a>
+
+            <a href="admin.html" id="card-admin" class="module-card card-admin"
+                style="display: none; background: #fffde7;">
+                <div class="module-icon" style="background: #ffecb3;">👑</div>
+                <h2 class="module-title playfair" style="color: #f57c00;">Panel Master Admin</h2>
+                <p class="module-desc">Control total del sistema. Gestión de cuentas, auditoría y mensajería masiva.</p>
+            </a>
+        </main>
+    </div>
+
+    <div id="panel-notificaciones">
+        <div class="notif-header">
+            <h3 class="playfair" style="margin:0; font-size: 22px;">Centro de Avisos</h3>
+            <span style="font-size: 28px; cursor:pointer; line-height: 1;"
+                onclick="toggleNotificaciones()">&times;</span>
+        </div>
+        <div class="notif-body" id="contenedor-notificaciones">
+            <p style="color: #888; text-align: center; margin-top: 50px; font-size: 13px;">Buscando novedades...</p>
+        </div>
+    </div>
+
+    <div id="modalVisorNotificaciones" class="modal-overlay" style="z-index: 1009;">
+        <div
+            style="width: 90%; max-width: 500px; height: auto; max-height: 80vh; background: #fdfdfd; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; position: relative;">
+            <div
+                style="background: var(--primary); padding: 20px 25px; color: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--accent);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div
+                        style="background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        🔔</div>
+                    <h3 id="visor-notif-titulo" class="playfair"
+                        style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.5px;">Aviso del Sistema
+                    </h3>
+                </div>
+                <span class="close-btn" style="position: static; color: white;"
+                    onclick="document.getElementById('modalVisorNotificaciones').style.display='none'">&times;</span>
+            </div>
+            <div
+                style="padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #f9f9f9;">
+                <div
+                    style="align-self: flex-start; background: white; padding: 20px; border-radius: 0 16px 16px 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; border: 1px solid #eee;">
+                    <div style="font-size: 14px; color: #444; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; hyphens: auto;"
+                        id="visor-notif-mensaje">...</div>
+                    <div style="font-size: 11px; color: #999; text-align: right; margin-top: 15px; font-weight: bold;"
+                        id="visor-notif-fecha">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalChatApp" class="modal-overlay" style="z-index: 1010;">
+        <div id="chat-container-box" class="chat-modal-box mobile-show-left">
+
+            <div class="chat-panel-izq">
+                <div
+                    style="padding: 20px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+                    <h3 class="playfair" style="margin: 0; font-size: 20px; letter-spacing: 1px;">Comunicaciones</h3>
+                    <span style="cursor: pointer; font-size: 28px; line-height: 1; color: #fff;"
+                        onclick="cerrarModalChatUniversal()">&times;</span>
+                </div>
+                <div
+                    style="padding: 15px; border-bottom: 1px solid #ddd; display: flex; gap: 10px; flex-shrink: 0; background: white;">
+                    <select id="chat-nuevo-usuario"
+                        style="flex: 1; padding: 12px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; font-family: 'Montserrat', sans-serif;"
+                        onchange="iniciarNuevoChat(this.value)">
+                        <option value="">➕ Nuevo Chat...</option>
+                    </select>
+                    <button
+                        style="background: var(--primary); color: white; border: none; padding: 12px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; font-family: 'Montserrat', sans-serif; transition: 0.2s;"
+                        onclick="abrirModalGrupo()" onmouseover="this.style.background='var(--accent)'"
+                        onmouseout="this.style.background='var(--primary)'">👥 Grupo</button>
+                </div>
+                <div id="lista-contactos-chat" style="flex: 1; overflow-y: auto;"></div>
+            </div>
+
+            <div class="chat-panel-der">
+                <div id="chat-placeholder"
+                    style="flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #888; background: #fdfdfd;">
+                    <span style="font-size: 50px; margin-bottom: 15px; opacity: 0.5;">💬</span>
+                    <p style="font-size: 15px; font-weight: 600;">Selecciona un chat para comenzar</p>
+                </div>
+                <div id="chat-hilo-activo" style="display: none; flex: 1; flex-direction: column; height: 100%;">
+                    <div
+                        style="padding: 15px 20px; background: white; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); z-index: 10;">
+                        <div style="display: flex; align-items: center; overflow: hidden;">
+                            <button class="btn-volver-chat" onclick="volverListaChatsMobile()">←</button>
+                            <span id="chat-nombre-contacto"
+                                style="font-weight: 700; color: var(--primary); font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Playfair Display', serif;">Contacto</span>
+                        </div>
+                        <div id="chat-acciones-header" style="flex-shrink: 0; padding-left: 10px;"></div>
+                    </div>
+
+                    <div id="chat-mensajes-area"
+                        style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #e5ded8;">
+                    </div>
+
+                    <div
+                        style="padding: 15px 20px; background: #f4f6f8; border-top: 1px solid #ddd; display: flex; gap: 12px; align-items: flex-end; flex-shrink: 0;">
+                        <textarea id="chat-input-mensaje" placeholder="Escribe un mensaje..."
+                            style="flex: 1; padding: 14px 20px; border-radius: 24px; border: 1px solid #ccc; outline: none; font-size: 14px; resize: none; overflow-y: auto; min-height: 48px; max-height: 120px; font-family: 'Montserrat', sans-serif; line-height: 1.4; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"
+                            rows="1"
+                            oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"
+                            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); enviarMensajeChat(); }"></textarea>
+                        <button
+                            style="background: var(--primary); color: white; border: none; border-radius: 50%; width: 48px; height: 48px; padding: 0; font-size: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; transition: 0.2s; box-shadow: 0 4px 10px rgba(10,37,64,0.2);"
+                            onclick="enviarMensajeChat()" onmouseover="this.style.background='var(--accent)'"
+                            onmouseout="this.style.background='var(--primary)'">🕊️</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modalGestionGrupo" class="modal-overlay" style="z-index: 1012;">
+        <div
+            style="background: white; height: auto; width: 90%; max-width: 450px; border-radius: 16px; padding: 30px; position: relative; border-top: 6px solid var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                <h3 id="titulo-modal-grupo" class="playfair" style="margin: 0; color: var(--primary); font-size: 22px;">
+                    Crear Nuevo Grupo</h3>
+                <span style="cursor:pointer; font-size:28px; line-height: 1; color: #999;"
+                    onclick="document.getElementById('modalGestionGrupo').style.display='none'">&times;</span>
+            </div>
+            <input type="text" id="input-nombre-grupo" placeholder="Nombre del Grupo"
+                style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 20px; box-sizing: border-box; font-weight: 600; font-family: inherit; font-size: 14px;">
+            <p
+                style="font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Selecciona a los miembros:</p>
+            <div id="lista-miembros-grupo"
+                style="max-height: 250px; overflow-y: auto; border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
+            </div>
+            <button id="btn-guardar-grupo"
+                style="background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; padding: 14px; margin-bottom: 10px; font-size: 14px;"
+                onclick="guardarGrupo()">Crear Grupo</button>
+            <div id="zona-peligro-grupo"
+                style="display: none; border-top: 1px dashed #ccc; padding-top: 20px; margin-top: 10px;">
+                <button onclick="vaciarChatActual()"
+                    style="background: #fff3e0; color: #e65100; border: 1px solid #ffb74d; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; padding: 12px; margin-bottom: 10px; font-size: 13px;">🧹
+                    Vaciar Chat del Grupo</button>
+                <button onclick="eliminarGrupoActual()"
+                    style="background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; padding: 12px; font-size: 13px;">🗑️
+                    Eliminar Grupo por Completo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalBloqueoExcedido" class="modal-overlay" style="z-index: 99999;">
+        <div class="modal-cuenta" style="text-align: center; border-top-color: var(--red-text);">
+            <div style="font-size: 60px; margin-bottom: 15px;">⛔</div>
+            <h2 class="playfair" style="color: var(--red-text); margin-top: 0; font-size: 26px;">Cuenta Inhabilitada
+            </h2>
+            <p style="font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 30px;">El despacho ha cambiado a un
+                plan con menor capacidad de usuarios y tu cuenta ha quedado fuera del límite permitido por la
+                licencia.<br><br>Si el administrador no renueva el plan en <b><span id="dias-borrado-bloqueo"
+                        style="color:var(--red-text); font-size:18px;"></span> días</b>, esta cuenta será eliminada
+                permanentemente.</p>
+            <button class="btn-pago" style="background: var(--primary); color: white; justify-content: center;"
+                onclick="cerrarSesion()">Cerrar Sesión Segura</button>
+        </div>
+    </div>
+
+    <div id="modalBloqueoExpirado" class="modal-overlay">
+        <div class="modal-cuenta" style="text-align: center; border-top-color: var(--red-text);">
+            <span class="close-btn"
+                onclick="document.getElementById('modalBloqueoExpirado').style.display='none'">&times;</span>
+            <div style="font-size: 60px; margin-bottom: 15px;">🔒</div>
+            <h2 class="playfair" style="color: var(--red-text); margin-top: 0; font-size: 26px;">Licencia Expirada</h2>
+            <p style="font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 30px;">Tu periodo de acceso ha
+                concluido. Para desbloquear los módulos y seguir gestionando tus expedientes, es necesario renovar tu
+                licencia de uso corporativa.</p>
+            <button class="btn-pago" style="background: var(--primary); color: white; justify-content: center;"
+                onclick="document.getElementById('modalBloqueoExpirado').style.display='none'; abrirMiCuenta();">Renovar
+                Suscripción Ahora</button>
+        </div>
+    </div>
+
+    <div id="modalCuentaOverlay" class="modal-overlay">
+        <div class="modal-cuenta">
+            <span class="close-btn"
+                onclick="document.getElementById('modalCuentaOverlay').style.display='none'">&times;</span>
+            <h2 class="playfair"
+                style="color:var(--primary); margin-top:0; border-bottom: 2px solid var(--accent); padding-bottom: 15px; margin-bottom: 20px; font-size: 24px;">
+                Gestión Corporativa</h2>
+            <div style="display: flex; border-bottom: 1px solid #ddd; margin-bottom: 25px;">
+                <button class="tab-cuenta-btn active" id="btn-tab-cuenta" onclick="switchCuentaTab('cuenta')">Mi
+                    Cuenta</button>
+                <button class="tab-cuenta-btn" id="btn-tab-suscripcion"
+                    onclick="switchCuentaTab('suscripcion')">Suscripción</button>
+            </div>
+            <div id="loadingCuenta"
+                style="text-align: center; color: #666; padding: 30px; font-weight: 600; font-size: 14px;">Consultando
+                base de datos central...</div>
+
+            <div id="datosCuentaBox" style="display: none;">
+                <div id="seccion-cuenta">
+                    <div class="info-row">
+                        <div class="info-label">Usuario Institucional</div>
+                        <div class="info-val" id="acc_username">--</div>
+                    </div>
+                    <div class="info-row" id="row-firma" style="display: none;">
+                        <div class="info-label">Firma de Abogados</div>
+                        <div class="info-val" id="acc_firma">--</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Licencia Vinculada</div>
+                        <div class="info-val" id="acc_licencia"
+                            style="font-family: monospace; font-size: 13px; color: var(--text-muted);">--</div>
+                    </div>
+                    <div class="info-row" id="row-vigencia-cuenta" style="align-items: flex-start;">
+                        <div class="info-label">Vigencia</div>
+                        <div style="text-align: right;">
+                            <div class="info-val" id="acc_vencimiento_fecha">--</div>
+                            <div id="acc_vencimiento_dias" class="info-tag">--</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row"
+                        style="flex-direction: column; align-items: stretch; border-bottom: none; margin-top: 10px;">
+                        <div class="info-label" style="margin-bottom: 8px;">Correo de Respaldo</div>
+                        <div id="ui-correo-ok"
+                            style="display:none; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #eee;">
+                            <div class="info-val" id="acc_email"
+                                style="text-align: left; color: var(--green-text); font-size: 14px;"></div>
+                        </div>
+                        <div id="ui-correo-vincular"
+                            style="display:none; background: #fffdf5; padding: 15px; border-radius: 8px; border: 1px dashed var(--orange);">
+                            <div style="font-size: 12px; color: var(--orange); margin-bottom: 10px; font-weight: 600;">
+                                No tienes un correo vinculado. Regístralo por seguridad.</div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="email" id="input-email" placeholder="tu@correo.com"
+                                    style="flex:1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Montserrat', sans-serif;">
+                                <button onclick="enviarCodigoCorreo()" id="btn-enviar-correo"
+                                    style="background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size:12px; font-weight:bold; font-family: 'Montserrat', sans-serif;">Enviar
+                                    Código</button>
+                            </div>
+                        </div>
+                        <div id="ui-correo-verificar"
+                            style="display:none; background: #f4f6f8; padding: 15px; border-radius: 8px; border: 1px dashed #1565c0; margin-top: 15px;">
+                            <div style="font-size: 12px; color: #1565c0; margin-bottom: 10px; font-weight: 600;">Ingresa
+                                el código enviado a tu correo:</div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="input-codigo-email" placeholder="Código"
+                                    style="flex:1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; text-align:center; font-family: 'Montserrat', sans-serif; font-weight: bold; letter-spacing: 2px;">
+                                <button onclick="validarCodigoCorreo()" id="btn-validar-correo"
+                                    style="background: var(--green-text); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size:12px; font-weight:bold; font-family: 'Montserrat', sans-serif;">Validar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-top: 25px; border: 1px solid #e0e0e0;">
+                        <div
+                            style="font-weight: 700; font-size: 14px; color: var(--primary); margin-bottom:15px; display: flex; align-items: center; gap: 8px;">
+                            📁 Integración con Google Drive
+                        </div>
+
+                        <div id="ui-drive-desconectado">
+                            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">El despacho no ha vinculado
+                                una cuenta de Google Drive para procesos automáticos.</p>
+                            <button id="btn-conectar-master" onclick="conectarGoogleDrive()"
+                                style="display:none; width:100%; background: #4285F4; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; font-family: 'Montserrat', sans-serif;">🔗
+                                Vincular Cuenta del Despacho</button>
+                        </div>
+
+                        <div id="ui-drive-conectado" style="display: none;">
+                            <div
+                                style="font-size: 12px; color: var(--green-text); margin-bottom: 10px; font-weight:bold;">
+                                ✅ Conexión Corporativa Activa</div>
+                            <div style="background: white; border: 1px solid #ccc; padding: 10px; border-radius: 6px; font-size: 13px; color: #333; margin-bottom: 15px; font-weight: 600;"
+                                id="drive-email-conectado">--</div>
+
+                            <button id="btn-desconectar-master" onclick="desconectarGoogleDrive()"
+                                style="display:none; width:100%; background: #ffebee; color: var(--red-text); border: 1px solid var(--red-text); padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; font-family: 'Montserrat', sans-serif;">🔌
+                                Desconectar Cuenta del Despacho</button>
+
+                            <p id="txt-aviso-abogado"
+                                style="display:none; font-size: 11px; color: #888; font-style: italic; text-align: center;">
+                                VIGILEX utiliza esta cuenta central para gestionar tus expedientes y reportes.</p>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: #fafafa; padding: 20px; border-radius: 12px; margin-top: 25px; border: 1px solid #e0e0e0;">
+                        <div
+                            style="font-weight: 700; font-size: 14px; color: var(--primary); margin-bottom:15px; display: flex; align-items: center; gap: 8px;">
+                            🔐 Seguridad de Contraseña</div>
+                        <div id="ui-pass-inicio">
+                            <button onclick="iniciarCambioPass()" id="btn-iniciar-pass"
+                                style="width:100%; background: white; color: var(--primary); border: 2px solid var(--primary); padding: 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; font-family: 'Montserrat', sans-serif; transition: 0.2s;"
+                                onmouseover="this.style.background='var(--primary)'; this.style.color='white';"
+                                onmouseout="this.style.background='white'; this.style.color='var(--primary)';">Cambiar
+                                Contraseña</button>
+                        </div>
+                        <div id="ui-pass-codigo" style="display: none;">
+                            <div style="font-size: 12px; color: #1565c0; margin-bottom: 10px; font-weight: 600;">Ingresa
+                                el código de seguridad enviado a tu correo:</div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="input-codigo-pass" placeholder="Código"
+                                    style="flex:1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; text-align:center; font-family: 'Montserrat', sans-serif; font-weight: bold; letter-spacing: 2px;">
+                                <button onclick="validarCodigoPass()" id="btn-validar-pass"
+                                    style="background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size:12px; font-weight:bold; font-family: 'Montserrat', sans-serif;">Verificar</button>
+                            </div>
+                        </div>
+                        <div id="ui-pass-nuevo" style="display: none; margin-top: 15px;">
+                            <div
+                                style="font-size: 12px; color: var(--green-text); margin-bottom: 12px; font-weight:bold;">
+                                ✅ Código verificado. Crea tu nueva contraseña:</div>
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <div style="position:relative;">
+                                    <input type="password" id="input-pass-1" placeholder="Nueva contraseña"
+                                        style="width:100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing:border-box; font-family: 'Montserrat', sans-serif;">
+                                    <button onclick="togglePassVisibility('input-pass-1')"
+                                        style="position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size: 16px; color: #888;">👁️</button>
+                                </div>
+                                <div style="position:relative;">
+                                    <input type="password" id="input-pass-2" placeholder="Confirma contraseña"
+                                        style="width:100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing:border-box; font-family: 'Montserrat', sans-serif;">
+                                    <button onclick="togglePassVisibility('input-pass-2')"
+                                        style="position:absolute; right:10px; top:10px; background:none; border:none; cursor:pointer; font-size: 16px; color: #888;">👁️</button>
+                                </div>
+                                <button onclick="confirmarNuevaPass()" id="btn-confirmar-pass"
+                                    style="background: var(--primary); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight:bold; font-family: 'Montserrat', sans-serif; margin-top: 5px;">Actualizar
+                                    Contraseña</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="seccion-suscripcion" style="display: none;">
+                    <div class="info-row">
+                        <div class="info-label">Tipo de Acceso</div>
+                        <div class="info-val" id="sub_tipo">--</div>
+                    </div>
+                    <div class="info-row" id="row-plan-actual" style="display:none;">
+                        <div class="info-label">Plan Actual</div>
+                        <div class="info-val" id="sub_plan" style="color: var(--accent); font-weight: 800;">--</div>
+                    </div>
+                    <div class="info-row" id="row-fecha-cobro" style="display:none;">
+                        <div class="info-label" id="lbl-tipo-fecha-cobro">Fecha de cobro</div>
+                        <div class="info-val" id="sub_fecha_cobro">--</div>
+                    </div>
+                    <div id="box-gestionar-sub"
+                        style="margin-top: 35px; padding-top: 25px; border-top: 2px dashed #ccc; text-align: center;">
+                        <p style="font-size: 13px; color: #666; margin-bottom: 20px; font-weight: 600;">Administra tu
+                            plan y facturación en tu portal seguro.</p>
+                        <a href="suscripcion.html" class="btn-pago"
+                            style="background: var(--primary); color: white; justify-content: center; text-decoration: none; padding: 16px; font-size: 15px;">⚙️
+                            Detalles de Suscripción</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalMensajeInterno" class="modal-overlay" style="z-index: 1013;">
+        <div class="modal-cuenta" style="border-top: 6px solid #1565c0; max-width: 550px;">
+            <span class="close-btn" onclick="cerrarModalMensaje()">&times;</span>
+            <h2 class="playfair"
+                style="color: #1565c0; margin-top: 0; border-bottom: 2px solid #e3f2fd; padding-bottom: 15px; font-size: 24px;">
+                ✉️ Enviar Comunicado</h2>
+            <div style="margin-top: 20px;">
+                <label
+                    style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 10px;">Destinatarios:</label>
+                <div id="msg-destinatarios-lista"
+                    style="max-height: 200px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
+                </div>
+                <label
+                    style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 10px;">Cuerpo
+                    del Mensaje:</label>
+                <textarea id="msg-contenido" rows="6" placeholder="Escribe tu comunicado general aquí..."
+                    style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 20px; resize: vertical; font-family: inherit; font-size: 14px; box-sizing: border-box; line-height: 1.5;"></textarea>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="cerrarModalMensaje()" class="btn-pago"
+                        style="background: #f4f6f8; color: #555; border: 1px solid #ddd; justify-content: center; margin: 0; flex: 1;">Cancelar</button>
+                    <button id="btn-enviar-msg" onclick="enviarMensajeInterno()" class="btn-pago"
+                        style="background: #1565c0; color: white; justify-content: center; margin: 0; flex: 2;">Enviar
+                        Comunicado</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 1. Barrera de Seguridad Cliente
+        if (localStorage.getItem('sesion_activa') !== 'verdadera') {
+            window.location.replace("inicio.html");
+        }
+
+        const usuarioActual = localStorage.getItem('usuario_actual');
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        let licenciaExpiradaGlobal = false;
+
+        function toggleNotificaciones() {
+            document.getElementById('panel-notificaciones').classList.toggle('abierto');
+        }
+
+        // 2. Guardián de Vigencia en Tiempo Real
+        async function verificarVigencia() {
+            if (!usuarioActual) return false;
+            try {
+                const response = await fetch('/.netlify/functions/verificar_sesion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usuarioActual })
+                });
+                const data = await response.json();
+                if (response.status === 403 && data.expirada) {
+                    licenciaExpiradaGlobal = true;
+                    document.getElementById('banner-expirado').style.display = 'block';
+                    document.getElementById('nav-principal').style.display = 'flex';
+                    return true;
+                }
+                licenciaExpiradaGlobal = false;
+                document.getElementById('banner-expirado').style.display = 'none';
+                document.getElementById('nav-principal').style.display = 'flex';
+                if (!data.valida) { cerrarSesion(); return false; }
+
+                // Card de Super Administrador y Módulos Exclusivos Master
+                if (data.es_admin) {
+                    const cardAdmin = document.getElementById('card-admin');
+                    if (cardAdmin) cardAdmin.style.display = 'flex';
+
+                    const cardAnalisis = document.getElementById('card-analisis');
+                    if (cardAnalisis) cardAnalisis.style.display = 'flex';
+
+                    const cardAtencion = document.getElementById('card-atencion');
+                    if (cardAtencion) cardAtencion.style.display = 'flex';
+                }
+
+                // MÓDULO "MI DESPACHO"
+                // Visible para todos EXCEPTO Pasantes (ellos no gestionan equipos)
+                if (data.rol !== 'pasante') {
+                    const cardEquipo = document.getElementById('card-equipo');
+                    if (cardEquipo) cardEquipo.style.display = 'flex';
+                }
+
+                return true;
+            } catch (e) { return true; }
+        }
+
+        function intentarAcceso(url) {
+            if (licenciaExpiradaGlobal) document.getElementById('modalBloqueoExpirado').style.display = 'flex';
+            else window.location.href = url;
+        }
+
+        // 3. Inicialización del Dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('pago') === 'exito') {
+                alert("✅ ¡Pago procesado con éxito!\n\nTu licencia ha sido renovada y actualizada en la base de datos.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (urlParams.get('pago') === 'cancelado') {
+                alert("⚠️ El proceso de pago fue cancelado. Tu licencia no ha sido modificada.");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            const activo = await verificarVigencia();
+
+            if (activo) {
+                fetch('/.netlify/functions/info_cuenta', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usuarioActual })
+                }).then(res => res.json()).then(async data => {
+                    if (data.success && data.cuenta.es_excedido) {
+                        document.getElementById('dias-borrado-bloqueo').innerText = data.cuenta.dias_para_borrar;
+                        document.getElementById('modalBloqueoExcedido').style.display = 'flex';
+                        document.getElementById('pantalla-carga').style.display = 'none';
+                        return;
+                    }
+                    const nombreFinal = (data.success && data.cuenta.nombre_real) ? data.cuenta.nombre_real : (usuarioActual || "Abogado");
+                    document.getElementById('nombre-usuario').innerText = nombreFinal;
+                    document.getElementById('pantalla-carga').style.display = 'none';
+                    document.getElementById('contenido-principal').style.display = 'block';
+
+                    if (!licenciaExpiradaGlobal) {
+                        if (data.cuenta && (data.cuenta.rol_equipo === 'titular' || data.cuenta.rol_equipo === 'master')) {
+                            const btnCom = document.getElementById('btn-comunicados-gerenciales');
+                            if (btnCom) btnCom.style.display = 'inline-flex';
+                        }
+                        await cargarEquipoGlobal();
+                        cargarNotificaciones();
+                        actualizarGloboChat();
+                    }
+                }).catch(e => {
+                    document.getElementById('nombre-usuario').innerText = usuarioActual || "Abogado";
+                    document.getElementById('pantalla-carga').style.display = 'none';
+                    document.getElementById('contenido-principal').style.display = 'block';
+                });
+            }
+        });
+
+        // Funciones Modal Cuenta
+        function switchCuentaTab(tab) {
+            document.getElementById('seccion-cuenta').style.display = tab === 'cuenta' ? 'block' : 'none';
+            document.getElementById('seccion-suscripcion').style.display = tab === 'suscripcion' ? 'block' : 'none';
+            document.getElementById('btn-tab-cuenta').classList.toggle('active', tab === 'cuenta');
+            document.getElementById('btn-tab-suscripcion').classList.toggle('active', tab === 'suscripcion');
+        }
+
+        async function abrirMiCuenta() {
+            const activo = await verificarVigencia();
+            if (!activo) return;
+            document.getElementById('modalCuentaOverlay').style.display = 'flex';
+            document.getElementById('loadingCuenta').style.display = 'block';
+            document.getElementById('datosCuentaBox').style.display = 'none';
+            switchCuentaTab('cuenta');
+
+            try {
+                const response = await fetch('/.netlify/functions/info_cuenta', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usuarioActual })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const c = data.cuenta;
+                    if (c.nombre_real) document.getElementById('nombre-usuario').innerText = c.nombre_real;
+                    document.getElementById('acc_username').innerText = c.username || usuarioActual;
+
+                    if (c.nombre_firma) { document.getElementById('row-firma').style.display = 'flex'; document.getElementById('acc_firma').innerText = c.nombre_firma; }
+                    else { document.getElementById('row-firma').style.display = 'none'; }
+
+                    const rowVigencia = document.getElementById('row-vigencia-cuenta');
+
+                    if (c.rol_equipo && c.rol_equipo !== 'titular' && c.rol_equipo !== 'master') {
+                        // FIX: Forzamos a que use el nombre de la firma o un texto genérico corporativo, no el nombre del usuario
+                        const nombreDesp = c.nombre_firma || "la Firma Titular";
+                        document.getElementById('acc_licencia').innerText = "Licencia Institucional de " + nombreDesp;
+                        document.getElementById('btn-tab-suscripcion').style.display = 'none';
+                        if (rowVigencia) rowVigencia.style.display = 'none';
+                    } else {
+                        document.getElementById('btn-tab-suscripcion').style.display = 'block';
+                        if (rowVigencia) rowVigencia.style.display = 'flex';
+                        let licenciaMostrar = c.licencia_usada;
+                        if (!licenciaMostrar || licenciaMostrar.trim() === '') { licenciaMostrar = c.stripe_subscription_id || "Pago Único / Licencia Directa"; }
+                        document.getElementById('acc_licencia').innerText = licenciaMostrar;
+                    }
+
+                    if (c.email) {
+                        document.getElementById('ui-correo-ok').style.display = 'block'; document.getElementById('ui-correo-vincular').style.display = 'none'; document.getElementById('acc_email').innerText = c.email;
+                    } else {
+                        document.getElementById('ui-correo-ok').style.display = 'none'; document.getElementById('ui-correo-vincular').style.display = 'block';
+                    }
+
+                    document.getElementById('ui-pass-inicio').style.display = 'block'; document.getElementById('ui-pass-codigo').style.display = 'none'; document.getElementById('ui-pass-nuevo').style.display = 'none';
+
+                    // --- VERIFICAR ESTADO DE GOOGLE DRIVE (LÓGICA DE PERMISOS CORPORATIVOS) ---
+                    try {
+                        const resDrive = await fetch('/.netlify/functions/crm_ai_core', {
+                            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                            body: JSON.stringify({ username: usuarioActual, accion: 'verificar_drive', payload: {} })
+                        });
+                        const dataDrive = await resDrive.json();
+
+                        // Verificamos de forma infalible si es jefe para darle control de los botones
+                        const esTitularOMaster = (c.rol_equipo === 'titular' || c.rol_equipo === 'master');
+
+                        if (dataDrive.conectado) {
+                            document.getElementById('ui-drive-desconectado').style.display = 'none';
+                            document.getElementById('ui-drive-conectado').style.display = 'block';
+                            document.getElementById('drive-email-conectado').innerText = dataDrive.email || "Cuenta Activa y Vinculada";
+
+                            // Permisos de botones
+                            const btnDesconectar = document.getElementById('btn-desconectar-master');
+                            if (btnDesconectar) btnDesconectar.style.display = esTitularOMaster ? 'block' : 'none';
+
+                            const txtAviso = document.getElementById('txt-aviso-abogado');
+                            if (txtAviso) txtAviso.style.display = esTitularOMaster ? 'none' : 'block';
+                        } else {
+                            document.getElementById('ui-drive-desconectado').style.display = 'block';
+                            document.getElementById('ui-drive-conectado').style.display = 'none';
+
+                            // Solo el Titular/Master puede ver el botón de conectar
+                            const btnConectar = document.getElementById('btn-conectar-master');
+                            if (btnConectar) btnConectar.style.display = esTitularOMaster ? 'block' : 'none';
+                        }
+                    } catch (e) { console.error("Error al verificar Drive", e); }
+                    // ----------------------------------------
+
+                    let diasFaltantes = 0; let expText = "Vitalicia";
+                    if (c.fecha_expiracion) {
+                        const iso = (c.en_prueba && c.trial_end) ? c.trial_end : c.fecha_expiracion;
+                        const fechaExp = new Date(iso); const hoy = new Date(); const diff = fechaExp - hoy;
+                        diasFaltantes = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                        const partes = iso.split('T')[0].split('-');
+                        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                        expText = `${parseInt(partes[2])} de ${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
+                    }
+
+                    document.getElementById('acc_vencimiento_fecha').innerText = expText;
+                    const tagC = document.getElementById('acc_vencimiento_dias');
+                    if (!c.fecha_expiracion) { tagC.style.display = 'none'; } else {
+                        tagC.style.display = 'inline-block';
+                        if (diasFaltantes > 0) {
+                            if (c.en_prueba) { tagC.innerText = `Le quedan ${diasFaltantes} días de prueba`; tagC.style.background = "#e3f2fd"; tagC.style.color = "#1565c0"; }
+                            else { tagC.innerText = `Quedan ${diasFaltantes} días`; tagC.style.background = "var(--green-soft)"; tagC.style.color = "var(--green-text)"; }
+                        } else { tagC.innerText = "EXPIRADA"; tagC.style.background = "var(--red-soft)"; tagC.style.color = "var(--red-text)"; }
+                    }
+
+                    if (c.stripe_subscription_id) {
+                        document.getElementById('row-plan-actual').style.display = 'flex'; document.getElementById('row-fecha-cobro').style.display = 'flex';
+                        let freq = "Mensual";
+                        if (c.tipo_acceso) {
+                            const tipoTextoSeguro = String(c.tipo_acceso).toLowerCase();
+                            if (tipoTextoSeguro.includes('semestral')) freq = "Semestral"; else if (tipoTextoSeguro.includes('anual') || tipoTextoSeguro.includes('año')) freq = "Anual";
+                        }
+                        document.getElementById('sub_tipo').innerText = `Suscripción ${freq}`;
+
+                        let nombreBonito = "Plan Institucional Profesional";
+                        if (c.plan_nombre) {
+                            const nombreTextoSeguro = String(c.plan_nombre).toLowerCase();
+                            if (nombreTextoSeguro.includes('personal')) nombreBonito = "Plan Personal"; else if (nombreTextoSeguro.includes('starter')) nombreBonito = "Plan Institucional Starter";
+                        }
+                        document.getElementById('sub_plan').innerText = nombreBonito;
+
+                        if (c.suscripcion_cancelada) {
+                            document.getElementById('lbl-tipo-fecha-cobro').innerText = "Fecha de vencimiento"; document.getElementById('lbl-tipo-fecha-cobro').style.color = "var(--red-text)";
+                        } else {
+                            document.getElementById('lbl-tipo-fecha-cobro').innerText = "Próxima fecha de cobro"; document.getElementById('lbl-tipo-fecha-cobro').style.color = "#888";
+                        }
+                        document.getElementById('sub_fecha_cobro').innerText = expText;
+                    } else {
+                        document.getElementById('sub_tipo').innerText = "Pago Único / Temporal"; document.getElementById('row-plan-actual').style.display = 'none'; document.getElementById('row-fecha-cobro').style.display = 'none';
+                    }
+                    document.getElementById('loadingCuenta').style.display = 'none'; document.getElementById('datosCuentaBox').style.display = 'block';
+                }
+            } catch (e) { console.error(e); document.getElementById('loadingCuenta').innerText = "Fallo de conexión con el servidor maestro."; }
+        }
+
+        async function enviarCodigoCorreo() {
+            const email = document.getElementById('input-email').value.trim();
+            if (!email.includes('@')) return alert("Ingresa un correo electrónico válido.");
+            const btn = document.getElementById('btn-enviar-correo'); btn.innerText = "Enviando..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/solicitar_vinculo_email', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual, email: email }) });
+                const data = await res.json();
+                if (res.ok && data.success) { document.getElementById('ui-correo-vincular').style.display = 'none'; document.getElementById('ui-correo-verificar').style.display = 'block'; alert("Se ha enviado un código a tu correo."); } else { alert("Error: " + (data.error || "No se pudo enviar.")); }
+            } catch (e) { alert("Error de red."); }
+            btn.innerText = "Enviar Código"; btn.disabled = false;
+        }
+
+        async function validarCodigoCorreo() {
+            const email = document.getElementById('input-email').value.trim(); const code = document.getElementById('input-codigo-email').value.trim();
+            if (!code) return alert("Ingresa el código.");
+            const btn = document.getElementById('btn-validar-correo'); btn.innerText = "Validando..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/confirmar_vinculo_email', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual, email: email, code: code }) });
+                const data = await res.json();
+                if (res.ok && data.success) { alert("✅ Correo vinculado exitosamente."); abrirMiCuenta(); } else { alert("Error: " + (data.error || "Código incorrecto.")); }
+            } catch (e) { alert("Error de red."); }
+            btn.innerText = "Validar"; btn.disabled = false;
+        }
+
+        async function iniciarCambioPass() {
+            const btn = document.getElementById('btn-iniciar-pass'); btn.innerText = "Enviando código..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/solicitar_otp_password', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual }) });
+                const data = await res.json();
+                if (res.ok && data.success) { document.getElementById('ui-pass-inicio').style.display = 'none'; document.getElementById('ui-pass-codigo').style.display = 'block'; alert("Se ha enviado un código de seguridad a tu correo vinculado."); } else { alert("Error: " + (data.error || "Debes tener un correo vinculado para cambiar tu contraseña.")); }
+            } catch (e) { alert("Error de red."); }
+            btn.innerText = "Cambiar Contraseña"; btn.disabled = false;
+        }
+
+        async function validarCodigoPass() {
+            const code = document.getElementById('input-codigo-pass').value.trim();
+            if (!code) return alert("Ingresa el código.");
+            const btn = document.getElementById('btn-validar-pass'); btn.innerText = "Verificando..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/validar_otp_password', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual, code: code }) });
+                const data = await res.json();
+                if (res.ok && data.success) { document.getElementById('ui-pass-codigo').style.display = 'none'; document.getElementById('ui-pass-nuevo').style.display = 'block'; } else { alert("Error: " + (data.error || "Código incorrecto.")); }
+            } catch (e) { alert("Error de red."); }
+            btn.innerText = "Verificar"; btn.disabled = false;
+        }
+
+        async function confirmarNuevaPass() {
+            const p1 = document.getElementById('input-pass-1').value; const p2 = document.getElementById('input-pass-2').value;
+            if (!p1 || !p2) return alert("Ingresa la nueva contraseña."); if (p1 !== p2) return alert("Las contraseñas no coinciden.");
+            const btn = document.getElementById('btn-confirmar-pass'); btn.innerText = "Actualizando..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/cambiar_password_final', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual, newPass: p1 }) });
+                const data = await res.json();
+                if (res.ok && data.success) { alert("✅ Contraseña actualizada exitosamente."); abrirMiCuenta(); } else { alert("Error: " + (data.error || "Fallo al actualizar.")); }
+            } catch (e) { alert("Error de red."); }
+            btn.innerText = "Actualizar Contraseña"; btn.disabled = false;
+        }
+
+        function togglePassVisibility(id) { const x = document.getElementById(id); x.type = x.type === "password" ? "text" : "password"; }
+
+        function cerrarSesion() {
+            localStorage.removeItem('sesion_activa');
+            localStorage.removeItem('usuario_actual');
+            localStorage.removeItem('vigilex_token');
+            window.location.replace("inicio.html");
+        }
+
+        // Comunicados
+        async function abrirModalMensaje() {
+            document.getElementById('modalMensajeInterno').style.display = 'flex';
+            document.getElementById('msg-contenido').value = '';
+            const contDest = document.getElementById('msg-destinatarios-lista');
+            contDest.innerHTML = '<p style="font-size:12px; color:#888;">Cargando equipo...</p>';
+            if (equipoGlobal.length > 0) {
+                let html = `<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                    <input type="checkbox" id="check-todos-comunicado" value="TODOS" onchange="toggleTodosComunicado(this)" style="transform: scale(1.2); accent-color: var(--primary);">
+                    <label for="check-todos-comunicado" style="font-weight:bold; color:var(--primary); font-size: 14px;">📢 A TODO EL DESPACHO</label>
+                </div>`;
+                let hayOtros = false;
+                equipoGlobal.forEach(u => {
+                    if (u.username !== usuarioActual) {
+                        hayOtros = true;
+                        html += `<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <input type="checkbox" class="check-dest-comunicado" value="${u.username}" style="accent-color: var(--primary);">
+                            <label style="font-size: 13px; font-weight: 600;">${getNombreReal(u.username)} <span style="color:#888; font-size:11px; font-weight: normal;">(${u.rol_equipo})</span></label>
+                        </div>`;
+                    }
+                });
+                if (!hayOtros) html = `<p style="font-size:13px; color:#888;">No hay otros miembros en tu despacho.</p>`;
+                contDest.innerHTML = html;
+            }
+        }
+        function toggleTodosComunicado(checkboxTodos) {
+            const checks = document.querySelectorAll('.check-dest-comunicado');
+            checks.forEach(c => { c.checked = checkboxTodos.checked; c.disabled = checkboxTodos.checked; });
+        }
+        function cerrarModalMensaje() { document.getElementById('modalMensajeInterno').style.display = 'none'; document.getElementById('msg-contenido').value = ''; }
+        async function enviarMensajeInterno() {
+            const isTodos = document.getElementById('check-todos-comunicado') && document.getElementById('check-todos-comunicado').checked;
+            const checks = document.querySelectorAll('.check-dest-comunicado');
+            const seleccionados = Array.from(checks).filter(c => c.checked).map(c => c.value);
+            let destinatarioFinal;
+            if (isTodos) { destinatarioFinal = 'TODOS'; } else {
+                if (seleccionados.length < 2) return alert("Selecciona al menos 2 integrantes o marca la opción 'A TODO EL DESPACHO'.");
+                destinatarioFinal = seleccionados;
+            }
+            const contenido = document.getElementById('msg-contenido').value.trim();
+            if (!contenido) return alert("El mensaje no puede estar vacío.");
+            const btn = document.getElementById('btn-enviar-msg'); btn.innerText = "Enviando..."; btn.disabled = true;
+            try {
+                const res = await fetch('/.netlify/functions/enviar_mensaje', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ remitente: usuarioActual, destinatario: destinatarioFinal, contenido: contenido }) });
+                const data = await res.json();
+                if (res.ok && data.success) { alert("✅ Comunicado enviado exitosamente."); cerrarModalMensaje(); } else { alert("Error: " + (data.error || "No se pudo enviar el comunicado.")); }
+            } catch (e) { alert("Fallo de conexión al enviar el comunicado."); }
+            btn.innerText = "Enviar Comunicado"; btn.disabled = false;
+        }
+
+
+        // ========================================================================
+        // EL CEREBRO UNIFICADO BLINDADO CONTRA PARPADEOS (FLICKER FIX) + IOS FIX
+        // ========================================================================
+        const usernameGlobal = usuarioActual;
+        let equipoGlobal = [];
+        let nombreRealGlobal = "";
+        let chatActual = { contacto: null, tipo: 'individual', id_grupo: null };
+        let idMensajeEditando = null;
+
+        async function cargarEquipoGlobal() {
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ usuarioActual: usuarioActual, accion: 'listar_equipo' }) });
+                const data = await res.json();
+                if (data.success && data.equipo) {
+                    equipoGlobal = data.equipo;
+                    const yo = equipoGlobal.find(u => u.username === usuarioActual);
+                    if (yo) nombreRealGlobal = yo.nombre_real || yo.username;
+                }
+            } catch (e) { }
+        }
+
+        function getNombreReal(usr) { const u = equipoGlobal.find(e => e.username === usr); return u && u.nombre_real ? u.nombre_real : usr; }
+        function getFechaFormateada() { const d = new Date(); return `el ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} a las ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`; }
+
+        async function cargarNotificaciones() {
+            const contenedor = document.getElementById('contenedor-notificaciones');
+            try {
+                const res = await fetch('/.netlify/functions/crm_notificaciones', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usuarioActual, accion: 'obtener' }) });
+                const data = await res.json();
+                if (data.success) {
+                    const noLeidas = data.notificaciones.filter(n => !n.leida).length;
+                    const badge = document.getElementById('badge-notif');
+                    if (noLeidas > 0) { badge.style.display = 'block'; badge.innerText = noLeidas; } else { badge.style.display = 'none'; }
+                    if (data.notificaciones.length === 0) {
+                        contenedor.innerHTML = '<p style="color: #888; text-align: center; margin-top: 50px; font-size: 13px;">No tienes asuntos urgentes.</p>';
+                    } else {
+                        contenedor.innerHTML = data.notificaciones.map(n => {
+                            const tituloCod = encodeURIComponent(n.titulo || 'Notificación');
+                            const msgCod = encodeURIComponent(n.mensaje || '');
+                            let claseUrgencia = '';
+                            let opacityStyle = n.leida ? 'opacity: 0.6;' : 'opacity: 1;';
+                            let bgStyle = n.leida ? 'background: #fafafa;' : '';
+
+                            if (!n.leida) {
+                                if (n.titulo && n.titulo.includes('VENCE HOY')) claseUrgencia = 'urgente-rojo';
+                                else if (n.titulo && n.titulo.includes('VENCE MAÑANA')) claseUrgencia = 'urgente-naranja';
+                                else if (n.titulo && n.titulo.includes('Cierre')) claseUrgencia = 'urgente-amarillo';
+                                else bgStyle = 'background: #fff3e0; border-left-color: #ff9800;';
+                            }
+
+                            // --- FIX DE ZONA HORARIA INFALIBLE ---
+                            let fechaIso = n.fecha_creacion;
+                            if (fechaIso.includes(' ')) fechaIso = fechaIso.replace(' ', 'T');
+                            if (!fechaIso.endsWith('Z')) fechaIso += 'Z';
+
+                            const fechaLocalMX = new Date(fechaIso).toLocaleString('es-MX', {
+                                timeZone: 'America/Mexico_City',
+                                day: 'numeric',
+                                month: 'short',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+
+                            return `
+                            <div class="notif-card ${claseUrgencia}" style="cursor: pointer; ${opacityStyle} ${bgStyle} transition: 0.2s;" onclick="procesarClickNotificacion(${n.id_notificacion}, '${tituloCod}', '${msgCod}', '${n.fecha_creacion}')" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                                <button class="notif-close" onclick="event.stopPropagation(); eliminarNotificacionCentro(${n.id_notificacion})" title="Eliminar Aviso">&times;</button>
+                                <h4 class="notif-titulo">${n.titulo || 'Notificación'}</h4>
+                                <p class="notif-msg">${n.mensaje}</p>
+                                <span class="notif-fecha">${fechaLocalMX}</span>
+                            </div>`;
+                        }).join('');
+                    }
+                }
+            } catch (e) { }
+        }
+
+        function procesarClickNotificacion(id, tituloCod, msgCod, fecha) {
+            document.getElementById('panel-notificaciones').classList.remove('abierto');
+            fetch('/.netlify/functions/crm_notificaciones', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usernameGlobal, accion: 'marcar_leida', id_notificacion: id }) }).then(() => cargarNotificaciones());
+            const titulo = decodeURIComponent(tituloCod);
+            const mensaje = decodeURIComponent(msgCod);
+            if (mensaje.toLowerCase().startsWith("de ") && !titulo.toLowerCase().includes("comunicado")) {
+                const remitente = mensaje.split(":")[0].replace(/de /i, "").trim();
+                abrirCentroDeChats();
+                abrirConversacion(remitente, 'individual', null);
+            } else {
+                document.getElementById('visor-notif-titulo').innerText = titulo;
+                document.getElementById('visor-notif-mensaje').innerText = mensaje;
+                document.getElementById('visor-notif-fecha').innerText = new Date(fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
+                document.getElementById('modalVisorNotificaciones').style.display = 'flex';
+            }
+        }
+
+        async function eliminarNotificacionCentro(id) {
+            try { await fetch('/.netlify/functions/crm_notificaciones', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usernameGlobal, accion: 'eliminar', id_notificacion: id }) }); cargarNotificaciones(); } catch (e) { }
+        }
+
+        // Funciones exclusivas para celular (SPA)
+        function volverListaChatsMobile() {
+            document.getElementById('chat-container-box').className = 'chat-modal-box mobile-show-left';
+            chatActual = { contacto: null, tipo: 'individual', id_grupo: null };
+            document.getElementById('chat-hilo-activo').style.display = 'none';
+            document.getElementById('chat-placeholder').style.display = 'flex';
+            cargarListaChats();
+        }
+
+        function abrirCentroDeChats() {
+            document.getElementById('modalChatApp').style.display = 'flex';
+            document.getElementById('chat-container-box').className = 'chat-modal-box mobile-show-left';
+
+            // EL SECRETO DE IOS: Ocultamos el resto del body y bloqueamos el scroll
+            document.body.classList.add('chat-abierto-movil');
+
+            const selNuevo = document.getElementById('chat-nuevo-usuario');
+            selNuevo.innerHTML = '<option value="">➕ Nuevo Chat...</option>';
+            equipoGlobal.forEach(u => { if (u.username !== usernameGlobal) selNuevo.innerHTML += `<option value="${u.username}">👤 ${getNombreReal(u.username)}</option>`; });
+            document.getElementById('chat-placeholder').style.display = 'flex';
+            document.getElementById('chat-hilo-activo').style.display = 'none';
+            cargarListaChats();
+        }
+
+        function cerrarModalChatUniversal() {
+            document.getElementById('modalChatApp').style.display = 'none';
+            document.body.classList.remove('chat-abierto-movil'); // Restauramos el lobby
+            chatActual = { contacto: null, tipo: 'individual', id_grupo: null };
+        }
+
+        async function cargarListaChats() {
+            try {
+                const res = await fetch('/.netlify/functions/crm_chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify({ username: usernameGlobal, accion: 'listar_chats' }) });
+                const data = await res.json();
+                if (data.success && data.chats) {
+                    const totalNoLeidos = data.chats.reduce((sum, c) => sum + parseInt(c.no_leidos || 0), 0);
+                    const badgeChat = document.getElementById('badge-chat');
+                    if (badgeChat) { badgeChat.style.display = (totalNoLeidos > 0) ? 'block' : 'none'; badgeChat.innerText = totalNoLeidos; }
+                }
+                const lista = document.getElementById('lista-contactos-chat');
+                if (data.success && data.chats.length > 0) {
+                    lista.innerHTML = data.chats.map(c => {
+                        const badge = c.no_leidos > 0 ? `<span style="background:var(--red-text);color:white;border-radius:50%;padding:2px 6px;font-size:11px;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2);">${c.no_leidos}</span>` : '';
+                        const isActive = (chatActual.contacto === c.contacto) ? 'background: #eef2f5; border-left: 4px solid var(--primary); padding-left: 11px;' : 'border-left: 4px solid transparent;';
+                        const icono = c.tipo === 'grupo' ? '👥' : '👤';
+                        const nombreVisual = c.tipo === 'grupo' ? c.contacto : getNombreReal(c.contacto);
+                        return `
+                        <div style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; ${isActive}" onclick="abrirConversacion('${c.contacto}', '${c.tipo}', ${c.id_grupo || null})" onmouseover="if(!this.style.background.includes('#eef2f5')) this.style.background='#f9f9f9'">
+                            <span style="font-weight: 600; color: var(--primary); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">${icono} ${nombreVisual}</span>
+                            ${badge}
+                        </div>`;
+                    }).join('');
+                } else { lista.innerHTML = '<p style="text-align:center; color:#999; margin-top:30px; font-size:13px;">No hay conversaciones activas.</p>'; }
+            } catch (e) { }
+        }
+
+        function iniciarNuevoChat(usuario) {
+            if (!usuario) return;
+            document.getElementById('chat-nuevo-usuario').value = "";
+            abrirConversacion(usuario, 'individual', null);
+        }
+
+        function toggleMenuMsg(id) {
+            const menu = document.getElementById(`menu-msg-${id}`);
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // =========================================================================
+        // FIX DE SCROLL: ACTUALIZACIÓN SILENCIOSA SIN PARPADEOS (ANTI-JUMP)
+        // =========================================================================
+        async function abrirConversacion(contacto, tipo, idGrupo, silencioso = false) {
+            chatActual = { contacto, tipo, id_grupo: idGrupo };
+            const area = document.getElementById('chat-mensajes-area');
+
+            if (!silencioso) {
+                document.getElementById('chat-container-box').className = 'chat-modal-box mobile-show-right';
+                document.getElementById('chat-placeholder').style.display = 'none';
+                document.getElementById('chat-hilo-activo').style.display = 'flex';
+
+                const tituloVisual = tipo === 'grupo' ? `👥 ${contacto}` : `💬 ${getNombreReal(contacto)}`;
+                document.getElementById('chat-nombre-contacto').innerText = tituloVisual;
+
+                const headerAcciones = document.getElementById('chat-acciones-header');
+                if (headerAcciones) {
+                    if (tipo === 'grupo') {
+                        headerAcciones.innerHTML = `<button onclick="abrirModalGrupo(true)" style="background:var(--bg); border:1px solid #ccc; color:var(--primary); font-weight:bold; cursor:pointer; font-size:12px; padding: 6px 12px; border-radius: 6px; transition: 0.2s;" onmouseover="this.style.background='#e0e0e0'">⚙️ Ajustes</button>`;
+                    } else {
+                        headerAcciones.innerHTML = `<button onclick="vaciarChatActual()" style="background:var(--red-soft); border:1px solid #ffcdd2; color:var(--red-text); cursor:pointer; font-size:12px; font-weight:bold; padding: 6px 12px; border-radius: 6px; transition: 0.2s;" onmouseover="this.style.background='#ffcdd2'">🧹 Vaciar</button>`;
+                    }
+                }
+                area.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px; font-size: 14px;">Cargando mensajes seguros...</p>';
+            }
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_chat', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'obtener_conversacion', contacto, tipo, id_grupo: idGrupo })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (tipo === 'grupo') chatActual.miembros = data.miembros || [];
+
+                    let newHtml = '';
+                    if (data.mensajes.length === 0) {
+                        newHtml = `<p style="text-align:center; color:#888; font-size: 13px; margin-top: 30px; font-weight: 500;">🔒 Conversación cifrada de extremo a extremo con ${tipo === 'grupo' ? contacto : getNombreReal(contacto)}.</p>`;
+                    } else {
+                        let hasClear = false;
+                        const msgHtml = data.mensajes.map(m => {
+                            if (m.mensaje.startsWith("SYS_CLEAR:") || m.mensaje.startsWith("SYS_GROUP:")) {
+                                hasClear = true;
+                                const txtSys = m.mensaje.replace("SYS_CLEAR:", "").replace("SYS_GROUP:", "");
+                                return `<div style="align-self: center; background: #fffde7; color: #856404; padding: 8px 15px; border-radius: 20px; font-size: 11px; margin: 15px 0; border: 1px solid #ffeeba; text-align: center; max-width: 85%; font-weight: 600;">ℹ️ ${txtSys}</div>`;
+                            }
+                            const esMio = (m.remitente === usernameGlobal);
+                            const align = esMio ? 'align-self: flex-end;' : 'align-self: flex-start;';
+                            const bg = esMio ? 'background: #dcf8c6;' : 'background: white;';
+                            const radius = esMio ? 'border-radius: 16px 16px 0 16px;' : 'border-radius: 16px 16px 16px 0;';
+                            const colorCheck = m.leido ? '#53bdeb' : '#999';
+                            const checks = esMio ? `<span style="color: ${colorCheck}; font-weight:bold; letter-spacing:-2px; margin-left:6px; font-size:12px;">✓✓</span>` : '';
+                            const textoEditado = (m.is_edited && !m.is_deleted) ? `<span style="font-style:italic; margin-right:5px;">Editado</span>` : '';
+                            const contenidoMsg = m.is_deleted ? `🚫 <i style="opacity:0.7;">${m.mensaje}</i>` : m.mensaje;
+                            const labelRemitente = (tipo === 'grupo' && !esMio) ? `<div style="font-size:11px; color:var(--accent); font-weight:bold; margin-bottom:4px;">${getNombreReal(m.remitente)}</div>` : '';
+
+                            let menuHtml = '';
+                            if (esMio && !m.is_deleted) {
+                                menuHtml = `
+                                <div style="position: absolute; top: 8px; right: 8px; cursor: pointer; color: #999; font-weight: bold; padding: 0 5px;" onclick="toggleMenuMsg(${m.id_mensaje})">⋮
+                                    <div id="menu-msg-${m.id_mensaje}" style="display:none; position:absolute; right:0; top:20px; background:white; border:1px solid #eee; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.1); z-index:10; min-width: 120px; overflow: hidden;">
+                                        <div style="padding:10px 15px; font-size:12px; color:var(--primary); cursor:pointer; border-bottom:1px solid #f0f0f0; font-weight:600;" onclick="iniciarEdicionMensaje(${m.id_mensaje}, '${encodeURIComponent(m.mensaje)}'); toggleMenuMsg(${m.id_mensaje});">✏️ Editar</div>
+                                        <div style="padding:10px 15px; font-size:12px; color:var(--red-text); cursor:pointer; font-weight:600;" onclick="eliminarMensajeChat(${m.id_mensaje})">🗑️ Eliminar</div>
+                                    </div>
+                                </div>`;
+                            }
+                            return `
+                            <div style="${align} ${bg} ${radius} padding: 12px 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 80%; position: relative; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.02);">
+                                ${menuHtml}
+                                ${labelRemitente}
+                                <div id="msg-view-${m.id_mensaje}" style="font-size: 14px; color: ${m.is_deleted ? '#888' : '#333'}; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; hyphens: auto; padding-right: ${esMio && !m.is_deleted ? '15px' : '0'}; font-family: 'Montserrat', sans-serif;">${contenidoMsg}</div>
+                                
+                                <div id="msg-edit-${m.id_mensaje}" style="display: none; margin-top: 8px;">
+                                    <textarea id="input-edit-${m.id_mensaje}" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--accent); outline: none; font-size: 13px; font-family: 'Montserrat', sans-serif; resize: none; overflow-y: auto; box-sizing: border-box; margin-bottom: 8px;" oninput="this.style.height=''; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button onclick="cancelarEdicionMensaje(${m.id_mensaje})" style="background: transparent; color: #888; border: 1px solid #ccc; cursor: pointer; font-size: 11px; padding: 6px 12px; font-weight: bold; border-radius: 4px;">Cancelar</button>
+                                        <button onclick="guardarEdicionMensaje(${m.id_mensaje})" style="background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; padding: 6px 15px; font-weight: bold;">Guardar</button>
+                                    </div>
+                                </div>
+                                <div style="font-size: 10px; color: #999; text-align: right; margin-top: 6px;">${textoEditado}${new Date(m.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${checks}</div>
+                            </div>`;
+                        }).join('');
+
+                        newHtml = hasClear ? msgHtml : `<p style="text-align:center; color:#bbb; font-size: 12px; margin-top: 10px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Inicio de la conversación</p>` + msgHtml;
+                    }
+
+                    // APLICAMOS LA CORRECCIÓN ANTI-PARPADEO
+                    if (area.innerHTML !== newHtml) {
+                        const isScrolledToBottom = (area.scrollHeight - area.scrollTop - area.clientHeight < 50);
+                        const prevScrollTop = area.scrollTop;
+
+                        area.innerHTML = newHtml;
+
+                        if (isScrolledToBottom || !silencioso) {
+                            setTimeout(() => { area.scrollTop = area.scrollHeight; }, 10);
+                        } else {
+                            area.scrollTop = prevScrollTop;
+                        }
+                    }
+                }
+            } catch (e) { }
+            if (!silencioso) cargarListaChats();
+        }
+
+        // =========================================================================
+        // FIX AL ENVIAR MENSAJE: NO REESCRIBIR EL DOM, SOLO INYECTAR LA BURBUJA
+        // =========================================================================
+        async function enviarMensajeChat() {
+            const input = document.getElementById('chat-input-mensaje');
+            const texto = input.value.trim();
+            if (!texto || !chatActual.contacto) return;
+
+            input.value = '';
+            input.style.height = '48px';
+
+            // EFECTO WHATSAPP: Mantenemos el teclado abierto en móviles
+            if (window.innerWidth <= 768) {
+                input.focus();
+            }
+
+            const area = document.getElementById('chat-mensajes-area');
+            if (area.innerHTML.includes('Inicio de la conversación')) area.innerHTML = '';
+
+            // Usamos insertAdjacentHTML para no parpadear el historial existente
+            area.insertAdjacentHTML('beforeend', `
+            <div style="align-self: flex-end; background: #dcf8c6; border-radius: 16px 16px 0 16px; padding: 12px 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 80%; margin-bottom: 8px;">
+                <div style="font-size: 14px; color: #333; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; hyphens: auto;">${texto}</div>
+                <div style="font-size: 10px; color: #999; text-align: right; margin-top: 6px; font-style: italic;">Enviando...</div>
+            </div>`);
+
+            setTimeout(() => { area.scrollTop = area.scrollHeight; }, 10);
+
+            try {
+                await fetch('/.netlify/functions/crm_chat', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'enviar_mensaje', contacto: chatActual.contacto, tipo: chatActual.tipo, id_grupo: chatActual.id_grupo, mensaje: texto })
+                });
+                abrirConversacion(chatActual.contacto, chatActual.tipo, chatActual.id_grupo, true);
+            } catch (e) { alert("Fallo el envío."); }
+        }
+
+        function iniciarEdicionMensaje(idMensaje, textoCodificado) {
+            idMensajeEditando = idMensaje;
+            document.getElementById(`menu-msg-${idMensaje}`).style.display = 'none';
+            const textoActual = decodeURIComponent(textoCodificado);
+            document.getElementById(`msg-view-${idMensaje}`).style.display = 'none';
+            document.getElementById(`msg-edit-${idMensaje}`).style.display = 'block';
+            const inputEdit = document.getElementById(`input-edit-${idMensaje}`);
+            inputEdit.value = textoActual;
+            inputEdit.focus();
+            inputEdit.style.height = '';
+            inputEdit.style.height = Math.min(inputEdit.scrollHeight, 120) + 'px';
+        }
+
+        function cancelarEdicionMensaje(idMensaje) {
+            idMensajeEditando = null;
+            document.getElementById(`msg-view-${idMensaje}`).style.display = 'block';
+            document.getElementById(`msg-edit-${idMensaje}`).style.display = 'none';
+        }
+
+        async function guardarEdicionMensaje(idMensaje) {
+            const inputEdit = document.getElementById(`input-edit-${idMensaje}`);
+            const nuevoTexto = inputEdit.value.trim();
+            if (!nuevoTexto) return alert("El mensaje no puede estar vacío.");
+
+            inputEdit.disabled = true;
+            try {
+                await fetch('/.netlify/functions/crm_chat', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'editar_mensaje', id_mensaje: idMensaje, nuevo_texto: nuevoTexto })
+                });
+                idMensajeEditando = null;
+                abrirConversacion(chatActual.contacto, chatActual.tipo, chatActual.id_grupo, true);
+            } catch (e) {
+                alert("Fallo al editar.");
+                inputEdit.disabled = false;
+            }
+        }
+
+        async function eliminarMensajeChat(idMensaje) {
+            if (!confirm("¿Eliminar este mensaje para todos?")) return;
+            const tombstone = `${getNombreReal(usernameGlobal)} eliminó un mensaje.`;
+            await fetch('/.netlify/functions/crm_chat', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ username: usernameGlobal, accion: 'eliminar_mensaje', id_mensaje: idMensaje, texto_tombstone: tombstone })
+            });
+            abrirConversacion(chatActual.contacto, chatActual.tipo, chatActual.id_grupo, true);
+        }
+
+        async function vaciarChatActual() {
+            if (!chatActual.contacto) return;
+            const esGrupo = (chatActual.tipo === 'grupo');
+            const msgConfirm = esGrupo ? `⚠️ ¿VACIAR historial del grupo ${chatActual.contacto}?` : `⚠️ ¿VACIAR historial con ${getNombreReal(chatActual.contacto)}?`;
+
+            if (!confirm(msgConfirm)) return;
+
+            const tombstone = `${getNombreReal(usernameGlobal)} vació el chat ${getFechaFormateada()}.`;
+            await fetch('/.netlify/functions/crm_chat', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ username: usernameGlobal, accion: 'vaciar_chat', contacto: chatActual.contacto, tipo: chatActual.tipo, id_grupo: chatActual.id_grupo, texto_tombstone: tombstone })
+            });
+
+            if (esGrupo) document.getElementById('modalGestionGrupo').style.display = 'none';
+            abrirConversacion(chatActual.contacto, chatActual.tipo, chatActual.id_grupo, false);
+        }
+
+        async function eliminarGrupoActual() {
+            if (chatActual.tipo !== 'grupo' || !chatActual.id_grupo) return;
+            if (!confirm(`🚨 ¿Estás ABSOLUTAMENTE SEGURO de ELIMINAR el grupo "${chatActual.contacto}" por completo?`)) return;
+
+            await fetch('/.netlify/functions/crm_chat', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                body: JSON.stringify({ username: usernameGlobal, accion: 'eliminar_grupo', id_grupo: chatActual.id_grupo })
+            });
+
+            document.getElementById('modalGestionGrupo').style.display = 'none';
+            document.getElementById('chat-hilo-activo').style.display = 'none';
+            document.getElementById('chat-placeholder').style.display = 'flex';
+            chatActual = { contacto: null, tipo: 'individual', id_grupo: null };
+            cargarListaChats();
+        }
+
+        function abrirModalGrupo(modoEdicion = false) {
+            document.getElementById('modalGestionGrupo').style.display = 'flex';
+            document.getElementById('titulo-modal-grupo').innerText = modoEdicion ? "Ajustes del Grupo" : "Crear Nuevo Grupo";
+            document.getElementById('btn-guardar-grupo').innerText = modoEdicion ? "Guardar Cambios" : "Crear Grupo";
+            document.getElementById('btn-guardar-grupo').onclick = () => guardarGrupo(modoEdicion);
+            document.getElementById('zona-peligro-grupo').style.display = modoEdicion ? 'block' : 'none';
+            document.getElementById('input-nombre-grupo').value = modoEdicion ? chatActual.contacto : "";
+
+            const cont = document.getElementById('lista-miembros-grupo');
+            cont.innerHTML = '';
+            equipoGlobal.forEach(u => {
+                const isChecked = modoEdicion && chatActual.miembros && chatActual.miembros.includes(u.username) ? 'checked' : '';
+                const disabled = (u.username === usernameGlobal) ? 'checked disabled' : isChecked;
+                cont.innerHTML += `<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;"><input type="checkbox" class="check-miembro-grupo" value="${u.username}" ${disabled} style="transform: scale(1.2); accent-color: var(--primary);"><label style="font-size: 13px; font-weight: 500;">${getNombreReal(u.username)}</label></div>`;
+            });
+        }
+
+        async function guardarGrupo(modoEdicion) {
+            const nombre = document.getElementById('input-nombre-grupo').value.trim();
+            if (!nombre) return alert("El nombre del grupo es obligatorio.");
+            const checks = document.querySelectorAll('.check-miembro-grupo');
+            const seleccionados = Array.from(checks).filter(c => c.checked || c.disabled).map(c => c.value);
+            if (seleccionados.length < 2) return alert("Selecciona al menos un miembro adicional.");
+
+            document.getElementById('btn-guardar-grupo').innerText = "Procesando...";
+            const accion = modoEdicion ? 'editar_grupo' : 'crear_grupo';
+            const accionMsj = modoEdicion ? "actualizó la información del grupo" : "creó este grupo";
+            const tombstone = `${getNombreReal(usernameGlobal)} ${accionMsj} ${getFechaFormateada()}`;
+
+            const payload = { username: usernameGlobal, accion: accion, nombre_grupo: nombre, miembros: seleccionados, tombstone: tombstone };
+            if (modoEdicion) payload.id_grupo = chatActual.id_grupo;
+
+            const res = await fetch('/.netlify/functions/crm_chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` }, body: JSON.stringify(payload) });
+            const data = await res.json();
+
+            document.getElementById('modalGestionGrupo').style.display = 'none';
+            if (data.success) {
+                const idG = modoEdicion ? chatActual.id_grupo : data.id_grupo;
+                abrirConversacion(nombre, 'grupo', idG, false);
+            }
+        }
+
+        // =======================================================
+        // RADAR DE MENSAJES NO LEÍDOS (GLOBO ROJO)
+        // =======================================================
+        async function actualizarGloboChat() {
+            const tokenSeguro = localStorage.getItem('vigilex_token');
+            const usernameGlobal = localStorage.getItem('usuario_actual');
+            if (!usernameGlobal || !tokenSeguro) return;
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'listar_chats' })
+                });
+                const data = await res.json();
+
+                if (data.success && data.chats) {
+                    const totalNoLeidos = data.chats.reduce((sum, c) => sum + parseInt(c.no_leidos || 0), 0);
+                    const badgeChat = document.getElementById('badge-chat');
+                    if (badgeChat) {
+                        // Actualiza el número y muestra/oculta el globo rojo
+                        badgeChat.style.display = (totalNoLeidos > 0) ? 'block' : 'none';
+                        badgeChat.innerText = totalNoLeidos;
+                    }
+                }
+            } catch (e) {
+                // Silencioso para no molestar si hay un micro-corte de internet
+            }
+        }
+
+        // Funciones de Google Drive
+        async function conectarGoogleDrive() {
+            const btn = document.getElementById('btn-conectar-master');
+            if (btn) { btn.innerText = "⏳ Enlazando..."; btn.disabled = true; }
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_google_auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usuarioActual })
+                });
+
+                const data = await res.json();
+
+                if (data.success && data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert("⚠️ Error al generar el enlace: " + (data.error || "Desconocido"));
+                    if (btn) { btn.innerText = "🔗 Vincular Cuenta del Despacho"; btn.disabled = false; }
+                }
+            } catch (e) {
+                alert("Fallo de conexión con el servidor.");
+                if (btn) { btn.innerText = "🔗 Vincular Cuenta del Despacho"; btn.disabled = false; }
+            }
+        }
+
+        async function desconectarGoogleDrive() {
+            if (!confirm("¿Estás seguro de desconectar tu cuenta de Google Drive? Perderás el acceso a las funciones automáticas de VIGILEX AI.")) return;
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usuarioActual, accion: 'desconectar_drive', payload: {} })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("🔌 Cuenta desconectada correctamente.");
+                    abrirMiCuenta(); // Recargamos el modal
+                }
+            } catch (e) { alert("Error al intentar desconectar."); }
+        }
+
+
+        // ========================================================================
+        // BUCLE MAESTRO: RADAR DE ALERTAS EN TIEMPO REAL
+        // ========================================================================
+        setInterval(() => {
+            // 1. Actualiza el globo rojo de las alertas del sistema (🔔)
+            cargarNotificaciones();
+
+            // 2. Actualiza el globo rojo de los chats privados (💬)
+            actualizarGloboChat();
+
+        }, 2000); // Refresco invisible cada 2 segundos
+
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

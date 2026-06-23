@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-vigilex.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --navy-light: #153b61;
+            --gold: #ad974f;
+            --bg-light: #f8f9fa;
+            --text-dark: #333333;
+            --text-gray: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #8f7c3f;
+        }
+
+        /* Clases auxiliares para el Menú Móvil */
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        .close-menu-item {
+            display: none;
+        }
+
+        .mobile-only-btn {
+            display: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(rgba(10, 37, 64, 0.9), rgba(10, 37, 64, 0.95)), url('https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 120px 5% 100px;
+            position: relative;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .hero-gold-line {
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            margin: 0 auto 30px;
+            border-radius: 2px;
+        }
+
+        /* --- EL FUNDADOR --- */
+        .founder-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 100px 8%;
+            gap: 60px;
+            background-color: #ffffff;
+        }
+
+        .founder-image-wrapper {
+            flex: 1;
+            position: relative;
+            max-width: 450px;
+        }
+
+        .founder-image {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .founder-decor {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        .founder-text {
+            flex: 1;
+        }
+
+        .founder-text h2 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .founder-text h4 {
+            color: var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .founder-text p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--navy);
+            border-left: 4px solid var(--gold);
+            padding-left: 20px;
+            margin: 30px 0;
+            line-height: 1.5;
+        }
+
+        /* --- MISIÓN Y VISIÓN (GRID) --- */
+        .mv-section {
+            padding: 80px 8%;
+            background-color: var(--bg-light);
+        }
+
+        .mv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mv-card {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--navy);
+            transition: 0.3s;
+        }
+
+        .mv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .mv-card.vision {
+            border-top-color: var(--gold);
+        }
+
+        .mv-card i {
+            font-size: 40px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .mv-card h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .mv-card p {
+            font-size: 1.05rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* --- VALORES --- */
+        .values-section {
+            padding: 100px 8%;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        .values-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-item i {
+            font-size: 45px;
+            color: var(--navy);
+            margin-bottom: 20px;
+        }
+
+        .value-item h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .value-item p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* --- CTA FINAL --- */
+        .cta-section {
+            text-align: center;
+            padding: 100px 5%;
+            background-color: var(--navy);
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        .btn-large {
+            font-size: 1.1rem;
+            padding: 18px 40px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* --- ANIMACIONES CSS --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 60px 5% 20px 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo h2 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 300px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+
+        /* ==================================================== */
+        /* RESPONSIVE & MOBILE MENU (MENÚ LATERAL ELEGANTE)     */
+        /* ==================================================== */
+        @media (max-width: 900px) {
+            .founder-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 5%;
+            }
+
+            .founder-image-wrapper {
+                margin-bottom: 30px;
+            }
+
+            .mv-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .quote {
+                border-left: none;
+                border-top: 4px solid var(--gold);
+                padding-left: 0;
+                padding-top: 20px;
+            }
+
+            /* --- ESTILOS DEL MENÚ MÓVIL --- */
+            .desktop-only-btn {
+                display: none;
+            }
+
+            /* Oculta el botón original de la barra */
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 26px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                /* Oculto fuera de la pantalla por defecto */
+                width: 280px;
+                height: 100vh;
+                /* Ocupa todo el alto de la pantalla */
+                background: white;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 30px;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+                transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 2000;
+            }
+
+            .nav-links.active-menu {
+                right: 0;
+                /* Se desliza hacia adentro */
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                display: block;
+                width: 100%;
+            }
+
+            .close-menu-item {
+                display: block;
+                width: 100%;
+                text-align: right;
+                margin-bottom: 10px;
+            }
+
+            .close-menu-btn {
+                background: none;
+                border: none;
+                font-size: 30px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .mobile-only-btn {
+                display: block;
+                width: 100%;
+                margin-top: 20px;
+                border-top: 1px solid #eee;
+                padding-top: 25px;
+            }
+
+            .mobile-only-btn .btn-primary {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logovigilexrubros.png" alt="Vigilex Logo"> VIGILEX</a>
+
+        <button class="mobile-menu-btn" id="btnMenuAbrir">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <ul class="nav-links" id="menuLateral">
+            <li class="close-menu-item">
+                <button class="close-menu-btn" id="btnMenuCerrar"><i class="fa-solid fa-xmark"></i></button>
+            </li>
+
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="caracteristicas.html">Características</a></li>
+            <li><a href="nosotros.html" class="active">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="precios.html">Precios</a></li>
+
+            <li class="mobile-only-btn"><a href="inicio.html" class="btn-primary">Acceder al Sistema</a></li>
+        </ul>
+
+        <a href="inicio.html" class="btn-primary desktop-only-btn">Acceder al Sistema</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-gold-line"></div>
+        <h1 class="fade-up">El Derecho evoluciona. <br>Tu firma también debería hacerlo.</h1>
+        <p class="fade-up" style="transition-delay: 0.1s;">Conoce la historia detrás del software que está transformando
+            la gestión jurisdiccional en México, creado por quienes entienden el verdadero valor del tiempo y la certeza
+            jurídica.</p>
+    </header>
+
+    <section class="founder-section">
+        <div class="founder-image-wrapper fade-up">
+            <div class="founder-decor"></div>
+            <img src="rodrigo.png" alt="Rodrigo Lizárraga Camacho - Fundador de VIGILEX" class="founder-image"
+                onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop';">
+        </div>
+        <div class="founder-text fade-up" style="transition-delay: 0.2s;">
+            <h2>De la exigencia de los tribunales al código fuente.</h2>
+            <h4>Rodrigo Lizárraga Camacho — Fundador y Desarrollador</h4>
+
+            <p>Como abogado postulante, conozco íntimamente la adrenalina de los pasillos de los juzgados, la angustia
+                de un término fatal por vencer y el caos que puede generar una gestión documental ineficiente.</p>
+
+            <p>VIGILEX no nació en un corporativo de Silicon Valley guiado por métricas de mercado; <b>nació en las
+                    trincheras del litigio</b>. Surgió de la necesidad personal de tener una herramienta que no solo
+                administrara expedientes, sino que actuara como un escudo contra el error humano y la negligencia
+                procesal.</p>
+
+            <div class="quote">
+                "Una plataforma de élite concebida por un abogado, estructurada con la lógica del Derecho y diseñada
+                exclusivamente para abogados."
+            </div>
+
+            <p>Al fusionar mi formación legal con el desarrollo de software de vanguardia, codifiqué cada línea de
+                VIGILEX pensando en lo que un Titular de firma realmente necesita: <b>seguridad absoluta, delegación sin
+                    pérdida de control y trazabilidad perfecta.</b></p>
+        </div>
+    </section>
+
+    <section class="mv-section">
+        <div class="mv-grid">
+            <div class="mv-card fade-up">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <h3>Nuestra Misión</h3>
+                <p>Dotar a los profesionales del derecho de un ecosistema tecnológico de máxima precisión que elimine el
+                    riesgo de caducidad procesal, erradique el desorden administrativo y eleve la rentabilidad operativa
+                    de sus firmas, permitiéndoles enfocarse en lo que verdaderamente importa: <b>ganar sus asuntos.</b>
+                </p>
+            </div>
+            <div class="mv-card vision fade-up" style="transition-delay: 0.2s;">
+                <i class="fa-solid fa-eye"></i>
+                <h3>Nuestra Visión</h3>
+                <p>Convertirnos en el estándar de oro y en el aliado digital indispensable para la práctica jurídica en
+                    América Latina, transformando despachos tradicionales en corporativos legales modernos, ágiles y
+                    ciberseguros a través de innovación tecnológica constante y accesible.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <h2 class="fade-up">Los Pilares de VIGILEX</h2>
+        <div class="values-grid">
+            <div class="value-item fade-up">
+                <i class="fa-solid fa-stopwatch"></i>
+                <h4>Precisión Procesal</h4>
+                <p>Un término omitido puede costar un caso. Nuestra arquitectura matemática garantiza que cada fecha
+                    límite sea calculada y notificada con exactitud implacable.</p>
+            </div>
+            <div class="value-item fade-up" style="transition-delay: 0.1s;">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h4>Certeza y Seguridad</h4>
+                <p>El secreto profesional es sagrado. Implementamos cifrado avanzado, bases de datos blindadas y
+                    autenticación estricta para que la información de tus clientes esté más segura que en papel.</p>
+            </div>
+            <div class="value-item fade-up" style="transition-delay: 0.2s;">
+                <i class="fa-solid fa-gem"></i>
+                <h4>Elegancia Operativa</h4>
+                <p>El software jurídico no tiene por qué ser complejo o anticuado. Diseñamos una interfaz limpia,
+                    intuitiva y estéticamente superior que hace que trabajar sea un placer.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section fade-up">
+        <h2>Únete a la nueva era del litigio.</h2>
+        <p>No dejes el control de tu despacho en el pasado. Experimenta la precisión de VIGILEX hoy mismo.</p>
+        <a href="precios.html" class="btn-primary btn-large">Conoce nuestros Planes</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2><img src="logovigilexrubros.png" alt="Logo"> VIGILEX</h2>
+                <p style="margin-top:15px;">Sistema de Gestión Integral para Abogados.
+                <p> </p> Seguridad, control y elegancia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="index.html#inicio">Inicio</a></li>
+                    <li><a href="caracteristicas.html">Características</a></li>
+                    <li><a href="inicio.html">Acceso a Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VIGILEX. Todos los derechos reservados. Rodrigo Lizárraga Camacho
+        </div>
+    </footer>
+
+    <script>
+        // 1. SCRIPT DE ANIMACIÓN SCROLL
+        document.addEventListener('DOMContentLoaded', function () {
+            const faders = document.querySelectorAll('.fade-up');
+            const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+
+            const appearOnScroll = new IntersectionObserver(function (entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('visible');
+                    appearOnScroll.unobserve(entry.target);
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => { appearOnScroll.observe(fader); });
+        });
+
+        // 2. SCRIPT DEL MENÚ LATERAL MÓVIL
+        const btnAbrir = document.getElementById('btnMenuAbrir');
+        const btnCerrar = document.getElementById('btnMenuCerrar');
+        const menuLateral = document.getElementById('menuLateral');
+
+        btnAbrir.addEventListener('click', () => {
+            menuLateral.classList.add('active-menu');
+        });
+
+        btnCerrar.addEventListener('click', () => {
+            menuLateral.classList.remove('active-menu');
+        });
+    </script>
+</body>
+
+</html>

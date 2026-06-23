@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resoluciones del Día | VIGILEX</title>
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES DE DISEÑO INSTITUCIONAL --- */
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            /* Dorado Premium */
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-muted: #666666;
+            --danger: #c62828;
+            --success: #2e7d32;
+            --input-border: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- NAVEGACIÓN SUPERIOR --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-nav img {
+            height: 30px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* --- CONTENEDORES --- */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        /* --- BOTONES --- */
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--input-border);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #153c61;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(10, 37, 64, 0.2);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* --- INPUTS --- */
+        input[type="date"] {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--primary);
+            outline: none;
+            transition: 0.3s;
+            background: white;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(173, 151, 79, 0.15);
+        }
+
+        /* --- DISEÑO DEL BOLETÍN --- */
+        .cliente-group {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            border-top: 5px solid var(--primary);
+        }
+
+        .cliente-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .res-card {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            align-items: flex-start;
+        }
+
+        .res-card:hover {
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            transform: translateY(-3px);
+        }
+
+        .res-check {
+            margin-top: 5px;
+            transform: scale(1.5);
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .res-content {
+            flex-grow: 1;
+        }
+
+        .res-expediente {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .res-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 10px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .b-auto {
+            background: #1565c0;
+        }
+
+        .b-interlocutoria {
+            background: #6a1b9a;
+        }
+
+        .b-sentencia {
+            background: #c62828;
+        }
+
+        .b-decreto {
+            background: #ff8f00;
+        }
+
+        .b-notif {
+            background: #f4f6f8;
+            color: #555;
+            border: 1px solid #ccc;
+        }
+
+        /* --- FASE 5: BADGES DE CUADERNOS --- */
+        .badge-cuaderno {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 10px;
+            display: inline-block;
+            margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .c-principal {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .c-incidental {
+            background: #fce4ec;
+            color: #e91e63;
+            border: 1px solid #f8bbd0;
+        }
+
+        .res-texto {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444;
+            margin: 10px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ddd;
+            font-weight: 500;
+        }
+
+        /* Estado "Leído" */
+        .res-card.leida {
+            opacity: 0.55;
+            background: #f4f6f8;
+            border-color: #eee;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .res-card.leida .res-texto {
+            text-decoration: line-through;
+            color: #999;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .res-card {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .top-nav {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <div class="logo-nav">
+            <img src="logovigilexrubros.png" alt="Vigilex" onerror="this.src='favicon.png'">
+            VIGILEX <span style="font-weight: 300; font-size: 16px; margin-left: 5px;">| Resoluciones</span>
+        </div>
+        <a href="lobby.html" class="btn-outline"
+            style="padding: 8px 15px; font-size: 12px; margin: 0; text-transform: none;">← Volver al Panel</a>
+    </nav>
+
+    <div class="container">
+
+        <div id="hub-contextos" style="display: flex; flex-direction: column; min-height: 70vh; width: 100%;">
+            <div style="width: 100%; margin-bottom: 40px; border-bottom: 1px solid #e0e0e0; padding-bottom: 20px;">
+                <h2 class="playfair"
+                    style="color: var(--primary); margin: 0 0 10px 0; font-size: 32px; letter-spacing: -0.5px;">
+                    Resoluciones del Día</h2>
+                <p
+                    style="color: var(--text-muted); margin: 0; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                    ¿De qué cartera deseas visualizar el boletín judicial hoy?</p>
+            </div>
+
+            <div id="grid-hub"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; width: 100%;">
+                <div style="text-align:center; padding: 40px; color:#888; grid-column: 1/-1; font-weight: 600;">
+                    Conectando con la red corporativa...</div>
+            </div>
+        </div>
+
+        <div id="boletin-core" style="display: none; width: 100%; max-width: 1100px; margin: 0 auto;">
+
+            <div
+                style="background: white; padding: 30px 35px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border-left: 6px solid var(--primary); flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2 id="titulo-contexto" class="playfair"
+                        style="margin: 0 0 8px 0; font-size: 26px; color: var(--primary);">Cargando...</h2>
+                    <p
+                        style="margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Boletín y Acuerdos de Expedientes</p>
+                </div>
+                <button onclick="volverAlHub()" class="btn-outline">← Cambiar Cartera</button>
+            </div>
+
+            <div
+                style="background: white; padding: 20px 30px; border-radius: 12px; margin-bottom: 35px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <span
+                        style="font-weight: 700; color: var(--primary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">📅
+                        Fecha de publicación:</span>
+                    <div
+                        style="display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 5px 15px; border-radius: 8px; border: 1px solid #eee;">
+                        <span
+                            style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Desde</span>
+                        <input type="date" id="filtro-fecha-desde" onchange="sincronizarFechas(); cargarBoletin()"
+                            style="border: none; background: transparent; padding: 5px; outline: none;">
+
+                        <span
+                            style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-left: 10px;">Hasta</span>
+                        <input type="date" id="filtro-fecha-hasta" onchange="cargarBoletin()"
+                            style="border: none; background: transparent; padding: 5px; outline: none;">
+                    </div>
+                </div>
+                <button onclick="cargarBoletin()" class="btn-primary" style="background: var(--accent);">🔄 Actualizar
+                    Boletín</button>
+            </div>
+
+            <div id="contenedor-boletin"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+        let contextoActual = null;
+        let rolActualGlobal = null;
+
+        if (!tokenSeguro || !usernameGlobal) window.location.replace("inicio.html");
+
+        // 1. INICIALIZAR Y DIBUJAR HUB
+        // 1. INICIALIZAR Y DIBUJAR HUB
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Poner fecha de hoy por defecto en ambos filtros
+            const hoy = new Date();
+            document.getElementById('filtro-fecha-desde').valueAsDate = hoy;
+            document.getElementById('filtro-fecha-hasta').valueAsDate = hoy;
+
+            try {
+                const res = await fetch('/.netlify/functions/equipo_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ usuarioActual: usernameGlobal, accion: 'listar_equipo' })
+                });
+                const data = await res.json();
+                if (data.success && data.equipo) {
+                    const yo = data.equipo.find(u => u.username === usernameGlobal);
+                    if (yo) rolActualGlobal = yo.rol_equipo;
+                    dibujarHub(data.equipo);
+                } else {
+                    document.getElementById('grid-hub').innerHTML = '<div style="color:var(--danger); grid-column:1/-1; font-weight:bold;">Error de red corporativa.</div>';
+                }
+            } catch (e) { console.error(e); }
+        });
+
+        function sincronizarFechas() {
+            const fechaDesde = document.getElementById('filtro-fecha-desde').value;
+            // Al cambiar 'Desde', copiamos el valor a 'Hasta' automáticamente
+            document.getElementById('filtro-fecha-hasta').value = fechaDesde;
+        }
+
+        function dibujarHub(equipo) {
+            const grid = document.getElementById('grid-hub');
+            grid.innerHTML = '';
+            const esJefe = (rolActualGlobal === 'titular' || rolActualGlobal === 'master');
+
+            let tarjetasHTML = crearTarjetaHub('TODOS', 'Todos los Clientes', 'Visión General del Despacho', 'var(--primary)', '🏢');
+
+            equipo.forEach(u => {
+                if (esJefe || u.username === usernameGlobal) {
+                    const n = u.nombre_real || u.username;
+                    tarjetasHTML += crearTarjetaHub(u.username, `Asuntos de: ${n}`, `Cartera Operativa (${(u.rol_equipo || 'Abogado').toUpperCase()})`, 'var(--accent)', '📂');
+                }
+            });
+            grid.innerHTML = tarjetasHTML;
+        }
+
+        function crearTarjetaHub(idUsername, titulo, subtitulo, color, icono) {
+            return `
+                <div onclick="entrarContexto('${idUsername}', '${titulo}')" 
+                     style="background: white; border-radius: 16px; padding: 35px 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); text-align: left; position: relative; overflow: hidden; border-top: 5px solid var(--primary); display: flex; flex-direction: column; min-height: 160px; box-sizing: border-box;"
+                     onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.08)'; this.style.borderTopColor='${color}';" 
+                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.04)'; this.style.borderTopColor='var(--primary)';">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="font-size: 32px; margin-right: 20px; background: #f8f9fa; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--primary);">${icono}</div>
+                        <h3 class="playfair" style="color: var(--primary); margin: 0; font-size: 19px; font-weight: 700; line-height: 1.3;">${titulo}</h3>
+                    </div>
+                    <div style="flex-grow: 1;"></div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center;">
+                        <p style="color: var(--text-muted); font-size: 11px; margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${subtitulo}</p>
+                        <span style="color: ${color}; font-size: 20px; font-weight: bold;">→</span>
+                    </div>
+                </div>`;
+        }
+
+        // 2. NAVEGACIÓN Y CARGA DE DATOS
+        function entrarContexto(idUsername, titulo) {
+            contextoActual = idUsername;
+            document.getElementById('hub-contextos').style.display = 'none';
+            document.getElementById('boletin-core').style.display = 'block';
+            document.getElementById('titulo-contexto').innerText = titulo;
+            cargarBoletin();
+        }
+
+        function volverAlHub() {
+            contextoActual = null;
+            document.getElementById('boletin-core').style.display = 'none';
+            document.getElementById('hub-contextos').style.display = 'flex';
+        }
+
+        async function cargarBoletin() {
+            const fechaDesde = document.getElementById('filtro-fecha-desde').value;
+            const fechaHasta = document.getElementById('filtro-fecha-hasta').value;
+            const cont = document.getElementById('contenedor-boletin');
+            cont.innerHTML = '<div style="text-align:center; padding:50px; font-weight:600; color:#888;">Buscando publicaciones en el servidor...</div>';
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_resoluciones_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({
+                        username: usernameGlobal,
+                        accion: 'listar_dia',
+                        fecha_desde: fechaDesde,  // Enviamos la fecha inicial
+                        fecha_hasta: fechaHasta,  // Enviamos la fecha final
+                        contexto: contextoActual
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.resoluciones.length === 0) {
+                        cont.innerHTML = `
+                            <div style="background: white; border-radius: 16px; padding: 60px 30px; text-align: center; border: 1px dashed var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+                                <div style="font-size: 50px; margin-bottom: 15px; opacity: 0.8;">📭</div>
+                                <h3 class="playfair" style="color: var(--primary); margin: 0 0 10px 0; font-size: 24px;">Boletín Limpio</h3>
+                                <p style="color: #666; margin: 0; font-size: 15px; font-weight: 500;">No se registraron resoluciones o notificaciones para la fecha seleccionada en esta cartera.</p>
+                            </div>`;
+                        return;
+                    }
+
+                    // AGRUPAR POR CLIENTE
+                    const porCliente = data.resoluciones.reduce((acc, r) => {
+                        const cli = r.cliente || 'Asuntos Sin Cliente Asignado';
+                        if (!acc[cli]) acc[cli] = [];
+                        acc[cli].push(r);
+                        return acc;
+                    }, {});
+
+                    let html = '';
+                    for (const [cliente, lista] of Object.entries(porCliente)) {
+                        html += `
+                        <div class="cliente-group">
+                            <div class="cliente-header">👤 ${cliente}</div>
+                            ${lista.map(r => generarTarjetaResolucion(r)).join('')}
+                        </div>`;
+                    }
+                    cont.innerHTML = html;
+                }
+            } catch (e) {
+                cont.innerHTML = '<div style="color:var(--danger); text-align:center; font-weight:bold;">Fallo de conexión.</div>';
+            }
+        }
+
+        function generarTarjetaResolucion(r) {
+            const cssLeida = r.vista_por_mi ? 'leida' : '';
+            const checkAtributo = r.vista_por_mi ? 'checked' : '';
+
+            // Colores de Badges de Tipo
+            let cssTipo = 'b-auto';
+            if (r.tipo === 'Interlocutoria') cssTipo = 'b-interlocutoria';
+            if (r.tipo === 'Sentencia') cssTipo = 'b-sentencia';
+            if (r.tipo === 'Decreto') cssTipo = 'b-decreto';
+
+            // --- FASE 5: DETECCIÓN INTELIGENTE DE CUADERNO ---
+            const cuadernoName = r.cuaderno || 'Único';
+            let badgeCuadernoHtml = '';
+
+            if (cuadernoName === 'Principal') {
+                badgeCuadernoHtml = `<span class="badge-cuaderno c-principal">📗 C. PRINCIPAL</span>`;
+            } else if (cuadernoName === 'Incidental') {
+                badgeCuadernoHtml = `<span class="badge-cuaderno c-incidental">📕 C. INCIDENTAL</span>`;
+            }
+
+            const txtDictado = r.fecha_resolucion ? `Dictado: ${r.fecha_resolucion.split('T')[0]}` : 'Fecha de dictado N/D';
+
+            let txtNotif = `Notif: ${r.tipo_notificacion}`;
+            if ((r.tipo_notificacion === 'Personal' || r.tipo_notificacion === 'Electronica') && r.fecha_notificacion) {
+                txtNotif += ` el ${r.fecha_notificacion.split('T')[0]}`;
+            }
+
+            // --- LÓGICA VISUAL PROVISIONAL ---
+            let alertaProvisionalHtml = '';
+            let estiloProvisional = '';
+            if (r.es_provisional) {
+                estiloProvisional = 'border-color: #fbc02d; background: #fffde7;';
+                alertaProvisionalHtml = `
+                <div style="background: #f57f17; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: inline-block;">
+                    ⚠️ PENDIENTE DE TOMAR FÍSICAMENTE: ${r.motivo_provisional || 'Sin motivo'}
+                </div>`;
+            }
+
+            return `
+                <div class="res-card ${cssLeida}" id="card-res-${r.id_resolucion}" style="${estiloProvisional}">
+                    <div>
+                        <input type="checkbox" class="res-check" ${checkAtributo} onchange="toggleVista(${r.id_resolucion}, this)" title="Marcar como visto">
+                    </div>
+                    <div class="res-content">
+                        ${alertaProvisionalHtml}
+                        <div class="res-expediente">
+                            Exp. ${r.numero_expediente} 
+                            <span style="color:var(--text-muted); font-weight:500;">| ${r.organo_jurisdiccional}</span>
+                            ${badgeCuadernoHtml}
+                        </div>
+                        <div class="res-meta">
+                            <span class="badge ${cssTipo}">${r.tipo}</span>
+                            <span class="badge b-notif">${txtNotif}</span>
+                            <span style="font-weight: 600; color: var(--primary);">⚖️ ${txtDictado}</span>
+                        </div>
+                        <div class="res-texto">${r.comentario}</div>
+                        <div style="font-size: 11px; color: #888; font-weight: 500; margin-top: 12px; border-top: 1px solid #eee; padding-top: 8px;">
+                            Registrado por: ${r.creado_por} | Abogado a cargo: <span style="font-weight:bold; color:var(--primary);">${r.abogado_asignado}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 3. MARCAR COMO LEÍDO (MEMORIA INDIVIDUAL)
+        async function toggleVista(idRes, checkbox) {
+            const card = document.getElementById(`card-res-${idRes}`);
+
+            // Feedback visual inmediato
+            if (checkbox.checked) card.classList.add('leida');
+            else card.classList.remove('leida');
+
+            try {
+                await fetch('/.netlify/functions/crm_resoluciones_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'toggle_vista', id_resolucion: idRes })
+                });
+            } catch (e) {
+                // Si falla, revertimos el checkbox
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) card.classList.add('leida');
+                else card.classList.remove('leida');
+                alert("Error de sincronización con el servidor.");
+            }
+        }
+    </script>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

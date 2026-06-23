@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda | VIGILEX</title>
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 900px;
+            width: 90%;
+        }
+
+        .card {
+            flex: 1;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: 0.3s;
+            border-top: 8px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card.institucional {
+            border-top-color: var(--accent);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card" onclick="window.location.href='calendario.html?tipo=personal'">
+            <span class="icon">👤</span>
+            <h2>Calendario Personal</h2>
+            <p>Gestiona tus citas privadas, recordatorios individuales y compromisos personales. Solo tú puedes ver este
+                contenido.</p>
+        </div>
+        <div class="card institucional" onclick="window.location.href='calendario.html?tipo=institucional'">
+            <span class="icon">⚖️</span>
+            <h2>Agenda Institucional</h2>
+            <p>Eventos compartidos del despacho. Visualiza audiencias, plazos procesales y juntas de todo el equipo en
+                un solo lugar.</p>
+        </div>
+    </div>
+
+    <script src="notificaciones_globales.js"></script>
+</body>
+
+</html>

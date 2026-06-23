@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Características | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-vigilex.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --navy-light: #153b61;
+            --gold: #ad974f;
+            --bg-light: #f8f9fa;
+            --text-dark: #333333;
+            --text-gray: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #8f7c3f;
+        }
+
+        .mobile-menu-btn,
+        .close-menu-item,
+        .mobile-only-btn {
+            display: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 5% 120px;
+            position: relative;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-weight: 300;
+        }
+
+        .hero-gold-line {
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            margin: 0 auto 30px;
+            border-radius: 2px;
+        }
+
+        /* --- SECCIONES ZIG-ZAG (SCROLL) --- */
+        .feature-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 100px 8%;
+            gap: 60px;
+        }
+
+        .feature-section:nth-child(even) {
+            background-color: var(--bg-light);
+            flex-direction: row-reverse;
+        }
+
+        .feature-section:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .feature-text {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .feature-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .feature-text p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 0;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        .feature-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 14px;
+            top: 2px;
+        }
+
+        /* --- CARRUSEL DINÁMICO (NUEVO) --- */
+        .feature-visual {
+            flex: 1;
+            position: relative;
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(10, 37, 64, 0.15);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: #fff;
+        }
+
+        .carousel-slides {
+            width: 100%;
+            display: flex;
+            position: relative;
+        }
+
+        .carousel-img {
+            width: 100%;
+            height: auto;
+            display: none;
+            object-fit: cover;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .carousel-img.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 37, 64, 0.5);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+
+        .carousel-btn:hover {
+            background: var(--gold);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn.prev {
+            left: 15px;
+        }
+
+        .carousel-btn.next {
+            right: 15px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--gold);
+            transform: scale(1.3);
+            border-color: var(--gold);
+        }
+
+        /* --- CTA FINAL --- */
+        .cta-section {
+            text-align: center;
+            padding: 100px 5%;
+            background-color: #ffffff;
+            border-top: 1px solid #eee;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+        }
+
+        .btn-large {
+            font-size: 1.1rem;
+            padding: 18px 40px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* --- ANIMACIONES CSS --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 60px 5% 20px 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo h2 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 300px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE & MOBILE MENU */
+        @media (max-width: 900px) {
+
+            .feature-section,
+            .feature-section:nth-child(even) {
+                flex-direction: column;
+                padding: 60px 5%;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .feature-text {
+                max-width: 100%;
+            }
+
+            .feature-list li {
+                text-align: left;
+                display: inline-block;
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .desktop-only-btn {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 26px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 30px;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+                transition: right 0.4s;
+                z-index: 2000;
+            }
+
+            .nav-links.active-menu {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                display: block;
+                width: 100%;
+            }
+
+            .close-menu-item {
+                display: block;
+                width: 100%;
+                text-align: right;
+                margin-bottom: 10px;
+            }
+
+            .close-menu-btn {
+                background: none;
+                border: none;
+                font-size: 30px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .mobile-only-btn {
+                display: block;
+                width: 100%;
+                margin-top: 20px;
+                border-top: 1px solid #eee;
+                padding-top: 25px;
+            }
+
+            .mobile-only-btn .btn-primary {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logovigilexrubros.png" alt="Vigilex Logo"> VIGILEX</a>
+
+        <button class="mobile-menu-btn" id="btnMenuAbrir">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <ul class="nav-links" id="menuLateral">
+            <li class="close-menu-item">
+                <button class="close-menu-btn" id="btnMenuCerrar"><i class="fa-solid fa-xmark"></i></button>
+            </li>
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="caracteristicas.html" class="active">Características</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="precios.html">Precios</a></li>
+            <li class="mobile-only-btn"><a href="inicio.html" class="btn-primary">Acceder al Sistema</a></li>
+        </ul>
+
+        <a href="inicio.html" class="btn-primary desktop-only-btn">Acceder al Sistema</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-gold-line"></div>
+        <h1 class="fade-up">Precisión en cada detalle procesal.</h1>
+        <p class="fade-up" style="transition-delay: 0.1s;">Descubre el ecosistema digital diseñado exclusivamente para
+            dotar a las firmas legales de seguridad, trazabilidad y control absoluto sobre su agenda y expedientes.</p>
+    </header>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Gestión Centralizada</h4>
+            <h2>Control Total de Expedientes</h2>
+            <p>Olvida el desorden de los archivos físicos y hojas de cálculo. VIGILEX te ofrece un seguimiento
+                horizontal y estructurado de cada asunto jurídico.</p>
+            <ul class="feature-list">
+                <li>Listas de control (checklists) personalizadas por asunto.</li>
+                <li>Trazabilidad exacta del progreso procesal.</li>
+                <li>Asignación de responsabilidades claras al equipo.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen2-1.png" class="carousel-img active"
+                    alt="Control de Expedientes 1">
+                <img src="imagenes/caracteristicas/imagen2-2.png" class="carousel-img" alt="Control de Expedientes 2">
+                <img src="imagenes/caracteristicas/imagen2-3.png" class="carousel-img" alt="Control de Expedientes 3">
+                <img src="imagenes/caracteristicas/imagen2-4.png" class="carousel-img" alt="Control de Expedientes 4">
+                <img src="imagenes/caracteristicas/imagen2-5.png" class="carousel-img" alt="Control de Expedientes 5">
+                <img src="imagenes/caracteristicas/imagen2-6.png" class="carousel-img" alt="Control de Expedientes 6">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Matemática Jurídica</h4>
+            <h2>Cómputo de Plazos Infalible</h2>
+            <p>La calculadora de plazos más avanzada del mercado. Diseñada para operar bajo las reglas del Fuero Común y
+                el Poder Judicial de la Federación, descartando automáticamente los días inhábiles.</p>
+            <ul class="feature-list">
+                <li>Sincronización directa con tu Calendario Jurisdiccional.</li>
+                <li>Prevención de caducidad de instancias.</li>
+                <li>Alertas visuales de severidad (Amarillo, Naranja, Rojo).</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen3-1.png" class="carousel-img active" alt="Cómputo de Plazos 1">
+                <img src="imagenes/caracteristicas/imagen3-2.png" class="carousel-img" alt="Cómputo de Plazos 2">
+                <img src="imagenes/caracteristicas/imagen3-3.png" class="carousel-img" alt="Cómputo de Plazos 3">
+                <img src="imagenes/caracteristicas/imagen3-4.png" class="carousel-img" alt="Cómputo de Plazos 4">
+                <img src="imagenes/caracteristicas/imagen3-5.png" class="carousel-img" alt="Cómputo de Plazos 5">
+                <img src="imagenes/caracteristicas/imagen3-6.png" class="carousel-img" alt="Cómputo de Plazos 6">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Visión Panorámica</h4>
+            <h2>Calendario Jurisdiccional</h2>
+            <p>Ten el control absoluto del tiempo de tu firma. Visualiza audiencias, vencimientos y diligencias en una
+                interfaz elegante y sincronizada con los días inhábiles oficiales del tribunal.</p>
+            <ul class="feature-list">
+                <li>Agenda global de todo el despacho en tiempo real.</li>
+                <li>Días inhábiles bloqueados de forma automática.</li>
+                <li>Filtros avanzados por abogado y tipo de asunto.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen-cal-1.png" class="carousel-img active"
+                    alt="Calendario Jurisdiccional 1">
+                <img src="imagenes/caracteristicas/imagen-cal-2.png" class="carousel-img"
+                    alt="Calendario Jurisdiccional 2">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Inteligencia Diaria</h4>
+            <h2>Notificaciones Integrales</h2>
+            <p>Mantén a tu despacho siempre enterado de todos los plazos, términos, tareas pendientes, agenda semanal y
+                de su reporte de desempeño semanal, con nuestro elevado sistema de notificaciones Vigilex. ¡Adios a la
+                extemporaneidad! Con Vigilex, el error humano es suplido a la perfección.</p>
+            <ul class="feature-list">
+                <li>Cada día lunes a las 9 am, recibirás un correo electrónico con la lista de términos por fenecer en
+                    la semana.</li>
+                <li>El día del término y los dos días anteriores al término, recibirás notificaciones de carácter
+                    urgente para que completes la tarea con plazo procesal.</li>
+                <li>Todos los usuarios recibirán un correo recordatorio a las 5 pm, cuando existan tareas pendientes por
+                    realizar asignadas para ese día.</li>
+                <li>Todos los usuarios, al final de la semana, recibirán un correo notificando su desempeño semanal
+                    VigiScore.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/correo1.png" class="carousel-img active" alt="Correo 1">
+                <img src="imagenes/caracteristicas/correo2.png" class="carousel-img" alt="Correo 2">
+                <img src="imagenes/caracteristicas/correo3.png" class="carousel-img active" alt="Correo 3">
+                <img src="imagenes/caracteristicas/correo4.png" class="carousel-img" alt="Correo 4">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Inteligencia Diaria</h4>
+            <h2>Resoluciones del Día</h2>
+            <p>Un boletín judicial interno a tu medida. Mantén a tu despacho actualizado sobre todos los acuerdos,
+                notificaciones y sentencias publicadas agrupadas por cartera de clientes.</p>
+            <ul class="feature-list">
+                <li>Actualización centralizada de publicaciones.</li>
+                <li>Fácil visualización del estatus de cada acuerdo.</li>
+                <li>Conexión directa con la ficha del expediente.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen4-1.png" class="carousel-img active" alt="Resoluciones 1">
+                <img src="imagenes/caracteristicas/imagen4-2.png" class="carousel-img" alt="Resoluciones 2">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Workspace Corporativo</h4>
+            <h2>Gestión de Equipo y Trazabilidad</h2>
+            <p>Como Titular, mantienes el poder absoluto. Administra los accesos de tus abogados, asigna roles de
+                seguridad y analiza el desempeño y carga de trabajo de tu firma en tiempo real.</p>
+            <ul class="feature-list">
+                <li>Roles jerárquicos (Titular, Administrador, Abogado).</li>
+                <li>Panel de métricas y desempeño individual.</li>
+                <li>Inhabilitación automática por límites de licencia.</li>
+                <li>Auditoría de acciones y reasignación de carteras.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen5-1.png" class="carousel-img active" alt="Gestión Equipo 1">
+                <img src="imagenes/caracteristicas/imagen5-2.png" class="carousel-img" alt="Gestión Equipo 2">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="feature-section">
+        <div class="feature-text fade-up">
+            <h4
+                style="color: var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Montserrat', sans-serif;">
+                Ciberseguridad y Flujo</h4>
+            <h2>Comunicación Encriptada Interna</h2>
+            <p>La información sensible de tus clientes nunca debe salir a plataformas públicas de mensajería. VIGILEX
+                cuenta con un ecosistema cerrado de chat corporativo y notificaciones de alta prioridad.</p>
+            <ul class="feature-list">
+                <li>Centro de Avisos con niveles de urgencia.</li>
+                <li>Chat Privado y Grupos encriptados.</li>
+                <li>Envío de comunicados gerenciales a toda la firma.</li>
+                <li>Autenticación segura OTP en cambios críticos.</li>
+            </ul>
+        </div>
+        <div class="feature-visual fade-up carousel-container">
+            <div class="carousel-slides">
+                <img src="imagenes/caracteristicas/imagen6-1.png" class="carousel-img active" alt="Chat Seguridad 1">
+                <img src="imagenes/caracteristicas/imagen6-2.png" class="carousel-img" alt="Chat Seguridad 2">
+            </div>
+            <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <section class="cta-section fade-up">
+        <h2>Eleva el estándar de tu práctica jurídica hoy.</h2>
+        <p>Inicia tu prueba gratuita y experimenta la tranquilidad del control total.</p>
+        <a href="precios.html" class="btn-primary btn-large">Ver Planes y Precios</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2
+                    style="font-family: 'Playfair Display', serif; margin:0; display:flex; align-items:center; gap:10px;">
+                    <img src="logovigilexrubros.png" alt="Logo" style="height:30px;"> VIGILEX
+                </h2>
+                <p style="margin-top:15px;">Sistema de Gestión Integral para Abogados.
+                <p> </p> Seguridad, control y elegancia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="index.html#inicio">Inicio</a></li>
+                    <li><a href="caracteristicas.html">Características</a></li>
+                    <li><a href="inicio.html">Acceso a Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VIGILEX. Todos los derechos reservados. Rodrigo Lizárraga Camacho
+        </div>
+    </footer>
+
+    <script>
+        // 1. ANIMACIONES SCROLL
+        document.addEventListener('DOMContentLoaded', function () {
+            const faders = document.querySelectorAll('.fade-up');
+            const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+
+            const appearOnScroll = new IntersectionObserver(function (entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('visible');
+                    appearOnScroll.unobserve(entry.target);
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => { appearOnScroll.observe(fader); });
+        });
+
+        // 2. SCRIPT DEL MENÚ LATERAL MÓVIL
+        const btnAbrir = document.getElementById('btnMenuAbrir');
+        const btnCerrar = document.getElementById('btnMenuCerrar');
+        const menuLateral = document.getElementById('menuLateral');
+
+        btnAbrir.addEventListener('click', () => { menuLateral.classList.add('active-menu'); });
+        btnCerrar.addEventListener('click', () => { menuLateral.classList.remove('active-menu'); });
+
+        // 3. LÓGICA DE LOS CARRUSELES DINÁMICOS
+        document.querySelectorAll('.carousel-container').forEach(container => {
+            const images = container.querySelectorAll('.carousel-img');
+            const prevBtn = container.querySelector('.prev');
+            const nextBtn = container.querySelector('.next');
+            const dotsContainer = container.querySelector('.carousel-dots');
+
+            let currentIndex = 0;
+
+            // Generar los puntos (dots) dependiendo de cuántas imágenes hay
+            images.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('carousel-dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = container.querySelectorAll('.carousel-dot');
+
+            function goToSlide(index) {
+                images[currentIndex].classList.remove('active');
+                dots[currentIndex].classList.remove('active');
+
+                currentIndex = index;
+
+                // Efecto de ciclo infinito
+                if (currentIndex < 0) currentIndex = images.length - 1;
+                if (currentIndex >= images.length) currentIndex = 0;
+
+                images[currentIndex].classList.add('active');
+                dots[currentIndex].classList.add('active');
+            }
+
+            prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+        });
+    </script>
+</body>
+
+</html>

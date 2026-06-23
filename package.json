@@ -1,0 +1,24 @@
+{
+  "name": "vigilex",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión Integral para Abogados",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Rodrigo Lizárraga",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@netlify/functions": "^5.2.0",
+    "bcryptjs": "^2.4.3",
+    "googleapis": "^171.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^8.0.4",
+    "pg": "^8.11.5",
+    "stripe": "^14.25.0",
+    "web-push": "^3.6.7"
+  }
+}

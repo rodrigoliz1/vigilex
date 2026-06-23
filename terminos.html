@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-vigilex.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0a2540;
+            --gold: #ad974f;
+            --gold-hover: #8f7c3f;
+            --bg-light: #f4f6f8;
+            --text-dark: #333333;
+            --text-gray: #555555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #8f7c3f;
+        }
+
+        /* Clases auxiliares para el Menú Móvil */
+        .mobile-menu-btn,
+        .close-menu-item,
+        .mobile-only-btn {
+            display: none;
+        }
+
+        /* HEADER LEGAL */
+        .legal-header {
+            background: var(--navy);
+            padding: 80px 5% 100px 5%;
+            text-align: center;
+            color: white;
+        }
+
+        .legal-header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .legal-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        /* CONTENEDOR DEL DOCUMENTO */
+        .legal-content {
+            max-width: 900px;
+            margin: -60px auto 80px auto;
+            background: white;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border-top: 6px solid var(--gold);
+            position: relative;
+            z-index: 10;
+        }
+
+        .legal-content h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .legal-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .legal-content p {
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .legal-content ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            color: var(--text-gray);
+        }
+
+        .legal-content li {
+            margin-bottom: 10px;
+        }
+
+        .last-update {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #888;
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy);
+            color: #ffffff;
+            padding: 60px 5% 20px 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo h2 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo p {
+            color: #aaa;
+            font-size: 14px;
+            max-width: 300px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .legal-content {
+                padding: 30px 20px;
+                margin-top: -40px;
+            }
+
+            .legal-header h1 {
+                font-size: 2.2rem;
+            }
+
+            /* Menú Móvil */
+            .desktop-only-btn {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 26px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 30px;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+                transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 2000;
+            }
+
+            .nav-links.active-menu {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                display: block;
+                width: 100%;
+            }
+
+            .close-menu-item {
+                display: block;
+                width: 100%;
+                text-align: right;
+                margin-bottom: 10px;
+            }
+
+            .close-menu-btn {
+                background: none;
+                border: none;
+                font-size: 30px;
+                color: var(--navy);
+                cursor: pointer;
+            }
+
+            .mobile-only-btn {
+                display: block;
+                width: 100%;
+                margin-top: 20px;
+                border-top: 1px solid #eee;
+                padding-top: 25px;
+            }
+
+            .mobile-only-btn .btn-primary {
+                text-align: center;
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><img src="logovigilexrubros.png" alt="Vigilex Logo"> VIGILEX</a>
+
+        <button class="mobile-menu-btn" id="btnMenuAbrir"><i class="fa-solid fa-bars"></i></button>
+
+        <ul class="nav-links" id="menuLateral">
+            <li class="close-menu-item"><button class="close-menu-btn" id="btnMenuCerrar"><i
+                        class="fa-solid fa-xmark"></i></button></li>
+
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="caracteristicas.html">Características</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="precios.html">Precios</a></li>
+
+            <li class="mobile-only-btn"><a href="inicio.html" class="btn-primary">Acceder al Sistema</a></li>
+        </ul>
+
+        <a href="inicio.html" class="btn-primary desktop-only-btn">Acceder al Sistema</a>
+    </nav>
+
+    <header class="legal-header">
+        <h1>Términos y Condiciones</h1>
+        <p>Acuerdo de Licencia y Uso del Sistema VIGILEX</p>
+    </header>
+
+    <main class="legal-content">
+        <div class="last-update">Última actualización: 12 de abril de 2026</div>
+
+        <h2>1. Aceptación de los Términos</h2>
+        <p>Al acceder y utilizar la plataforma VIGILEX (en adelante, "el Sistema"), usted acepta estar sujeto a estos
+            Términos y Condiciones. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al
+            servicio. El uso del Sistema constituye una firma electrónica y un acuerdo vinculante entre usted o el
+            despacho jurídico que representa y VIGILEX.</p>
+
+        <h2>2. Descripción del Servicio y Licencia</h2>
+        <p>VIGILEX otorga al usuario una licencia limitada, no exclusiva, intransferible y revocable para utilizar el
+            Sistema de gestión de expedientes y agenda jurisdiccional, sujeta al pago de las tarifas correspondientes
+            según el plan seleccionado (Personal, Starter o Profesional).</p>
+        <ul>
+            <li>Las licencias institucionales no pueden ser revendidas ni compartidas fuera de los miembros autorizados
+                del despacho.</li>
+            <li>El usuario es responsable de mantener la confidencialidad de su cuenta y contraseña.</li>
+        </ul>
+
+        <h2>3. Privacidad y Seguridad de la Información</h2>
+        <p>Entendemos la naturaleza crítica y confidencial de la información legal. VIGILEX implementa medidas de
+            seguridad de grado bancario para proteger sus expedientes y datos de clientes. Sin embargo, el usuario es el
+            único responsable de la exactitud, calidad y legalidad de los datos ingresados al Sistema. Consulte nuestro
+            <b>Aviso de Privacidad</b> para conocer en detalle el tratamiento de su información.
+        </p>
+
+        <h2>4. Pagos, Renovaciones y Cancelaciones</h2>
+        <p>Los servicios se facturan por adelantado de forma mensual, semestral o anual. Todas las transacciones son
+            procesadas de manera segura mediante Stripe. Las suscripciones se renovarán automáticamente a menos que se
+            cancelen antes del siguiente ciclo de facturación. No se realizarán reembolsos por períodos parciales de
+            uso.</p>
+
+        <h2>5. Modificaciones al Servicio</h2>
+        <p>VIGILEX se reserva el derecho de modificar o discontinuar, temporal o permanentemente, el Servicio (o
+            cualquier parte de este) con o sin previo aviso. Continuaremos mejorando y actualizando las características
+            procesales del sistema para garantizar el máximo rendimiento.</p>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2><img src="logovigilexrubros.png" alt="Logo"> VIGILEX</h2>
+                <p style="margin-top:15px;">Sistema de Gestión Integral para Abogados.
+                <p> </p> Seguridad, control y elegancia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="index.html#inicio">Inicio</a></li>
+                    <li><a href="caracteristicas.html">Características</a></li>
+                    <li><a href="inicio.html">Acceso a Usuarios</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 VIGILEX. Todos los derechos reservados. Rodrigo Lizárraga Camacho
+        </div>
+    </footer>
+
+    <script>
+        const btnAbrir = document.getElementById('btnMenuAbrir');
+        const btnCerrar = document.getElementById('btnMenuCerrar');
+        const menuLateral = document.getElementById('menuLateral');
+
+        btnAbrir.addEventListener('click', () => { menuLateral.classList.add('active-menu'); });
+        btnCerrar.addEventListener('click', () => { menuLateral.classList.remove('active-menu'); });
+    </script>
+
+</body>
+
+</html>

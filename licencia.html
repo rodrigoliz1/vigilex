@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | VIGILEX</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="apple-touch-icon" href="/logo-vigilex.png">
+
+    <meta property="og:title" content="Vigilex | Sistema Integral para Abogados">
+    <meta property="og:description"
+        content="Ecosistema digital inteligente para la gestión de expedientes y agenda jurisdiccional.">
+    <meta property="og:image" content="https://www.vigilex.mx/logo-vigilex.png">
+    <meta property="og:url" content="https://www.vigilex.mx">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --error-bg: #ffebee;
+            --error-text: #c62828;
+            --success-bg: #e8f5e9;
+            --success-text: #2e7d32;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            border-top: 6px solid var(--accent);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 22px;
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 0 0 25px 0;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+            background-color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #8c7a3f;
+        }
+
+        .btn-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-volver {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-volver:hover {
+            background-color: rgba(10, 37, 64, 0.05);
+        }
+
+        .alerta {
+            display: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .alerta-error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            border-left: 4px solid var(--error-text);
+        }
+
+        .alerta-exito {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border-left: 4px solid var(--success-text);
+        }
+
+        /* Estilos del Módulo de Adquisición de Licencia */
+        .compra-licencia {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border: 1px dashed var(--primary);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .compra-licencia p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .whatsapp-link {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.2s;
+            margin-top: 5px;
+            box-shadow: 0 4px 6px rgba(37, 211, 102, 0.2);
+        }
+
+        .whatsapp-link:hover {
+            background-color: #1ebe57;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h1>Activación de Plataforma</h1>
+        <p class="subtitle" id="form-subtitle">Valida tu código para habilitar una cuenta institucional</p>
+
+        <div id="msgAlerta" class="alerta"></div>
+
+        <div id="step-1">
+            <div class="form-group">
+                <label for="codigo_licencia">Código de Licencia (Token Único)</label>
+                <input type="text" id="codigo_licencia" placeholder="Ej. AAAA-BBBB-CCCC"
+                    style="text-transform: uppercase; text-align: center; letter-spacing: 2px; font-weight: bold;">
+            </div>
+
+            <button class="btn-primary" id="btnValidar" onclick="validarLicencia()">VALIDAR LICENCIA</button>
+            <button class="btn-volver" onclick="window.location.href='inicio.html'">← Volver a Inicio de Sesión</button>
+
+            <div class="compra-licencia">
+                <p><strong>¿No cuentas con una licencia?</strong></p>
+                <p>Para comprar tu Licencia, envía un mensaje por WhatsApp al:</p>
+                <a href="https://wa.me/5216692122543?text=Hola,%20me%20interesa%20adquirir%20una%20licencia%20para%20la%20Calculadora%20Procesal."
+                    target="_blank" class="whatsapp-link">
+                    💬 +52 669 212 2543
+                </a>
+            </div>
+        </div>
+
+        <div id="step-2" style="display: none;">
+            <div id="lic-paso-1">
+                <div class="form-group">
+                    <label>Nombre Completo / Despacho</label>
+                    <input type="text" id="reg_nombre" placeholder="Ej. Lic. Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>Nombre de Usuario (Para Iniciar Sesión)</label>
+                    <input type="text" id="reg_user" placeholder="Ej. jperez_abogado">
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico (Requerido)</label>
+                    <input type="email" id="reg_email" placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña Maestra</label>
+                    <input type="password" id="reg_pass" placeholder="Mínimo 6 caracteres">
+                </div>
+                <button class="btn-primary" id="btnIniciarReg" onclick="iniciarCrearCuentaLic()">ENVIAR CÓDIGO AL
+                    CORREO</button>
+            </div>
+
+            <div id="lic-paso-2" style="display: none; text-align: center;">
+                <p style="font-size:14px; color:#555; margin-bottom:15px;">Hemos enviado un código a tu correo.
+                    Ingrésalo para finalizar:</p>
+                <div class="form-group">
+                    <input type="text" id="reg_codigo" placeholder="Código de 6 dígitos"
+                        style="text-align:center; font-size:18px; letter-spacing:2px; font-weight:bold;">
+                </div>
+                <button class="btn-primary" id="btnRegistrar" onclick="crearCuentaLic()">CREAR CUENTA Y CONSUMIR
+                    LICENCIA</button>
+                <button class="btn-volver"
+                    onclick="document.getElementById('lic-paso-1').style.display='block'; document.getElementById('lic-paso-2').style.display='none';">←
+                    Cambiar correo</button>
+            </div>
+        </div>
+
+        <script>
+            let licenciaAprobada = "";
+
+            async function validarLicencia() {
+                const inputCodigo = document.getElementById('codigo_licencia');
+                const codigo = inputCodigo.value.trim().toUpperCase();
+                const btn = document.getElementById('btnValidar');
+
+                if (!codigo) { mostrarAlerta('Ingresa un código de licencia', 'error'); return; }
+
+                btn.innerText = "VERIFICANDO...";
+                btn.disabled = true;
+
+                try {
+                    const response = await fetch('/.netlify/functions/validar_licencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ codigo: codigo })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.valida) {
+                        mostrarAlerta('✅ Licencia genuina. Proceda a crear su cuenta.', 'exito');
+                        licenciaAprobada = codigo;
+                        document.getElementById('step-1').style.display = 'none';
+                        document.getElementById('step-2').style.display = 'block';
+                        document.getElementById('form-subtitle').innerText = "Configure sus credenciales de acceso";
+                    } else {
+                        mostrarAlerta(data.error || 'La licencia es inválida o ya ha sido utilizada.', 'error');
+                    }
+                } catch (err) {
+                    mostrarAlerta('Error de conexión con el servidor.', 'error');
+                }
+                btn.innerText = "VALIDAR LICENCIA";
+                btn.disabled = false;
+            }
+
+            let hashLicenciaGlobal = "";
+
+            async function iniciarCrearCuentaLic() {
+                const nombre = document.getElementById('reg_nombre').value.trim();
+                const usuario = document.getElementById('reg_user').value.trim();
+                const email = document.getElementById('reg_email').value.trim();
+                const password = document.getElementById('reg_pass').value;
+
+                if (!nombre || !usuario || !password || !email) {
+                    mostrarAlerta('Todos los campos son obligatorios.', 'error'); return;
+                }
+                if (!email.includes('@')) {
+                    mostrarAlerta('Ingresa un correo electrónico válido.', 'error'); return;
+                }
+
+                const btn = document.getElementById('btnIniciarReg');
+                btn.innerText = "ENVIANDO..."; btn.disabled = true;
+
+                try {
+                    const res = await fetch('/.netlify/functions/enviar_codigo_registro', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        hashLicenciaGlobal = data.hash;
+                        document.getElementById('lic-paso-1').style.display = 'none';
+                        document.getElementById('lic-paso-2').style.display = 'block';
+                        document.getElementById('msgAlerta').style.display = 'none';
+                    } else {
+                        mostrarAlerta(data.error || 'Error al enviar el correo.', 'error');
+                    }
+                } catch (err) { mostrarAlerta('Error de red al intentar registrar.', 'error'); }
+
+                btn.innerText = "ENVIAR CÓDIGO AL CORREO"; btn.disabled = false;
+            }
+
+            async function crearCuentaLic() {
+                const nombre = document.getElementById('reg_nombre').value.trim();
+                const usuario = document.getElementById('reg_user').value.trim();
+                const email = document.getElementById('reg_email').value.trim();
+                const password = document.getElementById('reg_pass').value;
+                const codigo = document.getElementById('reg_codigo').value.trim();
+                const btn = document.getElementById('btnRegistrar');
+
+                if (!codigo) { mostrarAlerta('Ingresa el código enviado a tu correo.', 'error'); return; }
+
+                btn.innerText = "REGISTRANDO..."; btn.disabled = true;
+
+                try {
+                    const response = await fetch('/.netlify/functions/crear_cuenta', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            licencia: licenciaAprobada,
+                            nombreFirma: nombre,
+                            username: usuario,
+                            password: password,
+                            email: email,
+                            codigo: codigo,
+                            hash: hashLicenciaGlobal
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        document.getElementById('step-2').innerHTML = `
+                        <div style="text-align:center; color: var(--green-text);">
+                            <h2 style="margin-bottom: 5px;">¡Registro Exitoso!</h2>
+                            <p style="margin-top:0; color: #666;">Tu cuenta ha sido creada y validada de forma segura.</p>
+                            <button class="btn-primary" style="margin-top: 20px;" onclick="window.location.href='inicio.html'">IR A INICIAR SESIÓN</button>
+                        </div>
+                    `;
+                        document.getElementById('msgAlerta').style.display = 'none';
+                    } else {
+                        mostrarAlerta(data.error || 'Error al crear la cuenta. Intente de nuevo.', 'error');
+                    }
+                } catch (err) { mostrarAlerta('Error de red al intentar registrar.', 'error'); }
+
+                btn.innerText = "CREAR CUENTA Y CONSUMIR LICENCIA"; btn.disabled = false;
+            }
+
+            function mostrarAlerta(mensaje, tipo) {
+                const div = document.getElementById('msgAlerta');
+                div.innerText = mensaje;
+                div.className = tipo === 'error' ? 'alerta alerta-error' : 'alerta alerta-exito';
+                div.style.display = 'block';
+            }
+        </script>
+</body>
+
+</html>

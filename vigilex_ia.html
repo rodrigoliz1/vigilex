@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIGILEX IA | Inteligencia Jurídica</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #ad974f;
+            --ia-purple: #6a1b9a;
+            --ia-light: #f3e5f5;
+            --bg: #f4f6f8;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .container-ia {
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+
+        .panel-ia {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            border-top: 8px solid var(--ia-purple);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 0;
+            color: var(--ia-purple);
+            font-size: 22px;
+        }
+
+        /* ACUERDO EXPRESS STYLES */
+        .dropzone-express {
+            border: 2px dashed #ce93d8;
+            background: #fdfbff;
+            padding: 40px 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .dropzone-express:hover {
+            background: var(--ia-light);
+            border-color: var(--ia-purple);
+        }
+
+        /* CHAT IA STYLES */
+        #chat-ia-box {
+            flex-grow: 1;
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 400px;
+            max-height: 500px;
+            border: 1px solid #eee;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .msg-ia {
+            align-self: flex-start;
+            background: var(--ia-light);
+            color: #4a148c;
+            border-radius: 0 15px 15px 15px;
+            border: 1px solid #e1bee7;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-radius: 15px 15px 0 15px;
+        }
+
+        .btn-ia {
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.2);
+        }
+
+        .btn-ia:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(106, 27, 154, 0.3);
+        }
+
+        .btn-ia:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 900px) {
+            .container-ia {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <a href="lobby.html" class="logo-nav">VIGILEX ✨ IA</a>
+        <a href="lobby.html" style="text-decoration:none; color:var(--primary); font-weight:bold; font-size:13px;">←
+            Volver al Panel</a>
+    </nav>
+
+    <div class="container-ia">
+
+        <div id="drive-status-banner"
+            style="grid-column: 1 / -1; background: white; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 6px solid #4285F4; margin-bottom: 10px;">
+            <div>
+                <h3 style="margin: 0 0 5px 0; color: #4285F4; display: flex; align-items: center; gap: 8px;">📁
+                    Integración Nativa con Google Drive</h3>
+                <p style="margin: 0; font-size: 13px; color: #666;">Conecta tu cuenta corporativa para procesar
+                    documentos de cualquier tamaño de forma segura y sin límites.</p>
+            </div>
+            <button id="btn-conectar-drive" onclick="conectarGoogleDrive()"
+                style="background: #4285F4; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);"
+                onmouseover="this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.transform='translateY(0)'">🔗 Conectar mi Google Drive</button>
+        </div>
+
+        <div class="panel-ia">
+            <h2 class="panel-title playfair">🚀 ACUERDO EXPRESS</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Sube un PDF, pega el texto, o pega el <b>Link
+                    de Drive</b>. La IA identificará el expediente automáticamente, publicará la resolución y guardará
+                el archivo en la carpeta del asunto.</p>
+
+            <div id="dropzone-express" class="dropzone-express"
+                ondragover="event.preventDefault(); this.style.background='#f3e5f5';"
+                ondragleave="this.style.background='#fdfbff';" ondrop="manejarDropExpress(event)">
+                <input type="file" id="file-express" accept="application/pdf" style="display:none;"
+                    onchange="archivoSeleccionadoExpress(this)">
+                <label for="file-express" style="cursor:pointer;">
+                    <div style="font-size: 40px; margin-bottom: 10px;">📄</div>
+                    <div id="text-express-file" style="font-weight:bold; color:var(--ia-purple);">Arrastra PDF o haz
+                        clic aquí</div>
+                    <div style="font-size: 11px; color:#999; margin-top:5px;">La IA lo guardará en la carpeta de Drive
+                        del expediente</div>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="link-express-input" placeholder="🔗 Pegar Link de Google Drive..."
+                    style="flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid #ce93d8; font-size: 13px; box-sizing: border-box; background: #fdfbff;">
+            </div>
+
+            <textarea id="text-express-input" rows="4" placeholder="O pega el extracto de texto aquí..."
+                style="width:100%; padding:15px; border-radius:12px; border:1px solid #ddd; font-family:inherit; font-size: 13px; margin-bottom: 20px; box-sizing:border-box;"></textarea>
+
+            <button id="btn-procesar-express" class="btn-ia" onclick="procesarAcuerdoExpress()">✨ Identificar, Guardar y
+                Publicar</button>
+            <div id="status-express" style="margin-top:15px; font-size:12px; font-weight:bold; text-align:center;">
+            </div>
+        </div>
+
+        <div class="panel-ia">
+            <h2 class="panel-title playfair">💬 VIGILEX CHAT IA</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Consulta información interna de tus
+                expedientes o haz preguntas legales libres.</p>
+
+            <div id="chat-ia-box">
+                <div class="msg msg-ia"><b>Vigilex AI a tus órdenes.</b> ¿Qué duda legal o consulta sobre tus
+                    expedientes tienes hoy?</div>
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:flex-end;">
+                <textarea id="chat-ia-input" placeholder="Escribe tu consulta..."
+                    style="flex:1; padding:15px; border-radius:20px; border:1px solid #ddd; outline:none; font-family:inherit; resize:none; max-height:100px;"
+                    rows="1" oninput="this.style.height=''; this.style.height = this.scrollHeight + 'px';"
+                    onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); enviarChatLibre(); }"></textarea>
+                <button onclick="enviarChatLibre()" id="btn-send-chat"
+                    style="background:var(--ia-purple); color:white; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer; font-size:20px; display:flex; align-items:center; justify-content:center;">🕊️</button>
+            </div>
+        </div>
+
+        <div class="panel-ia" style="grid-column: 1 / -1; border-top: 8px solid #1565c0;">
+            <h2 class="panel-title playfair" style="color: #1565c0;">🗂️ IMPORTACIÓN MASIVA DE EXPEDIENTE</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Pega el enlace de una <b>Carpeta de Google
+                    Drive</b> que contenga las constancias y acuerdos en PDF. La IA creará el expediente y procesará
+                todas las resoluciones una por una de forma automática.</p>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="link-masivo-input" placeholder="🔗 Pegar Link de Carpeta de Google Drive..."
+                    style="flex: 1; padding: 15px; border-radius: 8px; border: 2px solid #bbdefb; font-size: 14px; box-sizing: border-box; background: #fdfbff;">
+                <button id="btn-procesar-masivo" class="btn-ia" style="background: #1565c0;"
+                    onclick="iniciarImportacionMasiva()">🚀 Iniciar Escaneo y Procesamiento</button>
+            </div>
+
+            <div id="zona-progreso-masivo"
+                style="display: none; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-top: 10px;">
+                <h4 id="masivo-titulo-exp" style="margin: 0 0 10px 0; color: var(--primary);">Creando Expediente...</h4>
+
+                <div
+                    style="width: 100%; background: #e0e0e0; border-radius: 10px; height: 15px; overflow: hidden; margin-bottom: 10px;">
+                    <div id="masivo-barra"
+                        style="width: 0%; height: 100%; background: linear-gradient(90deg, #1565c0, #42a5f5); transition: width 0.4s ease;">
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; color: #666;">
+                    <span id="masivo-status-texto">Preparando motor IA...</span>
+                    <span id="masivo-contador">0 / 0</span>
+                </div>
+
+                <div id="masivo-log"
+                    style="margin-top: 15px; max-height: 100px; overflow-y: auto; font-size: 11px; color: #555; border-top: 1px dashed #ccc; padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const tokenSeguro = localStorage.getItem('vigilex_token');
+        const usernameGlobal = localStorage.getItem('usuario_actual');
+
+        if (!tokenSeguro) window.location.replace("inicio.html");
+
+        // --- 1. VERIFICAR SI VENIMOS DE REGRESO DE GOOGLE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('drive') === 'conectado') {
+                // Si la URL dice ?drive=conectado, Google nos autorizó con éxito
+                alert("✅ ¡Éxito! Tu cuenta de Google Drive ha sido vinculada a VIGILEX de forma segura.");
+
+                // Actualizamos el botón visualmente
+                const btnDrive = document.getElementById('btn-conectar-drive');
+                btnDrive.innerText = "✅ Drive Conectado";
+                btnDrive.style.background = "var(--green-text)";
+                btnDrive.style.boxShadow = "none";
+                btnDrive.disabled = true;
+
+                // Limpiamos la URL para que quede elegante
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+
+        // --- 2. FUNCIÓN PARA PEDIRLE A NETLIFY QUE NOS CONECTE CON GOOGLE ---
+        async function conectarGoogleDrive() {
+            const btn = document.getElementById('btn-conectar-drive');
+            btn.innerText = "⏳ Enlazando con Google...";
+            btn.disabled = true;
+
+            try {
+                // Llamamos a nuestro nuevo archivo backend
+                const res = await fetch('/.netlify/functions/crm_google_auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameGlobal })
+                });
+
+                const data = await res.json();
+
+                if (data.success && data.url) {
+                    // ¡MAGIA! Redirigimos al usuario a la pantalla de permisos de Google
+                    window.location.href = data.url;
+                } else {
+                    alert("⚠️ Error al generar el enlace seguro: " + (data.error || "Desconocido"));
+                    btn.innerText = "🔗 Conectar mi Google Drive";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert("Fallo de conexión con el servidor. Revisa tu consola local.");
+                btn.innerText = "🔗 Conectar mi Google Drive";
+                btn.disabled = false;
+            }
+        }
+
+        // --- LÓGICA ACUERDO EXPRESS ---
+        function archivoSeleccionadoExpress(input) {
+            if (input.files[0]) document.getElementById('text-express-file').innerText = "✅ Seleccionado: " + input.files[0].name;
+        }
+
+        function manejarDropExpress(ev) {
+            ev.preventDefault();
+            const file = ev.dataTransfer.files[0];
+            if (file && file.type === "application/pdf") {
+                const input = document.getElementById('file-express');
+                const dt = new DataTransfer(); dt.items.add(file);
+                input.files = dt.items;
+                archivoSeleccionadoExpress(input);
+            } else { alert("Solo PDFs"); }
+        }
+
+        let pendingPayload = null;
+        let pendingDatosIA = null;
+
+        function cerrarModalesExpress() {
+            document.getElementById('modalConfirmarExpress').style.display = 'none';
+            document.getElementById('modalNuevoExpress').style.display = 'none';
+            pendingPayload = null; pendingDatosIA = null;
+        }
+
+        async function procesarAcuerdoExpress() {
+            const btn = document.getElementById('btn-procesar-express');
+            const status = document.getElementById('status-express');
+            const fileInput = document.getElementById('file-express');
+            const textInput = document.getElementById('text-express-input').value.trim();
+            const linkInput = document.getElementById('link-express-input').value.trim();
+
+            if (!fileInput.files[0] && !textInput && !linkInput) return alert("Sube un PDF, pega un texto o pega un enlace de Drive.");
+
+            let modoPayload = 'texto';
+            if (linkInput) modoPayload = 'drive_link';
+            else if (fileInput.files[0]) modoPayload = 'pdf';
+
+            if (modoPayload === 'pdf' && fileInput.files[0].size > 3.5 * 1024 * 1024) {
+                return alert("⚠️ El PDF supera los 3.5 MB. Súbelo primero a tu carpeta de Drive y pega aquí el enlace.");
+            }
+
+            btn.disabled = true;
+            status.innerHTML = "🔍 <span style='color:var(--ia-purple)'>La IA está leyendo y cruzando datos con tus expedientes...</span>";
+
+            try {
+                let payload = { username: usernameGlobal, accion: 'analizar_acuerdo_express', payload: { modo: modoPayload } };
+
+                if (modoPayload === 'texto') payload.payload.texto = textInput;
+                else if (modoPayload === 'drive_link') payload.payload.drive_link = linkInput;
+                else {
+                    const toBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result.split(',')[1]); });
+                    payload.payload.pdf_base64 = await toBase64(fileInput.files[0]);
+                    payload.payload.nombre_archivo = fileInput.files[0].name;
+                }
+
+                const res = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    status.innerHTML = "";
+                    pendingPayload = payload.payload; // Guardamos el PDF/Link para el paso 2
+                    pendingDatosIA = data.datos_ia;
+
+                    if (data.datos_ia.encontrado) {
+                        // Abrir modal de confirmar
+                        document.getElementById('conf-exp-titulo').innerText = "📂 " + data.datos_ia.numero_visual;
+                        document.getElementById('conf-res-detallado').innerText = data.datos_ia.resumen_detallado;
+                        document.getElementById('conf-res-corto').value = `🎯 ${data.datos_ia.sentido_corto}\n\n${data.datos_ia.comentario_corto}`;
+                        document.getElementById('modalConfirmarExpress').style.display = 'flex';
+                    } else {
+                        // Abrir modal de nuevo asunto
+                        document.getElementById('nuevo-num').value = data.datos_ia.nuevo_asunto.numero || '';
+                        document.getElementById('nuevo-juzgado').value = data.datos_ia.nuevo_asunto.juzgado || '';
+                        document.getElementById('nuevo-materia').value = data.datos_ia.nuevo_asunto.materia || '';
+                        document.getElementById('nuevo-via').value = data.datos_ia.nuevo_asunto.via || '';
+                        document.getElementById('nuevo-cliente').value = data.datos_ia.nuevo_asunto.posible_cliente || '';
+                        document.getElementById('nuevo-res-corto').value = `🎯 ${data.datos_ia.sentido_corto}\n\n${data.datos_ia.comentario_corto}`;
+                        document.getElementById('modalNuevoExpress').style.display = 'flex';
+                    }
+                } else {
+                    status.innerHTML = `<span style="color:var(--red-text)">❌ Error: ${data.error}</span>`;
+                }
+            } catch (e) { status.innerHTML = `<span style="color:var(--red-text)">❌ Error de red.</span>`; }
+            btn.disabled = false;
+        }
+
+        async function ejecutarAcuerdoExpress(esNuevo) {
+            const btn = esNuevo ? document.getElementById('btn-ejecutar-nuevo') : document.getElementById('btn-ejecutar-existente');
+            btn.disabled = true; btn.innerText = "⏳ Ejecutando...";
+
+            // Actualizamos los datos de la IA con lo que el usuario haya editado
+            if (esNuevo) {
+                pendingDatosIA.nuevo_asunto.numero = document.getElementById('nuevo-num').value;
+                pendingDatosIA.nuevo_asunto.juzgado = document.getElementById('nuevo-juzgado').value;
+                pendingDatosIA.nuevo_asunto.materia = document.getElementById('nuevo-materia').value;
+                pendingDatosIA.nuevo_asunto.via = document.getElementById('nuevo-via').value;
+                pendingDatosIA.nuevo_asunto.cliente = document.getElementById('nuevo-cliente').value;
+                pendingDatosIA.comentario_final_usuario = document.getElementById('nuevo-res-corto').value;
+                if (!pendingDatosIA.nuevo_asunto.cliente) { alert("Asigna un nombre de Cliente."); btn.disabled = false; btn.innerText = "✨ Dar de Alta Expediente y Guardar"; return; }
+            } else {
+                pendingDatosIA.comentario_final_usuario = document.getElementById('conf-res-corto').value;
+            }
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'ejecutar_acuerdo_express', payload: pendingPayload, datos_ia: pendingDatosIA, es_nuevo: esNuevo })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    cerrarModalesExpress();
+                    document.getElementById('status-express').innerHTML = `<div style="color:var(--green-text); padding:10px; background:#e8f5e9; border-radius:8px;">✅ ¡ÉXITO! Operación completada. ${data.guardado_en_drive ? 'Archivo en Drive.' : ''}</div>`;
+                    document.getElementById('file-express').value = ''; document.getElementById('text-express-input').value = ''; document.getElementById('link-express-input').value = '';
+                    document.getElementById('text-express-file').innerText = "Arrastra PDF o haz clic aquí";
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (e) { alert("Error de conexión al guardar."); }
+
+            btn.disabled = false;
+            btn.innerText = esNuevo ? "✨ Dar de Alta Expediente y Guardar Acuerdo" : "💾 Confirmar y Guardar en Expediente";
+        }
+
+        // --- LÓGICA CHAT LIBRE ---
+        async function enviarChatLibre() {
+            const input = document.getElementById('chat-ia-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const box = document.getElementById('chat-ia-box');
+            box.innerHTML += `<div class="msg msg-user">${msg.replace(/\n/g, '<br>')}</div>`;
+            input.value = ''; input.style.height = '';
+            box.scrollTop = box.scrollHeight;
+
+            const tempId = "loading-" + Date.now();
+            box.innerHTML += `<div id="${tempId}" class="msg msg-ia" style="opacity:0.6"><i>✨ Vigilex AI está consultando tu base de datos...</i></div>`;
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'chat_libre', payload: { pregunta: msg } })
+                });
+                const data = await res.json();
+                document.getElementById(tempId).remove();
+
+                const respuesta = data.success ? data.respuesta.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>') : "Error: " + data.error;
+                box.innerHTML += `<div class="msg msg-ia"><b>✨ Vigilex AI:</b><br>${respuesta}</div>`;
+            } catch (e) { document.getElementById(tempId).innerText = "Error de red."; }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // --- LÓGICA IMPORTACIÓN MASIVA ---
+        async function iniciarImportacionMasiva() {
+            const linkCarpeta = document.getElementById('link-masivo-input').value.trim();
+            if (!linkCarpeta) return alert("Pega el enlace de la carpeta de Drive.");
+
+            const btn = document.getElementById('btn-procesar-masivo');
+            const zonaProgreso = document.getElementById('zona-progreso-masivo');
+            const tituloExp = document.getElementById('masivo-titulo-exp');
+            const barra = document.getElementById('masivo-barra');
+            const statusTexto = document.getElementById('masivo-status-texto');
+            const contador = document.getElementById('masivo-contador');
+            const log = document.getElementById('masivo-log');
+
+            btn.disabled = true;
+            zonaProgreso.style.display = 'block';
+            log.innerHTML = ''; barra.style.width = '0%';
+            statusTexto.innerText = "Escaneando carpeta y creando expediente base...";
+
+            try {
+                // FASE 1: Crear expediente y listar archivos
+                const resFase1 = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'masivo_fase1_escanear', payload: { folder_link: linkCarpeta } })
+                });
+                const dataFase1 = await resFase1.json(); // <--- ¡AQUÍ ESTABA EL ERROR CORREGIDO!
+
+                if (!dataFase1.success) {
+                    statusTexto.innerHTML = `<span style="color:red">❌ Error: ${dataFase1.error}</span>`;
+                    btn.disabled = false; return;
+                }
+
+                const idExpedienteCreado = dataFase1.id_expediente;
+                const archivos = dataFase1.archivos; // Array de { id, name }
+                const total = archivos.length;
+
+                tituloExp.innerText = `📂 Expediente Creado: ${dataFase1.numero_visual} | Procesando ${total} documentos...`;
+                contador.innerText = `0 / ${total}`;
+
+                if (total === 0) {
+                    statusTexto.innerText = "La carpeta está vacía o no tiene PDFs.";
+                    btn.disabled = false; return;
+                }
+
+                // FASE 2: Bucle archivo por archivo (El verdadero cerebro)
+                let completados = 0;
+                for (const archivo of archivos) {
+                    statusTexto.innerText = `Leyendo: ${archivo.name}...`;
+                    log.innerHTML += `<div>⏳ Analizando: ${archivo.name}</div>`;
+                    log.scrollTop = log.scrollHeight;
+
+                    try {
+                        const resFase2 = await fetch('/.netlify/functions/crm_ai_core', {
+                            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                            body: JSON.stringify({
+                                username: usernameGlobal,
+                                accion: 'masivo_fase2_procesar',
+                                payload: { id_expediente: idExpedienteCreado, file_id: archivo.id, file_name: archivo.name }
+                            })
+                        });
+                        const dataFase2 = await resFase2.json(); // <--- ¡AQUÍ ESTÁ LA SEGUNDA CORRECCIÓN!
+
+                        if (dataFase2.success) {
+                            log.innerHTML += `<div style="color:green">✅ ${dataFase2.tipo} dictado el ${dataFase2.fecha}: ${dataFase2.sentido}</div>`;
+                        } else {
+                            log.innerHTML += `<div style="color:red">❌ Error en ${archivo.name}: ${dataFase2.error}</div>`;
+                        }
+                    } catch (e) {
+                        log.innerHTML += `<div style="color:red">❌ Fallo de red al procesar ${archivo.name}</div>`;
+                    }
+
+                    completados++;
+                    barra.style.width = `${(completados / total) * 100}%`;
+                    contador.innerText = `${completados} / ${total}`;
+                    log.scrollTop = log.scrollHeight;
+                }
+
+                statusTexto.innerHTML = `<b style="color:green">✨ ¡Procesamiento Masivo Completado!</b> Ve a la vista de expedientes para ver el resultado.`;
+                btn.disabled = false;
+
+            } catch (e) {
+                statusTexto.innerHTML = `<span style="color:red">❌ Fallo crítico de conexión. Revisa consola.</span>`;
+                console.error(e);
+                btn.disabled = false;
+            }
+        }
+
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarConexionDrive();
+        });
+
+        async function verificarConexionDrive() {
+            const btnDrive = document.getElementById('btn-conectar-drive');
+            if (!btnDrive) return;
+
+            try {
+                const res = await fetch('/.netlify/functions/crm_ai_core', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenSeguro}` },
+                    body: JSON.stringify({ username: usernameGlobal, accion: 'verificar_drive', payload: {} })
+                });
+                const data = await res.json();
+
+                if (data.conectado) {
+                    btnDrive.innerText = "✅ Google Drive Conectado";
+                    btnDrive.style.backgroundColor = "#34a853"; // Verde
+                    btnDrive.style.color = "white";
+                    btnDrive.style.pointerEvents = "none"; // Deshabilita el clic para no volver a conectar
+                }
+            } catch (e) {
+                console.error("Error verificando Drive", e);
+            }
+        }
+    </script>
+
+    <div id="modalConfirmarExpress"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">
+        <div
+            style="background:white; width:90%; max-width:600px; border-radius:15px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.3); border-top: 8px solid var(--ia-purple);">
+            <div
+                style="padding:20px; background:var(--ia-light); border-bottom:1px solid #e1bee7; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; color:var(--ia-purple); font-family:'Playfair Display', serif;">✅ Asunto
+                    Identificado</h3>
+                <span onclick="cerrarModalesExpress()"
+                    style="cursor:pointer; font-size:24px; color:#888;">&times;</span>
+            </div>
+            <div style="padding:25px; max-height:60vh; overflow-y:auto;">
+                <div id="conf-exp-titulo"
+                    style="font-weight:bold; font-size:16px; color:var(--primary); margin-bottom:15px; padding-bottom:10px; border-bottom:2px dashed #eee;">
+                    Expediente...</div>
+
+                <label style="font-size:12px; font-weight:bold; color:var(--ia-purple);">Síntesis Detallada (Análisis de
+                    la IA):</label>
+                <div id="conf-res-detallado"
+                    style="background:#fafafa; padding:15px; border-radius:8px; font-size:13px; line-height:1.6; color:#444; margin-top:5px; margin-bottom:20px; border:1px solid #eee;">
+                </div>
+
+                <label style="font-size:12px; font-weight:bold; color:var(--primary);">Síntesis Corta (Se guardará en el
+                    expediente):</label>
+                <textarea id="conf-res-corto" rows="4"
+                    style="width:100%; padding:15px; border-radius:8px; border:1px solid #ccc; font-family:inherit; font-size:13px; margin-top:5px; margin-bottom:20px; box-sizing:border-box;"></textarea>
+
+                <button onclick="ejecutarAcuerdoExpress(false)" id="btn-ejecutar-existente" class="btn-ia"
+                    style="width:100%; padding:15px; font-size:15px;">💾 Confirmar y Guardar en Expediente</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNuevoExpress"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+        <div
+            style="background:white; width:90%; max-width:600px; border-radius:15px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.3); border-top: 8px solid var(--primary);">
+            <div
+                style="padding:20px; background:#e3f2fd; border-bottom:1px solid #bbdefb; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; color:var(--primary); font-family:'Playfair Display', serif;">📂 Asunto No
+                    Registrado</h3>
+                <span onclick="cerrarModalesExpress()"
+                    style="cursor:pointer; font-size:24px; color:#888;">&times;</span>
+            </div>
+            <div style="padding:25px; max-height:65vh; overflow-y:auto;">
+                <p style="font-size:13px; color:#555; margin-top:0;">No encontré este asunto en tu catálogo, pero he
+                    extraído los datos. ¿Deseas darlo de alta ahora mismo y guardar la resolución?</p>
+
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <div style="flex:1;">
+                        <label style="font-size:11px; font-weight:bold;">Número de Expediente:</label>
+                        <input type="text" id="nuevo-num"
+                            style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:11px; font-weight:bold;">Cliente (Asignar a):</label>
+                        <input type="text" id="nuevo-cliente" placeholder="Nombre del cliente"
+                            style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <label style="font-size:11px; font-weight:bold;">Órgano Jurisdiccional:</label>
+                <input type="text" id="nuevo-juzgado"
+                    style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; margin-bottom:15px; box-sizing:border-box;">
+
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <div style="flex:1;">
+                        <label style="font-size:11px; font-weight:bold;">Materia:</label>
+                        <input type="text" id="nuevo-materia"
+                            style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:11px; font-weight:bold;">Vía / Tipo:</label>
+                        <input type="text" id="nuevo-via"
+                            style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <div
+                    style="background:#fafafa; padding:15px; border-radius:8px; border:1px solid #eee; margin-bottom:20px;">
+                    <label style="font-size:12px; font-weight:bold; color:var(--ia-purple);">Síntesis a guardar:</label>
+                    <textarea id="nuevo-res-corto" rows="3"
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; font-family:inherit; font-size:13px; margin-top:5px; box-sizing:border-box;"></textarea>
+                </div>
+
+                <button onclick="ejecutarAcuerdoExpress(true)" id="btn-ejecutar-nuevo" class="btn-ia"
+                    style="width:100%; background:var(--primary); padding:15px; font-size:15px;">✨ Dar de Alta
+                    Expediente y Guardar Acuerdo</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
